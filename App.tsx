@@ -26,6 +26,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Test from './components/Test';
 
 const Section: React.FC<{
   title: string;
@@ -69,6 +70,7 @@ const App = () => {
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         <Header />
+        <Test />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
