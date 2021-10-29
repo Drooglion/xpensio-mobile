@@ -11,7 +11,7 @@ import Tabs from './Tabs';
 
 /* Auth */
 // import Auth from './Auth/Root';
-// import Login from './Auth/Login';
+import Login from './Auth/Login';
 // import Register from './Auth/Register';
 // import CompleteRegister from './Auth/CompleteRegister';
 // import Splash from './Auth/Splash';
@@ -55,7 +55,8 @@ const RootNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Tabs">{() => <Tabs />}</Stack.Screen>
+        <Stack.Screen name="Login" component={Login} />
+        {/* <Stack.Screen name="Tabs">{() => <Tabs />}</Stack.Screen> */}
         {/* {state.isLoading ? (
           <Stack.Screen name="Splash" component={Splash} />
         ) : state.isSIgnout || !isNil(state.token) ? (

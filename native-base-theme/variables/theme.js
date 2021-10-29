@@ -2,14 +2,18 @@
 
 import color from 'color';
 import { Platform, Dimensions, PixelRatio } from 'react-native';
-// eslint-disable-next-line import/no-unresolved
-import R from 'res/R';
+import R from '../../src/res/R';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
 const platform = Platform.OS;
 const platformStyle = undefined;
-const isIphoneX = platform === 'ios' && (deviceHeight === 812 || deviceWidth === 812 || deviceHeight === 896 || deviceWidth === 896);
+const isIphoneX =
+  platform === 'ios' &&
+  (deviceHeight === 812 ||
+    deviceWidth === 812 ||
+    deviceHeight === 896 ||
+    deviceWidth === 896);
 
 export default {
   platformStyle,
@@ -34,7 +38,8 @@ export default {
   badgePadding: platform === 'ios' ? 3 : 0,
 
   //  Button
-  btnFontFamily: platform === 'android' ? 'Airbnb Cereal App Medium' : 'Airbnb Cereal App',
+  btnFontFamily:
+    platform === 'android' ? 'Airbnb Cereal App Medium' : 'Airbnb Cereal App',
   btnFontWeight: platform === 'android' ? null : '500',
   btnDisabledBg: R.colors.inactive,
   buttonPadding: 6,
@@ -123,7 +128,8 @@ export default {
 
   //  Font
   DefaultFontSize: 16,
-  fontFamily: platform === 'android' ? 'Airbnb Cereal App Book' : 'Airbnb Cereal App',
+  fontFamily:
+    platform === 'android' ? 'Airbnb Cereal App Book' : 'Airbnb Cereal App',
   fontWeight: platform === 'android' ? null : '400',
   fontSizeBase: 15,
   get fontSizeH1() {
@@ -161,14 +167,10 @@ export default {
   iosStatusbar: 'dark-content',
   toolbarDefaultBorder: platform === 'ios' ? '#a7a6ab' : '#3F51B5',
   get statusBarColor() {
-    return color(this.toolbarDefaultBg)
-      .darken(0.2)
-      .hex();
+    return color(this.toolbarDefaultBg).darken(0.2).hex();
   },
   get darkenHeader() {
-    return color(this.tabBgColor)
-      .darken(0.03)
-      .hex();
+    return color(this.tabBgColor).darken(0.03).hex();
   },
 
   //  Icon
@@ -273,13 +275,13 @@ export default {
       topInset: 24,
       leftInset: 0,
       rightInset: 0,
-      bottomInset: 34
+      bottomInset: 34,
     },
     landscape: {
       topInset: 0,
       leftInset: 44,
       rightInset: 44,
-      bottomInset: 21
-    }
-  }
+      bottomInset: 21,
+    },
+  },
 };
