@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Thumbnail } from 'native-base';
 // import Icon from 'react-native-vector-icons/Foundation';
 // import AffiliatesStack from '@screens/MainTab/Affiliates/Navigator';
 // import HomeStack from '@screens/MainTab/Home/Navigator';
@@ -9,38 +10,49 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import { Platform } from 'react-native';
 
 import RequestsStack from './Requests';
+import R from '../../res/R';
 
 const Tab = createBottomTabNavigator();
 
 export default function Tabs() {
   const screenOptions = useCallback(
-    ({ _route }) => ({
+    ({ route }) => ({
       keyboardHidesTabBar: false,
       headerShown: false,
-      // tabBarIcon: ({ focused, color, size }) => {
-      //   const { name } = route;
-      //   let iconName;
+      tabBarIcon: ({ focused }: { focused: boolean }) => {
+        const { name } = route;
+        let iconName = '';
+        if (name === 'Payments') {
+          iconName = `ic_payments${focused ? '_selected' : ''}`;
+        } else if (name === 'MyCards') {
+          iconName = `ic_cards${focused ? '_selected' : ''}`;
+        } else if (name === 'Notifications') {
+          iconName = `ic_notifications${focused ? '_selected' : ''}`;
+        } else if (name === 'Requests') {
+          iconName = `ic_requests${focused ? '_selected' : ''}`;
+        }
 
-      //   if (name === 'Payments') {
-      //     iconName = 'home';
-      //   } else if (name === 'Live') {
-      //     iconName = 'play-video';
-      //   } else if (name === 'Search') {
-      //     iconName = 'magnifying-glass';
-      //   } else if (name === 'Affiliates') {
-      //     iconName = 'link';
-      //   } else if (name === 'Donate') {
-      //     iconName = 'heart';
-      //   }
-
-      //   // You can return any component that you like here!
-      //   return <Icon name={iconName} size={size} color={color} />;
-      // },
+        return (
+          <Thumbnail
+            //@ts-ignore
+            source={R.images[iconName]}
+            square
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{ height: 20, width: 20 }}
+          />
+        );
+      },
     }),
     [],
   );
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={screenOptions}
+      //@ts-ignore
+      tabBarOptions={{
+        activeTintColor: R.colors.primary,
+        inactiveTintColor: 'gray',
+      }}>
       <Tab.Screen name="Payments" component={RequestsStack} />
       <Tab.Screen name="Requests" component={RequestsStack} />
       <Tab.Screen name="MyCards" component={RequestsStack} />
