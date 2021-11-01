@@ -27,9 +27,9 @@ import ForgotPasswordButton from 'library/components/ForgotPasswordButton';
 import SignInWithGoogleButton from 'library/components/SignInWithGoogleButton';
 import PasswordInput from '../../../library/components/PasswordInput';
 // import hooks from 'library/hooks';
-import R from '../../../res/R';
-import getTheme from '../../../../native-base-theme/components';
-import theme from '../../../../native-base-theme/variables/theme';
+import R from 'res/R';
+import getTheme from 'native-base-theme/components';
+import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
 
 const Login = () => {

@@ -15,7 +15,7 @@ import {
   Text,
 } from 'native-base';
 
-import STORE_QUERIES from 'library/store/queries';
+// import STORE_QUERIES from 'library/store/queries';
 import Icon from 'react-native-vector-icons/Ionicons';
 import R from 'res/R';
 import ProfileImgLink from 'library/components/ProfileImgLink';
@@ -28,29 +28,26 @@ class Header extends Component {
       linkToProfile,
       onSearch,
       navigation,
-      data: { user: { photoUrl } },
+      data: {
+        user: { photoUrl },
+      },
     } = this.props;
     let headerRight = null;
     if (linkToProfile) {
       headerRight = (
         <Right style={styles.right}>
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')} activeOpacity={1}>
-            <ProfileImgLink
+          <TouchableOpacity onPress={() => {}} activeOpacity={1}>
+            {/* <ProfileImgLink
               uri={photoUrl}
               size={40}
-            />
+            /> */}
           </TouchableOpacity>
         </Right>
       );
     } else if (onSearch) {
       headerRight = (
         <Right style={styles.right}>
-          <Button
-            transparent
-            icon
-            style={styles.btnSearch}
-            onPress={onSearch}
-          >
+          <Button transparent icon style={styles.btnSearch} onPress={onSearch}>
             <NBIcon
               ios="ios-search"
               android="md-search"
@@ -61,31 +58,25 @@ class Header extends Component {
       );
     }
     return headerRight;
-  }
+  };
 
   renderBody() {
-    const {
-      content,
-      title,
-      hasBack,
-      inverseFontColor,
-      subtitle,
-    } = this.props;
+    const { content, title, hasBack, inverseFontColor, subtitle } = this.props;
     const titleStyle = inverseFontColor
-      ? StyleSheet.flatten([styles[hasBack ? 'backTitle' : 'title'], { color: R.colors.white }])
+      ? StyleSheet.flatten([
+          styles[hasBack ? 'backTitle' : 'title'],
+          { color: R.colors.white },
+        ])
       : styles[hasBack ? 'backTitle' : 'title'];
-    return content || (
-      <Body style={styles.body}>
-        <Title
-          allowFontScaling={false}
-          style={titleStyle}
-        >
-          {title}
-        </Title>
-        {
-          subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null
-        }
-      </Body>
+    return (
+      content || (
+        <Body style={styles.body}>
+          <Title allowFontScaling={false} style={titleStyle}>
+            {title}
+          </Title>
+          {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+        </Body>
+      )
     );
   }
 
@@ -113,31 +104,29 @@ class Header extends Component {
         transparent={transparent}
         style={headerStyle}
         iosBarStyle={iosBarStyle}
-        androidStatusBarColor={androidStatusBarColor}
-      >
-        {
-          hasBack ? (
-            <Left style={styles.left}>
-              <Button
-                onPress={onBackPress}
-                transparent={!highlightBack}
-                style={highlightBack ? styles.highlightBack : null}
-              >
-                <Icon
-                  name="md-arrow-back"
-                  size={33}
-                  color={R.colors[inverseFontColor ? 'white' : 'black']}
-                />
-              </Button>
-            </Left>
-          ) : null
-        }
-        { this.renderBody() }
-        { content ? null : this.headerRight() }
+        androidStatusBarColor={androidStatusBarColor}>
+        {hasBack ? (
+          <Left style={styles.left}>
+            <Button
+              onPress={onBackPress}
+              transparent={!highlightBack}
+              style={highlightBack ? styles.highlightBack : null}>
+              <Icon
+                name="md-arrow-back"
+                size={33}
+                color={R.colors[inverseFontColor ? 'white' : 'black']}
+              />
+            </Button>
+          </Left>
+        ) : null}
+        {this.renderBody()}
+        {content ? null : this.headerRight()}
       </NBHeader>
     );
   }
 }
+
+export default Header;
 
 Header.propTypes = {
   title: PropTypes.string,
@@ -170,7 +159,3 @@ Header.defaultProps = {
   androidStatusBarColor: R.colors.white,
   content: null,
 };
-
-export default compose(
-  graphql(STORE_QUERIES.user)
-)(Header);
