@@ -18,14 +18,14 @@ import {
 // import { GoogleSignin } from 'react-native-google-signin';
 // import moment from 'moment';
 // import Hr from 'react-native-hr-component';
-// import { capitalize } from 'lodash';
+// import capitalize from 'lodash/capitalize';
 
-// import ForgotPasswordButton from 'library/components/ForgotPasswordButton';
+import ForgotPasswordButton from 'library/components/ForgotPasswordButton';
 // import LoadingIndicator from 'library/components/LoadingIndicator';
 // import STORE_MUTATIONS from 'library/store/mutations';
 // import ACCOUNT from 'library/api/Account';
-// import SignInWithGoogleButton from 'library/components/SignInWithGoogleButton';
-// import PasswordInput from 'library/components/PasswordInput';
+import SignInWithGoogleButton from 'library/components/SignInWithGoogleButton';
+import PasswordInput from '../../../library/components/PasswordInput';
 // import hooks from 'library/hooks';
 import R from '../../../res/R';
 import getTheme from '../../../../native-base-theme/components';
@@ -58,7 +58,7 @@ const Login = () => {
                 value=""
               />
             </Item>
-            {/* <Item error={inputs.error} style={styles.item} underline>
+            <Item error={false} style={styles.item} underline>
               <PasswordInput
                 placeholder={R.strings.password}
                 textContentType="password"
@@ -67,36 +67,31 @@ const Login = () => {
                 autoCorrect={false}
                 secureTextEntry
                 selectionColor={R.colors.cursor}
-                onChangeText={text => handleChange('password', text)}
-                onSubmitEditing={login}
-                value={inputs.password || ''}
+                onChangeText={() => {}}
+                onSubmitEditing={() => {}}
+                value=""
               />
             </Item>
-            <Text style={styles.txtErrorLogin}>
+            {/* <Text style={styles.txtErrorLogin}>
               {capitalize(inputs.errorMessage)}
-            </Text>
-            <ForgotPasswordButton onPress={forgotPassword} />
-            <Button
-              style={styles.signIn}
-              onPress={login}
-              disabled={inputs.signinInProgress}>
-              {inputs.signinInProgress ? (
+            </Text> */}
+            <ForgotPasswordButton onPress={() => {}} />
+            <Button style={styles.signIn} onPress={() => {}} disabled={false}>
+              <Text>{R.strings.signIn}</Text>
+              {/* {inputs.signinInProgress ? (
                 <LoadingIndicator size={5} color={R.colors.white} />
               ) : (
                 <Text>{R.strings.signIn}</Text>
-              )}
-            </Button> */}
+              )} */}
+            </Button>
             {/* <Hr
               lineColor={R.colors.divider}
               text={R.strings.or}
               textStyles={styles.or}
               textPadding={10}
               hrStyles={styles.hr}
-            />
-            <SignInWithGoogleButton
-              disabled={inputs.googleSignInProgress}
-              onPress={googleSignin}
             /> */}
+            <SignInWithGoogleButton disabled={false} onPress={() => {}} />
           </Form>
         </Content>
       </Container>
