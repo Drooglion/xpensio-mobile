@@ -1,8 +1,5 @@
-/* eslint-disable import/no-unresolved */
-
 import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { compose, graphql } from 'react-apollo';
 import PropTypes from 'prop-types';
 import {
   Header as NBHeader,
@@ -18,20 +15,13 @@ import {
 // import STORE_QUERIES from 'library/store/queries';
 import Icon from 'react-native-vector-icons/Ionicons';
 import R from 'res/R';
-import ProfileImgLink from 'library/components/ProfileImgLink';
+// import ProfileImgLink from 'library/components/ProfileImgLink';
 
 import styles from './styles';
 
 class Header extends Component {
   headerRight = () => {
-    const {
-      linkToProfile,
-      onSearch,
-      navigation,
-      data: {
-        user: { photoUrl },
-      },
-    } = this.props;
+    const { linkToProfile, onSearch, navigation } = this.props;
     let headerRight = null;
     if (linkToProfile) {
       headerRight = (

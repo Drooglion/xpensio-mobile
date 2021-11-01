@@ -6,10 +6,12 @@ import styles from './styles';
 class TabSelection extends Component {
   state = { selected: 0 };
 
-  handlePress = (selected) => {
+  handlePress = selected => {
     const { onChange } = this.props;
-    this.setState({ selected }, () => { onChange(selected); });
-  }
+    this.setState({ selected }, () => {
+      onChange(selected);
+    });
+  };
 
   renderTabSelections() {
     const { selected } = this.state;
@@ -19,13 +21,14 @@ class TabSelection extends Component {
         key={tab}
         transparent
         style={[styles.tab, i === selected ? styles.tabActive : null]}
-        onPress={() => this.handlePress(i)}
-      >
+        onPress={() => this.handlePress(i)}>
         <Text
           allowFontScaling={false}
           uppercase={false}
-          style={[styles.tabText, i === selected ? styles.tabTextActive : null]}
-        >
+          style={[
+            styles.tabText,
+            i === selected ? styles.tabTextActive : null,
+          ]}>
           {tab}
         </Text>
       </Button>
@@ -33,11 +36,7 @@ class TabSelection extends Component {
   }
 
   render() {
-    return (
-      <View style={styles.tabs}>
-        {this.renderTabSelections()}
-      </View>
-    );
+    return <View style={styles.tabs}>{this.renderTabSelections()}</View>;
   }
 }
 
@@ -45,5 +44,5 @@ export default TabSelection;
 
 TabSelection.propTypes = {
   tabs: PropTypes.instanceOf(Array).isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 };

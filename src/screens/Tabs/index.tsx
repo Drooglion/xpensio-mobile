@@ -10,7 +10,8 @@ import { Thumbnail } from 'native-base';
 // import { Platform } from 'react-native';
 
 import RequestsStack from './Requests';
-import R from '../../res/R';
+import PaymentsStack from './Payments';
+import R from 'res/R';
 
 const Tab = createBottomTabNavigator();
 
@@ -53,7 +54,7 @@ export default function Tabs() {
         activeTintColor: R.colors.primary,
         inactiveTintColor: 'gray',
       }}>
-      <Tab.Screen name="Payments" component={RequestsStack} />
+      <Tab.Screen name="Payments" component={PaymentsStack} />
       <Tab.Screen name="Requests" component={RequestsStack} />
       <Tab.Screen name="MyCards" component={RequestsStack} />
       <Tab.Screen name="Notifications" component={RequestsStack} />
