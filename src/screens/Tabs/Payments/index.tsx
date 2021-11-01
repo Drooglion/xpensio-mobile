@@ -27,8 +27,8 @@ import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
 
 const Payments = ({ navigation }) => {
-  let tab = {};
-  const actAsAdmin = false;
+  let tab: {} | undefined | null = {};
+  const actAsAdmin: boolean = false;
   const tabs = !actAsAdmin
     ? [R.strings.myPayments]
     : [R.strings.myPayments, R.strings.team];
