@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unresolved */
-
 import React from 'react';
 import {
   Container,
@@ -16,22 +14,21 @@ import Header from 'library/components/Header';
 // import MyPayments from 'library/components/MyPayments';
 // import TeamPayments from 'library/components/TeamPayments';
 import TabSelection from 'library/components/TabSelection';
+import { useTranslation } from 'react-i18next';
 
 // import StringUtils from 'library/utils/StringUtils';
 //
 // import STORE_QUERIES from 'library/store/queries';
 
-import R from 'res/R';
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
 
 const Payments = ({ navigation }) => {
   let tab: {} | undefined | null = {};
+  const { t } = useTranslation();
   const actAsAdmin: boolean = false;
-  const tabs = !actAsAdmin
-    ? [R.strings.myPayments]
-    : [R.strings.myPayments, R.strings.team];
+  const tabs = !actAsAdmin ? [t('myPayments')] : [t('myPayments'), t('team')];
 
   const goToTabPage = page => {
     tab.goToPage(page);
@@ -89,7 +86,7 @@ const Payments = ({ navigation }) => {
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container>
-        <Header title="S$ 1,500.00" subtitle={R.strings.availableFunds} />
+        <Header title="S$ 1,500.00" subtitle={t('availableFunds')} />
         {/* <BalanceHeader /> */}
         <View style={{ flexGrow: 1 }}>
           <TabSelection tabs={tabs} onChange={goToTabPage} />

@@ -9,21 +9,20 @@ import {
 } from 'native-base';
 
 import Header from 'library/components/Header';
+import { useTranslation } from 'react-i18next';
 // import MyRequests from 'library/components/MyRequests';
 // import TeamRequests from 'library/components/TeamRequests';
 import TabSelection from 'library/components/TabSelection';
 
-import R from 'res/R';
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
 
 const Requests = ({ navigation }) => {
+  const { t } = useTranslation();
   let tab: {} | undefined | null = {};
   const actAsAdmin: boolean = false;
-  const tabs = !actAsAdmin
-    ? [R.strings.myRequests]
-    : [R.strings.myRequests, R.strings.team];
+  const tabs = !actAsAdmin ? [t('myRequests')] : [t('myRequests'), t('team')];
 
   const onItemClick = item => {};
 
@@ -34,7 +33,7 @@ const Requests = ({ navigation }) => {
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container>
-        <Header title={R.strings.requests} />
+        <Header title={t('requests')} />
         <View style={{ flexGrow: 1 }}>
           <TabSelection tabs={tabs} onChange={goToTabPage} />
           <Tabs
