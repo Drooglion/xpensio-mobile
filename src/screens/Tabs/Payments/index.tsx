@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash';
 
 import Header from 'library/components/Header';
 // import BalanceHeader from 'library/components/BalanceHeader';
-// import MyPayments from 'library/components/MyPayments';
+import MyPayments from 'library/components/MyPayments';
 // import TeamPayments from 'library/components/TeamPayments';
 import TabSelection from 'library/components/TabSelection';
 import { useTranslation } from 'react-i18next';
@@ -99,7 +99,7 @@ const Payments = ({ navigation }) => {
             tabContainerStyle={styles.tabContainer}
             tabBarUnderlineStyle={styles.tabUnderline}>
             <Tab heading={<TabHeading />}>
-              {/* <MyPayments onItemClick={onMyPaymentPress} /> */}
+              <MyPayments />
             </Tab>
             {!actAsAdmin ? null : (
               <Tab heading={<TabHeading />}>
