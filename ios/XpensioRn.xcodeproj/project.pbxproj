@@ -40,9 +40,8 @@
 		00E356EE1AD99517003FC87E /* XpensioRnTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XpensioRnTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* XpensioRnTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XpensioRnTests.m; sourceTree = "<group>"; };
-		01615511CACC43988E10D401 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		06CDE20A88C14913AB5ACE8F /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		0838C3280EE24802A8CCB9CE /* AirbnbCerealApp-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AirbnbCerealApp-Black.ttf"; path = "../assets/fonts/AirbnbCerealApp-Black.ttf"; sourceTree = "<group>"; };
+		129FCA0992234E678F71AD49 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* XpensioRn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XpensioRn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = XpensioRn/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = XpensioRn/AppDelegate.m; sourceTree = "<group>"; };
@@ -50,36 +49,24 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = XpensioRn/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = XpensioRn/main.m; sourceTree = "<group>"; };
 		1D0AE47A65C8663E3B452821 /* Pods-XpensioRn-XpensioRnTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XpensioRn-XpensioRnTests.release.xcconfig"; path = "Target Support Files/Pods-XpensioRn-XpensioRnTests/Pods-XpensioRn-XpensioRnTests.release.xcconfig"; sourceTree = "<group>"; };
-		2BC36D09C16C4024B2EA58FA /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
-		3C9A00C00FCB42078E0E468F /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
-		3FB82E101B0443F5A87DD0FF /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
+		335E80BB57444AD1985438C4 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		458894F5F19E42E48D67122D /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
-		46F388443BB34163B301BEB6 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
-		500AB62865EE4CFCA7B2E20A /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/native-base/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		58E5DCF07BAA4FD2A321655F /* Avenir-BookOblique.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Avenir-BookOblique.ttf"; path = "../assets/fonts/Avenir-BookOblique.ttf"; sourceTree = "<group>"; };
-		6110B3B2AA5C4667B176D6DE /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/native-base/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		6423831EA8574132BED9D8CC /* libPods-XpensioRn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XpensioRn.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		66AE7E9AE9A642DDBF1C6367 /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
 		6C97AB639B58BBB4B15BBE30 /* Pods-XpensioRn-XpensioRnTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XpensioRn-XpensioRnTests.debug.xcconfig"; path = "Target Support Files/Pods-XpensioRn-XpensioRnTests/Pods-XpensioRn-XpensioRnTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = XpensioRn/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8462CB965A664378B7EEBF98 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
-		8641A678B19144C2ADC57FE0 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		86B426341D0A4840AE2DB5CA /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/native-base/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		ABFE59519B596E51CEFDCCC0 /* libPods-XpensioRn-XpensioRnTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XpensioRn-XpensioRnTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AEC1DF8650FF48029F9DB725 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/native-base/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
-		B36FC1DFD9B244CCA65F1F7F /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		B297DBDC273940EDB100CEA4 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		BE8384AD5A634A4D9E8467D6 /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
 		C0A881CF5CF3F2B244570E2A /* Pods-XpensioRn.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XpensioRn.debug.xcconfig"; path = "Target Support Files/Pods-XpensioRn/Pods-XpensioRn.debug.xcconfig"; sourceTree = "<group>"; };
 		C8E78748ECDB4C0389D32EF2 /* AirbnbCerealApp-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AirbnbCerealApp-Medium.ttf"; path = "../assets/fonts/AirbnbCerealApp-Medium.ttf"; sourceTree = "<group>"; };
 		CAF5BEE8047348B0BF8606DA /* AirbnbCerealApp-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AirbnbCerealApp-Bold.ttf"; path = "../assets/fonts/AirbnbCerealApp-Bold.ttf"; sourceTree = "<group>"; };
 		CD29A431272C29D40002309C /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		CD29A432272C29D40002309C /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		CD29A433272C29D40002309C /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
-		CD29A434272C29D40002309C /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		CD29A435272C29D40002309C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		CD29A436272C29D40002309C /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		CD29A437272C29D40002309C /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
-		CD29A438272C29D40002309C /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		CD29A439272C29D40002309C /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		CD29A43A272C29D40002309C /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		CD29A43B272C29D40002309C /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
@@ -172,22 +159,12 @@
 				E8182D50AD63465A8963E05B /* AirbnbCerealApp-Light.ttf */,
 				C8E78748ECDB4C0389D32EF2 /* AirbnbCerealApp-Medium.ttf */,
 				58E5DCF07BAA4FD2A321655F /* Avenir-BookOblique.ttf */,
-				86B426341D0A4840AE2DB5CA /* AntDesign.ttf */,
-				B36FC1DFD9B244CCA65F1F7F /* Entypo.ttf */,
 				EA3EC7CADA42437582E5922D /* EvilIcons.ttf */,
-				500AB62865EE4CFCA7B2E20A /* Feather.ttf */,
-				3C9A00C00FCB42078E0E468F /* FontAwesome.ttf */,
-				06CDE20A88C14913AB5ACE8F /* FontAwesome5_Brands.ttf */,
-				2BC36D09C16C4024B2EA58FA /* FontAwesome5_Regular.ttf */,
 				FDB9D6E8179142FEA80C7336 /* FontAwesome5_Solid.ttf */,
-				AEC1DF8650FF48029F9DB725 /* Fontisto.ttf */,
 				E79D935BDC1543F98735CD87 /* Foundation.ttf */,
-				01615511CACC43988E10D401 /* Ionicons.ttf */,
-				8462CB965A664378B7EEBF98 /* MaterialCommunityIcons.ttf */,
-				46F388443BB34163B301BEB6 /* MaterialIcons.ttf */,
-				6110B3B2AA5C4667B176D6DE /* Octicons.ttf */,
-				3FB82E101B0443F5A87DD0FF /* SimpleLineIcons.ttf */,
-				8641A678B19144C2ADC57FE0 /* Zocial.ttf */,
+				129FCA0992234E678F71AD49 /* EvilIcons.ttf */,
+				335E80BB57444AD1985438C4 /* FontAwesome5_Solid.ttf */,
+				B297DBDC273940EDB100CEA4 /* Foundation.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -229,14 +206,11 @@
 			children = (
 				CD29A433272C29D40002309C /* AntDesign.ttf */,
 				CD29A431272C29D40002309C /* Entypo.ttf */,
-				CD29A432272C29D40002309C /* EvilIcons.ttf */,
 				CD29A439272C29D40002309C /* Feather.ttf */,
 				CD29A437272C29D40002309C /* FontAwesome.ttf */,
 				CD29A43D272C29D40002309C /* FontAwesome5_Brands.ttf */,
 				CD29A43C272C29D40002309C /* FontAwesome5_Regular.ttf */,
-				CD29A438272C29D40002309C /* FontAwesome5_Solid.ttf */,
 				CD29A440272C29D40002309C /* Fontisto.ttf */,
-				CD29A434272C29D40002309C /* Foundation.ttf */,
 				CD29A43F272C29D40002309C /* Ionicons.ttf */,
 				CD29A43B272C29D40002309C /* MaterialCommunityIcons.ttf */,
 				CD29A43A272C29D40002309C /* MaterialIcons.ttf */,
@@ -569,7 +543,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 28MD3UGLGU;
+				DEVELOPMENT_TEAM = 4MQX2538H9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = XpensioRn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -598,7 +572,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 28MD3UGLGU;
+				DEVELOPMENT_TEAM = 4MQX2538H9;
 				INFOPLIST_FILE = XpensioRn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
