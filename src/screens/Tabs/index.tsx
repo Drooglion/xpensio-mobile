@@ -9,8 +9,9 @@ import { Thumbnail } from 'native-base';
 // import SearchShowsStack from '@screens/MainTab/SearchShows/Navigator';
 // import { Platform } from 'react-native';
 
-import RequestsStack from './Requests';
 import PaymentsStack from './Payments';
+import RequestsStack from './Requests';
+import CardsStack from './Cards';
 import R from 'res/R';
 
 const Tab = createBottomTabNavigator();
@@ -18,14 +19,18 @@ const Tab = createBottomTabNavigator();
 export default function Tabs() {
   const screenOptions = useCallback(
     ({ route }) => ({
+      swipeEnabled: false,
       keyboardHidesTabBar: false,
       headerShown: false,
+      tabBarActiveTintColor: R.colors.primary,
+      tabBarInactiveTintColor: 'gray',
+      tabBarStyle: { display: 'flex' },
       tabBarIcon: ({ focused }: { focused: boolean }) => {
         const { name } = route;
         let iconName = '';
         if (name === 'Payments') {
           iconName = `ic_payments${focused ? '_selected' : ''}`;
-        } else if (name === 'MyCards') {
+        } else if (name === 'My cards') {
           iconName = `ic_cards${focused ? '_selected' : ''}`;
         } else if (name === 'Notifications') {
           iconName = `ic_notifications${focused ? '_selected' : ''}`;
@@ -47,16 +52,11 @@ export default function Tabs() {
     [],
   );
   return (
-    <Tab.Navigator
-      screenOptions={screenOptions}
-      //@ts-ignore
-      tabBarOptions={{
-        activeTintColor: R.colors.primary,
-        inactiveTintColor: 'gray',
-      }}>
+    //@ts-ignore
+    <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen name="Payments" component={PaymentsStack} />
       <Tab.Screen name="Requests" component={RequestsStack} />
-      <Tab.Screen name="MyCards" component={RequestsStack} />
+      <Tab.Screen name="My cards" component={CardsStack} />
       <Tab.Screen name="Notifications" component={RequestsStack} />
     </Tab.Navigator>
   );
