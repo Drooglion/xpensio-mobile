@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl } from 'react-native';
+import { useTranslation } from 'react-i18next';
 // import { graphql } from 'react-apollo';
 import {
   ListItem,
@@ -13,7 +14,7 @@ import {
 // import UserAvatar from 'react-native-user-avatar';
 import { capitalize, chain, isNil, isEmpty } from 'lodash';
 
-// import EmptyList from 'library/components/EmptyList';
+import EmptyList from 'library/components/EmptyList';
 // import STORE_QUERIES from 'library/store/queries';
 
 import StringUtils from 'library/utils/StringUtils';
@@ -23,6 +24,7 @@ import R from 'res/R';
 import styles from './styles';
 
 const PaymentsList = () => {
+  const { t } = useTranslation();
   // componentDidMount() {
   //   const { data } = this.props;
   //   this.formatData(data);
@@ -175,11 +177,7 @@ const PaymentsList = () => {
           <RefreshControl refreshing={false} onRefresh={() => {}} />
         }
         ListEmptyComponent={
-          <h1>Empty List</h1>
-          // <EmptyList
-          //   image={R.images.empty_payments}
-          //   text={R.strings.noPayments}
-          // />
+          <EmptyList image={R.images.empty_payments} text={t('noPayments')} />
         }
         data={data}
         keyExtractor={(item, index) => index.toString()}

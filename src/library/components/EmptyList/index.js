@@ -11,14 +11,10 @@ const EmptyList = ({ image, text }) => (
     <Animatable.Image
       source={image}
       style={styles.img}
-      animation="fadeIn"
-      duration={600}
+      animation="zoomIn"
+      duration={1000}
     />
-    <Animatable.Text
-      style={styles.txtTitle}
-      animation="fadeIn"
-      duration={600}
-    >
+    <Animatable.Text style={styles.txtTitle} animation="fadeIn">
       {text}
     </Animatable.Text>
   </View>
