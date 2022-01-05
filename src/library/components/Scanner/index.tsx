@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { Text, View } from 'native-base';
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import { useTranslation } from 'react-i18next';
 
 import CameraGuide from '../CameraGuide';
 
@@ -10,26 +11,27 @@ export interface ScannerProps {
   onRead(data: string): void;
 }
 
-const Scanner = ({ onRead }: ScannerProps) => (
-  <Fragment>
-    <QRCodeScanner
-      cameraStyle={styles.qrCameraStyle}
-      containerStyle={styles.qrContainerStyle}
-      customMarker={<CameraGuide />}
-      fadeIn
-      onRead={e => onRead(e.data)}
-      showMarker
-    />
-    <View style={styles.infoContainer}>
-      {/* @ts-ignore */}
-      <Text style={styles.txtTitle}> Scanning ... </Text>
-      {/* @ts-ignore */}
-      <Text style={styles.txtDesc}>
-        {' '}
-        Place the QR code inside the center guide.{' '}
-      </Text>
-    </View>
-  </Fragment>
-);
+const Scanner = ({ onRead }: ScannerProps) => {
+  const { t } = useTranslation();
+
+  return (
+    <Fragment>
+      <QRCodeScanner
+        cameraStyle={styles.qrCameraStyle}
+        containerStyle={styles.qrContainerStyle}
+        customMarker={<CameraGuide />}
+        fadeIn
+        onRead={e => onRead(e.data)}
+        showMarker
+      />
+      <View style={styles.infoContainer}>
+        {/* @ts-ignore */}
+        <Text style={styles.txtTitle}>{t('scanning')}</Text>
+        {/* @ts-ignore */}
+        <Text style={styles.txtDesc}>{t('scanDesc')}</Text>
+      </View>
+    </Fragment>
+  );
+};
 
 export default Scanner;

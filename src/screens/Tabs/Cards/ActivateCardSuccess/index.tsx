@@ -8,6 +8,7 @@ import {
 } from 'native-base';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
@@ -16,6 +17,7 @@ import styles from './styles';
 
 const ActivateCardSuccess = () => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
 
   const onContinue = () => {
     navigation.navigate('Tabs', {
@@ -35,10 +37,10 @@ const ActivateCardSuccess = () => {
             style={styles.img}
             resizeMode="contain"
           />
-          <Text style={styles.txtTitle}>{R.strings.cardAdded}</Text>
-          <Text style={styles.txtDesc}>{R.strings.cardAddedDesc}</Text>
+          <Text style={styles.txtTitle}>{t('cardAdded')}</Text>
+          <Text style={styles.txtDesc}>{t('cardAddedDesc')}</Text>
           <Button primary style={styles.btnAction} onPress={onContinue}>
-            <Text>{R.strings.continue}</Text>
+            <Text>{t('continue')}</Text>
           </Button>
         </Content>
       </Container>

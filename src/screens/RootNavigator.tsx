@@ -23,7 +23,7 @@ import CardScanner from './Tabs/Cards/CardScanner';
 import ActivateCard from './Tabs/Cards/ActivateCard';
 import ActivateCardSuccess from './Tabs/Cards/ActivateCardSuccess';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<any>();
 
 const RootNavigator = () => {
   //   const { state, dispatch } = useAuth();

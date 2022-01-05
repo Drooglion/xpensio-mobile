@@ -241,13 +241,17 @@ const strings = {
   requestVirtualCard: 'Request Card',
   requestPlasticCard: 'Request Card',
   requestCard: 'Request Card',
+  resendCode: 'Resend code',
+  resendCodeDesc: "Didn't receive the code?",
   retake: 'Retake',
   rules: 'Rules',
 
   save: 'Save',
 
+  scanDesc: 'Place the QR code inside the center guide.',
   scannerTitle: 'Scan to pair card',
   scannerDesc: 'Find and scan the QR code inside your card kit.',
+  scanning: 'Scanning...',
 
   search: 'Search',
   searchPayment: 'Search payment',

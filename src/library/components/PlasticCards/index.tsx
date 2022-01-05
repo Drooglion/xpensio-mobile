@@ -2,12 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Keyboard } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { Button, Text, View } from 'native-base';
+import { useTranslation } from 'react-i18next';
 
-import R from 'res/R';
 import StringUtils from 'library/utils/StringUtils';
 
 import OtpConfirmModal from 'library/components/OtpConfirmModal';
-import ActionButton from './ActionButton';
 import PlasticCard from './PlasticCard';
 
 import styles from './styles';
@@ -32,6 +31,7 @@ const PlasticCards = ({
   company,
   onOpenScanner,
 }: PlasticCardProps) => {
+  const { t } = useTranslation();
   const carouselRef = useRef<any>(null);
   const [cards, setCards] = useState<PlasticCardType[]>([]);
   const [selectedCard, setSelectedCard] = useState<number>();
@@ -138,7 +138,7 @@ const PlasticCards = ({
           status={item.status}
         />
         <View style={styles.actionContainer}>
-          <Text style={styles.txtDesc}>{R.strings.plasticCardDesc}</Text>
+          <Text style={styles.txtDesc}>{t('plasticCardDesc')}</Text>
           <View style={styles.btnGroup}>
             {cardStatus === 'FOR_ACTIVATION' ? (
               <Button
@@ -146,7 +146,7 @@ const PlasticCards = ({
                 info
                 style={styles.btn}
                 onPress={() => scanCard(item)}>
-                <Text style={styles.btnTxtAction}>{R.strings.activate}</Text>
+                <Text style={styles.btnTxtAction}>{t('activate')}</Text>
               </Button>
             ) : (
               <Button
@@ -156,7 +156,7 @@ const PlasticCards = ({
                 style={styles.btn}
                 onPress={() => confirmLockUnlock()}>
                 <Text style={styles.btnTxtAction}>
-                  {R.strings[locked ? 'unlock' : 'lock']}
+                  {locked ? t('unlock') : t('lock')}
                 </Text>
               </Button>
             )}

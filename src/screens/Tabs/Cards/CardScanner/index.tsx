@@ -9,6 +9,7 @@ import {
   Text,
 } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
@@ -18,6 +19,7 @@ import Scanner from 'library/components/Scanner';
 
 const CardScanner = ({}) => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setTimeout(() => {
@@ -45,9 +47,7 @@ const CardScanner = ({}) => {
         <Footer style={R.sharedStyles.footer}>
           <FooterTab style={R.sharedStyles.footerTab}>
             <Button danger style={R.sharedStyles.btnFooter} onPress={onCancel}>
-              <Text style={R.sharedStyles.txtBtnFooter}>
-                {R.strings.cancel}
-              </Text>
+              <Text style={R.sharedStyles.txtBtnFooter}>{t('cancel')}</Text>
             </Button>
           </FooterTab>
         </Footer>

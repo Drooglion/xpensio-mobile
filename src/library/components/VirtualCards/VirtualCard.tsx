@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import styles from './VirtualCardStyles';
 import R from 'res/R';
@@ -25,6 +26,8 @@ const VirtualCard = ({
   status,
   company,
 }: VirtualCardProps) => {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.cardContainer}>
       <Image
@@ -56,7 +59,7 @@ const VirtualCard = ({
         )}
         <View style={styles.cardHolder}>
           <Text allowFontScaling={false} style={styles.cardTxtMute}>
-            {R.strings.name}
+            {t('name')}
           </Text>
           <View style={styles.cardName}>
             <Text allowFontScaling={false} style={styles.cardTxtName}>
@@ -69,7 +72,7 @@ const VirtualCard = ({
         </View>
         <View style={styles.cardExp}>
           <Text allowFontScaling={false} style={styles.cardTxtMute}>
-            {R.strings.validThru}
+            {t('validThru')}
           </Text>
           <Text allowFontScaling={false} style={styles.cardTxtExp}>
             {`${expiryMonth.padStart(2, '0')}/${expiryYear}`}

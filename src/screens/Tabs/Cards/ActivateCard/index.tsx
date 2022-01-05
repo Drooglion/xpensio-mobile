@@ -10,6 +10,7 @@ import {
 } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
@@ -17,10 +18,11 @@ import R from 'res/R';
 import styles from './styles';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import Header from 'library/components/Header';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ActivateCard = () => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
+
   const [mobileNumber, setMobileNumber] = useState<string>();
   const [code, setCode] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -49,7 +51,7 @@ const ActivateCard = () => {
     <StyleProvider style={getTheme(theme)}>
       <Container style={R.sharedStyles.container}>
         <Header
-          title={R.strings.activatePhysicalCard}
+          title={t('activatePhysicalCard')}
           hasBack
           onBackPress={onCancel}
         />
@@ -57,9 +59,7 @@ const ActivateCard = () => {
           contentContainerStyle={styles.infoContainer}
           scrollEnabled={false}>
           <View style={styles.texts}>
-            <Text style={styles.txtDesc}>
-              {R.strings.activatePhysicalCardDesc}
-            </Text>
+            <Text style={styles.txtDesc}>{t('activatePhysicalCardDesc')}</Text>
             <Text style={styles.txtMobile}>{mobileNumber}</Text>
           </View>
           <Item style={styles.itemInput}>
@@ -78,10 +78,10 @@ const ActivateCard = () => {
             />
           </Item>
           <View style={styles.resendContainer}>
-            <Text style={styles.txtResendDesc}>Didn't receive the code?</Text>
-            <TouchableOpacity onPress={resendCode}>
-              <Text style={styles.txtResend}>Resend code</Text>
-            </TouchableOpacity>
+            <Text style={styles.txtResendDesc}>{t('resendCodeDesc')}</Text>
+            <Button transparent onPress={resendCode}>
+              <Text style={styles.txtResend}>{t('resendCode')}</Text>
+            </Button>
           </View>
           <Button
             disabled={isSubmitting}
@@ -90,7 +90,7 @@ const ActivateCard = () => {
             {isSubmitting ? (
               <LoadingIndicator color={R.colors.white} size={5} />
             ) : (
-              <Text>{R.strings.activate}</Text>
+              <Text>{t('activate')}</Text>
             )}
           </Button>
         </Content>

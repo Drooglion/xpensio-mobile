@@ -6,6 +6,8 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button, Item, Input, Text, View } from 'native-base';
+import { useTranslation } from 'react-i18next';
+
 import R from 'res/R';
 
 import LoadingIndicator from 'library/components/LoadingIndicator';
@@ -27,6 +29,7 @@ const OtpConfirmModal = ({
   onCancel,
 }: OtpConfirmModalProps) => {
   const activationCodeSize = 6;
+  const { t } = useTranslation();
   const [pin, setPin] = useState<string>();
   const [codeSent, setCodeSent] = useState(false);
 
@@ -71,8 +74,8 @@ const OtpConfirmModal = ({
   return (
     <Modal isVisible={visible} onDismiss={onCancel} useNativeDriver>
       <View style={styles.modal}>
-        <Text style={styles.title}>{R.strings.confirmAction}</Text>
-        <Text style={styles.desc}>{R.strings.confirmActionDesc}</Text>
+        <Text style={styles.title}>{t('confirmAction')}</Text>
+        <Text style={styles.desc}>{t('confirmActionDesc')}</Text>
         <KeyboardAvoidingView enabled behavior="padding" style={styles.body}>
           <Item floatingLabel error={!!error}>
             <Input
@@ -82,7 +85,7 @@ const OtpConfirmModal = ({
               maxLength={activationCodeSize}
               onChangeText={onPinChanged}
               onSubmitEditing={onSubmitPin}
-              placeholder={R.strings.pinPlaceholder}
+              placeholder={t('pinPlaceholder')}
               returnKeyType="done"
               value={pin}
               style={styles.input}
@@ -97,7 +100,7 @@ const OtpConfirmModal = ({
             onPress={request}
             style={styles.actionBtn}>
             <Text style={styles.actionBtnText}>
-              {codeSent ? R.strings.codeOtpSent : R.strings.getCode}
+              {codeSent ? t('codeOtpSent') : t('getCode')}
             </Text>
           </Button>
           <View style={styles.row}>
@@ -106,7 +109,7 @@ const OtpConfirmModal = ({
                 transparent
                 onPress={close}
                 style={{ marginRight: R.metrics.baseMargin }}>
-                <Text style={styles.noTxt}>{R.strings.cancel}</Text>
+                <Text style={styles.noTxt}>{t('cancel')}</Text>
               </Button>
             )}
             <Button
@@ -117,7 +120,7 @@ const OtpConfirmModal = ({
                 <LoadingIndicator size={5} />
               ) : (
                 <Text uppercase style={styles.txtConfirm}>
-                  {R.strings.ok}
+                  {t('ok')}
                 </Text>
               )}
             </Button>

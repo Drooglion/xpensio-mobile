@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Keyboard } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-
-import { Button, Content, Item, Text, View } from 'native-base';
+import { Button, Item, Text, View } from 'native-base';
+import { useTranslation } from 'react-i18next';
 
 import StringUtils from 'library/utils/StringUtils';
 import BottomSheet from 'library/components/BottomSheet';
 import EmptyVirtualCard from 'library/components/EmptyVirtualCard';
-import R from 'res/R';
 import VirtualCard from './VirtualCard';
 
 import styles from './styles';
@@ -35,6 +34,7 @@ const VirtualCards = ({
   hasPendingRequest,
   onRequestCard,
 }: VirtualCardsProps) => {
+  const { t } = useTranslation();
   const carouselRef = useRef<any>(null);
 
   const [cards, setCards] = useState<CarouselItemType[]>([]);
@@ -44,7 +44,7 @@ const VirtualCards = ({
   const [confirmPinVisible, setConfirmPinVisible] = useState<boolean>(false);
   const [cardDetailsVisible, setCardDetailsVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
+  //const [error, setError] = useState<string>();
   const [pinError, setPinError] = useState<string>();
 
   useEffect(() => {
@@ -246,7 +246,7 @@ const VirtualCards = ({
               company={company ? company.companyName : ''}
             />
             <View style={styles.actionContainer}>
-              <Text style={styles.txtDesc}>{R.strings.virtualCardDesc}</Text>
+              <Text style={styles.txtDesc}>{t('virtualCardDesc')}</Text>
               <View style={styles.btnGroup}>
                 {StringUtils.cardStatus(card.status) === 'UNLOCKED' ? (
                   <Button
@@ -254,9 +254,7 @@ const VirtualCards = ({
                     info
                     style={styles.btn}
                     onPress={() => confirmViewDetails()}>
-                    <Text style={styles.btnTxtAction}>
-                      {R.strings.viewDetails}
-                    </Text>
+                    <Text style={styles.btnTxtAction}>{t('viewDetails')}</Text>
                   </Button>
                 ) : null}
 
@@ -275,15 +273,11 @@ const VirtualCards = ({
                   style={styles.btn}
                   onPress={() => confirmLockUnlock()}>
                   <Text style={styles.btnTxtAction}>
-                    {
-                      R.strings[
-                        selectedCard !== undefined
-                          ? StringUtils.cardStatus(card.status) === 'LOCKED'
-                            ? 'unlock'
-                            : 'lock'
-                          : 'unlock'
-                      ]
-                    }
+                    {selectedCard !== undefined
+                      ? StringUtils.cardStatus(card.status) === 'LOCKED'
+                        ? t('unlock')
+                        : t('lock')
+                      : t('unlock')}
                   </Text>
                 </Button>
               </View>
@@ -324,11 +318,11 @@ const VirtualCards = ({
         <View style={styles.bottomSheetContent}>
           <View style={styles.bottomSheetDetails}>
             <Text uppercase style={styles.virtualCardViewWarning}>
-              {R.strings.virtualCardViewWarning}
+              {t('virtualCardViewWarning')}
             </Text>
             <Item style={styles.item}>
               <Text uppercase style={styles.label}>
-                {R.strings.company}
+                {t('company')}
               </Text>
               <Text style={styles.text}>
                 {company ? company.companyName : ''}
@@ -336,7 +330,7 @@ const VirtualCards = ({
             </Item>
             <Item style={styles.item}>
               <Text uppercase style={styles.label}>
-                {R.strings.address}
+                {t('address')}
               </Text>
               <Text style={styles.text}>
                 {company ? company.companyAddress : ''}
@@ -344,13 +338,13 @@ const VirtualCards = ({
             </Item>
             <Item style={styles.item}>
               <Text uppercase style={styles.label}>
-                {R.strings.cvv}
+                {t('cvv')}
               </Text>
               <Text style={styles.text}>{cvv || ''}</Text>
             </Item>
           </View>
           <Button primary onPress={onCloseBottomSheet} style={styles.btn}>
-            <Text style={styles.btnTxtAction}>{R.strings.close}</Text>
+            <Text style={styles.btnTxtAction}>{t('close')}</Text>
           </Button>
         </View>
       </BottomSheet>
