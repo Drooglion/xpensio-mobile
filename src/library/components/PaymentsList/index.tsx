@@ -22,8 +22,25 @@ import DateUtils from 'library/utils/DateUtils';
 import NumberUtils from 'library/utils/NumberUtils';
 import R from 'res/R';
 import styles from './styles';
+import strings from 'res/strings';
 
-const PaymentsList = () => {
+type Props = {
+  onItemClick: () => void;
+};
+
+type Item = {
+  image: string | null;
+  merchantName?: string;
+  status?: string;
+  attachments?: string[];
+  createdAt: string;
+  createdAtFormatted: string;
+  amountTotal: number;
+  originalAmount: number;
+  originalCurrency: string;
+};
+
+const PaymentsList = ({ onItemClick }: Props) => {
   const { t } = useTranslation();
   // componentDidMount() {
   //   const { data } = this.props;
@@ -50,16 +67,17 @@ const PaymentsList = () => {
   //   this.setState({ data: sectionedData });
   // };
 
-  // renderOriginalAmount = (originalAmount, originalCurrency) => {
-  //   const {
-  //     companyConfiguration: { currency },
-  //   } = this.props;
-  //   return isNil(originalAmount) || originalCurrency === currency ? null : (
-  //     <Text allowFontScaling={false} style={styles.originalAmount}>
-  //       {`${NumberUtils.formatCurrency(originalCurrency, originalAmount)}/`}
-  //     </Text>
-  //   );
-  // };
+  const renderOriginalAmount = (
+    originalAmount: number,
+    originalCurrency: string,
+  ) => {
+    const currency = 'NZD';
+    return isNil(originalAmount) || originalCurrency === currency ? null : (
+      <Text allowFontScaling={false} style={styles.originalAmount}>
+        {`${NumberUtils.formatCurrency(originalCurrency, originalAmount)}/`}
+      </Text>
+    );
+  };
 
   // renderItem = item => {
   //   if (item.isSection) {
@@ -75,86 +93,86 @@ const PaymentsList = () => {
     </ListItem>
   );
 
-  // renderItemRow = (item, key) => {
-  //   const {
-  //     onItemClick,
-  //     companyConfiguration: { currency },
-  //     refetch,
-  //   } = this.props;
-  //   const avatar = !isNil(item.image) ? (
-  //     <Thumbnail small source={{ uri: item.image }} />
-  //   ) : (
-  //     <UserAvatar
-  //       size={R.metrics.avatar}
-  //       name={StringUtils.getInitials(item.merchantName)}
-  //       fontDecrease="2"
-  //       colors={R.colors.avatars}
-  //     />
-  //   );
+  const renderItemRow = (item: any, key: any) => {
+    // const {
+    //   onItemClick,
+    //   companyConfiguration: { currency },
+    //   refetch,
+    // } = this.props;
+    const currency = 'NZD';
 
-  //   let status = null;
-  //   if (StringUtils.paymentStatus(item.status) !== 'APPROVED') {
-  //     status = (
-  //       <Text style={styles.missing}>
-  //         {capitalize(StringUtils.paymentStatus(item.status))}
-  //       </Text>
-  //     );
-  //   } else if (isEmpty(item.attachments)) {
-  //     status = <Text style={styles.missing}>{R.strings.missingReceipt}</Text>;
-  //   }
+    const avatar = !isNil(item.image) ? (
+      <Thumbnail small source={{ uri: item.image }} />
+    ) : (
+      <UserAvatar
+        size={R.metrics.avatar}
+        name={StringUtils.getInitials(item.merchantName)}
+        fontDecrease="2"
+        colors={R.colors.avatars}
+      />
+    );
 
-  //   return (
-  //     <ListItem
-  //       noBorder
-  //       noIndent
-  //       avatar
-  //       button
-  //       onPress={() => onItemClick(item, refetch)}
-  //       style={styles.listItem}
-  //       key={key}>
-  //       <Left style={styles.itemLeft}>{avatar}</Left>
-  //       <Body style={styles.itemBody}>
-  //         <Text
-  //           allowFontScaling={false}
-  //           numberOfLines={1}
-  //           ellipsizeMode="tail"
-  //           style={styles.name}>
-  //           {item.merchantName}
-  //         </Text>
-  //         <Text style={styles.time}>
-  //           {DateUtils.formatTime(item.createdAt)}
-  //         </Text>
-  //         {status}
-  //         {/*
-  //           (item.comment !== null) ? (
-  //             <View style={styles.commentBox}>
-  //               <Text style={styles.comment}>{item.comment.description}</Text>
-  //               <Text style={styles.team}>{item.comment.author}</Text>
-  //             </View>
-  //           ) : null
-  //           */}
-  //       </Body>
-  //       <Right style={styles.itemRight}>
-  //         {this.renderOriginalAmount(
-  //           item.originalAmount,
-  //           item.originalCurrency,
-  //         )}
-  //         <Text allowFontScaling={false} style={styles.amount}>
-  //           {NumberUtils.formatCurrency(currency, item.amountTotal)}
-  //         </Text>
-  //       </Right>
-  //     </ListItem>
-  //   );
-  // };
+    let status = null;
+    if (StringUtils.paymentStatus(item.status) !== 'APPROVED') {
+      status = (
+        <Text style={styles.missing}>
+          {capitalize(StringUtils.paymentStatus(item.status))}
+        </Text>
+      );
+    } else if (isEmpty(item.attachments)) {
+      status = <Text style={styles.missing}>{R.strings.missingReceipt}</Text>;
+    }
 
-  const renderItemRows = (items: any) => {
-    const itemSectionTitle = items[0]?.createdAtFormatted;
+    return (
+      <ListItem
+        noBorder
+        noIndent
+        avatar
+        button
+        onPress={() => onItemClick(item)}
+        style={styles.listItem}
+        key={key}>
+        <Left style={styles.itemLeft}>{avatar}</Left>
+        <Body style={styles.itemBody}>
+          <Text
+            allowFontScaling={false}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.name}>
+            {item.merchantName}
+          </Text>
+          <Text style={styles.time}>
+            {DateUtils.formatTime(item.createdAt)}
+          </Text>
+          {status}
+          {/*
+            (item.comment !== null) ? (
+              <View style={styles.commentBox}>
+                <Text style={styles.comment}>{item.comment.description}</Text>
+                <Text style={styles.team}>{item.comment.author}</Text>
+              </View>
+            ) : null
+            */}
+        </Body>
+        <Right style={styles.itemRight}>
+          {renderOriginalAmount(item.originalAmount, item.originalCurrency)}
+          <Text allowFontScaling={false} style={styles.amount}>
+            {NumberUtils.formatCurrency(currency, item.amountTotal)}
+          </Text>
+        </Right>
+      </ListItem>
+    );
+  };
+
+  const renderItemRows = ({ item }: { item: Item[] }) => {
+    console.log({ item });
+    const itemSectionTitle = item[0]?.createdAtFormatted;
     const itemSection = renderSection(itemSectionTitle);
-    // const itemRows = items.map((item, i) => renderItemRow(item, i));
+
     return (
       <Fragment>
         {itemSection}
-        {/* {itemRows} */}
+        {item.map((item, i) => renderItemRow(item, i))}
       </Fragment>
     );
   };
@@ -164,9 +182,54 @@ const PaymentsList = () => {
   };
 
   const data = [
-    { title: 'mo', createdAtFormatted: 'July 4, 2021' },
-    { title: 'mo', createdAtFormatted: 'July 4, 2021' },
-    { title: 'mo', createdAtFormatted: 'July 4, 2021' },
+    [
+      {
+        image: 'https://picsum.photos/200',
+        merchantName: 'Merchant Name',
+        status: 'APPROVED',
+        attachments: [],
+        createdAt: '2014-06-26 04:07:31',
+        createdAtFormatted: 'July 24, 2022',
+        amountTotal: 2500,
+        originalAmount: 2500,
+        originalCurrency: 'NZD',
+      },
+      {
+        image: 'https://picsum.photos/200',
+        merchantName: 'Merchant Name',
+        status: 'APPROVED',
+        attachments: [],
+        createdAt: '2014-06-26 04:07:31',
+        createdAtFormatted: 'July 24, 2022',
+        amountTotal: 2500,
+        originalAmount: 2500,
+        originalCurrency: 'NZD',
+      },
+      {
+        image: 'https://picsum.photos/200',
+        merchantName: 'Merchant Name',
+        status: 'APPROVED',
+        attachments: [],
+        createdAt: '2014-06-26 04:07:31',
+        createdAtFormatted: 'July 24, 2022',
+        amountTotal: 2500,
+        originalAmount: 2500,
+        originalCurrency: 'NZD',
+      },
+    ],
+    [
+      {
+        image: 'https://picsum.photos/200',
+        merchantName: 'Merchant Name',
+        status: 'APPROVED',
+        attachments: [],
+        createdAt: '2014-06-26 04:07:31',
+        createdAtFormatted: 'July 24, 2022',
+        amountTotal: 2500,
+        originalAmount: 2500,
+        originalCurrency: 'NZD',
+      },
+    ],
   ];
 
   return (
@@ -185,7 +248,7 @@ const PaymentsList = () => {
         onEndReached={() => {}}
         onEndReachedThreshold={1}
         ListFooterComponent={renderFooter}
-        renderItem={({ item }) => renderItemRows(item)}
+        renderItem={renderItemRows}
       />
     </View>
   );
