@@ -21,7 +21,7 @@ import DateUtils from 'library/utils/DateUtils';
 import NumberUtils from 'library/utils/NumberUtils';
 import R from 'res/R';
 import styles from './styles';
-import { Payment } from 'types/Payment';
+import Payment from 'models/Payment';
 
 type Props = {
   onItemClick: () => void;

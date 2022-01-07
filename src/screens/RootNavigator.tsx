@@ -19,10 +19,6 @@ import ForgotPassword from './Auth/ForgotPassword';
 // import Settings from './Settings/Navigator';
 // import Media from './Media/Navigator';
 
-import CardScanner from './Tabs/Cards/CardScanner';
-import ActivateCard from './Tabs/Cards/ActivateCard';
-import ActivateCardSuccess from './Tabs/Cards/ActivateCardSuccess';
-
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
@@ -84,13 +80,7 @@ const RootNavigator = () => {
           </>
         )} */}
         {/* <Stack.Screen name="Media" component={Media} />
-        <Stack.Screen name="Settings" component={Settings} /> */}
-        <Stack.Screen name="Scanner" component={CardScanner} />
-        <Stack.Screen name="ActivateCard" component={ActivateCard} />
-        <Stack.Screen
-          name="ActivateCardSuccess"
-          component={ActivateCardSuccess}
-        />
+      options={{ headerShown: false }}  <Stack.Screen name="Settings" component={Settings} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

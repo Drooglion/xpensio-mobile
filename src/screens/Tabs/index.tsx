@@ -11,7 +11,7 @@ import { Thumbnail } from 'native-base';
 
 import PaymentsStack from './Payments/Navigator';
 import RequestsStack from './Requests';
-import CardsStack from './Cards';
+import CardsStack from './Cards/Navigator';
 import R from 'res/R';
 
 const Tab = createBottomTabNavigator();

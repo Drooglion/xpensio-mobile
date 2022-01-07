@@ -15,18 +15,20 @@ import MyPayments from 'library/components/MyPayments';
 // import TeamPayments from 'library/components/TeamPayments';
 import TabSelection from 'library/components/TabSelection';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
 
 // import StringUtils from 'library/utils/StringUtils';
-//
-// import STORE_QUERIES from 'library/store/queries';
 
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
 
-const Payments = ({ navigation }) => {
+const Payments = () => {
   let tab: {} | undefined | null = {};
+
   const { t } = useTranslation();
+  const navigation = useNavigation();
+
   const actAsAdmin: boolean = false;
   const tabs = !actAsAdmin ? [t('myPayments')] : [t('myPayments'), t('team')];
 

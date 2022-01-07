@@ -1,10 +1,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-console */
 
-import React, { Fragment, useState } from 'react';
-import PropTypes from 'prop-types';
-import { compose, graphql } from 'react-apollo';
-import { withNavigation } from 'react-navigation';
+import React, { FC, useState } from 'react';
 import { Dimensions, TouchableOpacity, View } from 'react-native';
 import { Text, Icon } from 'native-base';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
@@ -25,14 +22,19 @@ const { width, height } = Dimensions.get('window');
 const imageHeight = height * 0.3;
 const stickyHeaderHeight = 60;
 
-const ParallaxContent = ({
-  children,
-  navigation,
-  onBackPress,
-  deleteAttachment,
-  payment,
-  refetch,
-}) => {
+import { Payment } from 'types/Payment';
+import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+
+type Props = {
+  payment: Payment;
+  onBackPress: () => void;
+};
+
+const ParallaxContent: FC<Props> = ({ payment, onBackPress }) => {
+  const navigation = useNavigation();
+  const { t } = useTranslation();
+
   const { attachments } = payment;
 
   const [activeDotIndex, setActiveDotIndex] = useState(0);
@@ -50,25 +52,25 @@ const ParallaxContent = ({
         callback: () => {
           refetch();
           navigation.pop();
-        }
-      }
+        },
+      },
     });
   };
 
   const deleteReceipt = async () => {
-    try {
-      const variables = {
-        paymentId: payment.id,
-        attachmentId: attachments[viewImageIndex].id,
-      };
-      await deleteAttachment({ variables });
-      refetch();
-      setViewImage(false);
-      setViewImageIndex(0);
-    } catch (error) {
-      console.log('error: ', { error });
-      HelperUtils.bugsnag.notify(error);
-    }
+    // try {
+    //   const variables = {
+    //     paymentId: payment.id,
+    //     attachmentId: attachments[viewImageIndex].id,
+    //   };
+    //   await deleteAttachment({ variables });
+    //   refetch();
+    //   setViewImage(false);
+    //   setViewImageIndex(0);
+    // } catch (error) {
+    //   console.log('error: ', { error });
+    //   HelperUtils.bugsnag.notify(error);
+    // }
   };
 
   const noAttachments = () => (
@@ -88,8 +90,7 @@ const ParallaxContent = ({
           onPress={() => {
             setViewImageIndex(index);
             setViewImage(true);
-          }}
-        >
+          }}>
           <ImageLoad
             style={[styles.img, { height: imageHeight }]}
             placeholderStyle={{ width: '100%', height: imageHeight }}
@@ -100,18 +101,16 @@ const ParallaxContent = ({
         </TouchableOpacity>
       );
     } else {
-      component = index < 5 ? (
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={addMoreReceipt}
-          style={[styles.addReceipt, { height: imageHeight }]}
-        >
-          <Icon style={styles.cameraIcon} name="camera" />
-          <Text style={styles.addReceiptTxt}>
-            {R.strings.addReceipt}
-          </Text>
-        </TouchableOpacity>
-      ) : null;
+      component =
+        index < 5 ? (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={addMoreReceipt}
+            style={[styles.addReceipt, { height: imageHeight }]}>
+            <Icon style={styles.cameraIcon} name="camera" />
+            <Text style={styles.addReceiptTxt}>{R.strings.addReceipt}</Text>
+          </TouchableOpacity>
+        ) : null;
     }
     return component;
   };
@@ -133,16 +132,20 @@ const ParallaxContent = ({
         activeDotIndex={activeDotIndex}
         dotColor={R.colors.primary}
         inactiveDotColor={R.colors.white}
-        dotStyle={{ height: 10, width: 10, borderRadius: 10, }}
+        dotStyle={{ height: 10, width: 10, borderRadius: 10 }}
         inactiveDotScale={0.6}
         inactiveDotOpacity={0.8}
-        containerStyle={{ position: 'absolute', bottom: -10, alignSelf: 'center' }}
+        containerStyle={{
+          position: 'absolute',
+          bottom: -10,
+          alignSelf: 'center',
+        }}
       />
     </View>
   );
 
   return (
-    <Fragment>
+    <>
       <ReceiptsView
         visible={viewImage}
         imageUrls={attachments.filter(attachment => has(attachment, 'url'))}
@@ -155,9 +158,9 @@ const ParallaxContent = ({
         onChangeHeaderVisibility={setHeaderVisible}
         parallaxHeaderHeight={imageHeight}
         backgroundColor={R.colors.white}
-        renderForeground={() => (
+        renderForeground={() =>
           isEmpty(attachments) ? noAttachments() : hasAttachments()
-        )}
+        }
         renderFixedHeader={() => (
           <Header
             hasBack
@@ -167,25 +170,11 @@ const ParallaxContent = ({
             onBackPress={onBackPress}
           />
         )}
-        stickyHeaderHeight={stickyHeaderHeight}
-      >
-        { children }
+        stickyHeaderHeight={stickyHeaderHeight}>
+        {children}
       </ParallaxScrollView>
-    </Fragment>
+    </>
   );
 };
 
-ParallaxContent.propTypes = {
-  children: PropTypes.node.isRequired,
-  onBackPress: PropTypes.func,
-  payment: PropTypes.instanceOf(Object).isRequired,
-};
-
-ParallaxContent.defaultProps = {
-  onBackPress: () => {}
-};
-
-export default compose(
-  withNavigation,
-  graphql(PAYMENTS.DELETE_ATTACHMENT, { name: 'deleteAttachment' })
-)(ParallaxContent);
+export default ParallaxContent;
