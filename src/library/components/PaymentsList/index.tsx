@@ -11,36 +11,24 @@ import {
   Thumbnail,
   View,
 } from 'native-base';
-// import UserAvatar from 'react-native-user-avatar';
+import UserAvatar from 'react-native-user-avatar';
 import { capitalize, chain, isNil, isEmpty } from 'lodash';
 
 import EmptyList from 'library/components/EmptyList';
-// import STORE_QUERIES from 'library/store/queries';
 
 import StringUtils from 'library/utils/StringUtils';
 import DateUtils from 'library/utils/DateUtils';
 import NumberUtils from 'library/utils/NumberUtils';
 import R from 'res/R';
 import styles from './styles';
-import strings from 'res/strings';
+import { Payment } from 'types/Payment';
 
 type Props = {
   onItemClick: () => void;
+  data: Payment[][];
 };
 
-type Item = {
-  image: string | null;
-  merchantName?: string;
-  status?: string;
-  attachments?: string[];
-  createdAt: string;
-  createdAtFormatted: string;
-  amountTotal: number;
-  originalAmount: number;
-  originalCurrency: string;
-};
-
-const PaymentsList = ({ onItemClick }: Props) => {
+const PaymentsList = ({ onItemClick, data }: Props) => {
   const { t } = useTranslation();
   // componentDidMount() {
   //   const { data } = this.props;
@@ -94,11 +82,6 @@ const PaymentsList = ({ onItemClick }: Props) => {
   );
 
   const renderItemRow = (item: any, key: any) => {
-    // const {
-    //   onItemClick,
-    //   companyConfiguration: { currency },
-    //   refetch,
-    // } = this.props;
     const currency = 'NZD';
 
     const avatar = !isNil(item.image) ? (
@@ -180,57 +163,6 @@ const PaymentsList = ({ onItemClick }: Props) => {
   const renderFooter = () => {
     return false ? <ActivityIndicator color={R.colors.primary} /> : null;
   };
-
-  const data = [
-    [
-      {
-        image: 'https://picsum.photos/200',
-        merchantName: 'Merchant Name',
-        status: 'APPROVED',
-        attachments: [],
-        createdAt: '2014-06-26 04:07:31',
-        createdAtFormatted: 'July 24, 2022',
-        amountTotal: 2500,
-        originalAmount: 2500,
-        originalCurrency: 'NZD',
-      },
-      {
-        image: 'https://picsum.photos/200',
-        merchantName: 'Merchant Name',
-        status: 'APPROVED',
-        attachments: [],
-        createdAt: '2014-06-26 04:07:31',
-        createdAtFormatted: 'July 24, 2022',
-        amountTotal: 2500,
-        originalAmount: 2500,
-        originalCurrency: 'NZD',
-      },
-      {
-        image: 'https://picsum.photos/200',
-        merchantName: 'Merchant Name',
-        status: 'APPROVED',
-        attachments: [],
-        createdAt: '2014-06-26 04:07:31',
-        createdAtFormatted: 'July 24, 2022',
-        amountTotal: 2500,
-        originalAmount: 2500,
-        originalCurrency: 'NZD',
-      },
-    ],
-    [
-      {
-        image: 'https://picsum.photos/200',
-        merchantName: 'Merchant Name',
-        status: 'APPROVED',
-        attachments: [],
-        createdAt: '2014-06-26 04:07:31',
-        createdAtFormatted: 'July 24, 2022',
-        amountTotal: 2500,
-        originalAmount: 2500,
-        originalCurrency: 'NZD',
-      },
-    ],
-  ];
 
   return (
     <View style={styles.container}>
