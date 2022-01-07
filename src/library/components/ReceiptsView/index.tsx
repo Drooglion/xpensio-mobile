@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-native';
@@ -21,8 +20,7 @@ const ImageView = ({
     onRequestClose={onClose}
     onDismiss={onClose}
     transparent
-    visible={visible}
-  >
+    visible={visible}>
     <ImageViewer
       index={index}
       enableSwipeDown
@@ -34,14 +32,8 @@ const ImageView = ({
       failImageSource={R.images.noimage}
       loadingRender={() => <LoadingIndicator color={R.colors.white} />}
     />
-    <Button
-      style={styles.btnDelete}
-      onPress={onDelete}
-      block
-    >
-      <Text style={styles.txtDelete}>
-        {R.strings.deleteReceipt}
-      </Text>
+    <Button style={styles.btnDelete} onPress={onDelete} block>
+      <Text style={styles.txtDelete}>{R.strings.deleteReceipt}</Text>
     </Button>
   </Modal>
 );

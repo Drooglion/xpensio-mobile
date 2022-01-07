@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 
 import React, { FC, useState } from 'react';
+import { withNavigation } from 'react-navigation';
 import { Dimensions, TouchableOpacity, View } from 'react-native';
 import { Text, Icon } from 'native-base';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
@@ -29,9 +30,10 @@ import { useTranslation } from 'react-i18next';
 type Props = {
   payment: Payment;
   onBackPress: () => void;
+  refetch?: () => void;
 };
 
-const ParallaxContent: FC<Props> = ({ payment, onBackPress }) => {
+const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
   const navigation = useNavigation();
   const { t } = useTranslation();
 

@@ -1,6 +1,10 @@
 import { chunk } from 'lodash';
 
 const getInitials = text => {
+  if (!text) {
+    return null;
+  }
+
   let initials = text.match(/\b\w/g) || [];
   initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
 

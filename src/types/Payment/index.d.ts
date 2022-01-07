@@ -4,7 +4,7 @@ export interface IPayment {
   image: string | null;
   merchantName: string;
   status: PaymentStatus;
-  attachments: string[];
+  attachments: Record<string, string>[];
   createdAt: string;
   createdAtFormatted: string;
   amountTotal: number;

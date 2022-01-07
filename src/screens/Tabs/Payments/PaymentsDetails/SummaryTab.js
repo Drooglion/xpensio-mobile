@@ -1,14 +1,7 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable no-console */
+/* Needs more info about payment attributes*/
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  Label,
-  Item,
-  Text,
-  View,
-} from 'native-base';
+import { Button, Label, Item, Text, View } from 'native-base';
 import { isNil, capitalize } from 'lodash';
 
 import BorderedBadge from 'library/components/BorderedBadge';
@@ -34,7 +27,7 @@ const SummaryTab = ({
         <Label style={styles.label}>{R.strings.originalAmount}</Label>
         <View style={styles.row}>
           <Text style={styles.text}>
-            { NumberUtils.formatCurrency(originalCurrency, originalAmount) }
+            {NumberUtils.formatCurrency(originalCurrency, originalAmount)}
           </Text>
           <Text style={styles.currency}>{originalCurrency.toUpperCase()}</Text>
         </View>
@@ -44,23 +37,20 @@ const SummaryTab = ({
 
   const footerActionButton = () => {
     const paymentStatus = StringUtils.paymentStatus(payment.status);
-    const showAction = actAsAdmin
-      && paymentTab === 'teamPayment'
-      && paymentStatus === 'APPROVED';
+    const showAction =
+      actAsAdmin &&
+      paymentTab === 'teamPayment' &&
+      paymentStatus === 'APPROVED';
     return showAction ? (
       <Button
         block
         danger
         style={{ marginVertical: R.metrics.section }}
-        onPress={() => toggleDenyModal(true)}
-      >
-        <Text upperCase={false}>
-          {R.strings.disapprovePayment}
-        </Text>
+        onPress={() => toggleDenyModal(true)}>
+        <Text upperCase={false}>{R.strings.disapprovePayment}</Text>
       </Button>
     ) : null;
   };
-
 
   return (
     <View style={styles.tabContent}>
@@ -77,20 +67,19 @@ const SummaryTab = ({
       </View> */}
       <Item style={styles.item}>
         <Label style={styles.label}>{R.strings.paidWith}</Label>
-        <Text style={styles.text}>{`${payment.card.brand} - ${payment.card.last4 || ''}`}</Text>
+        <Text style={styles.text}>{`${payment.card.brand} - ${
+          payment.card.last4 || ''
+        }`}</Text>
       </Item>
-      {
-        payment.status !== 1
-          ? (
-            <Item style={styles.item}>
-              <Label style={styles.label}>{R.strings.status}</Label>
-              <BorderedBadge
-                text={capitalize(StringUtils.paymentStatus(payment.status))}
-              />
-            </Item>
-          ) : null
-      }
-      { renderOriginalAmount() }
+      {payment.status !== 1 ? (
+        <Item style={styles.item}>
+          <Label style={styles.label}>{R.strings.status}</Label>
+          <BorderedBadge
+            text={capitalize(StringUtils.paymentStatus(payment.status))}
+          />
+        </Item>
+      ) : null}
+      {renderOriginalAmount()}
       <Item style={styles.item}>
         <Label style={styles.label}>{R.strings.totalAmount}</Label>
         <View style={styles.row}>
@@ -106,17 +95,21 @@ const SummaryTab = ({
       </Item>
       <Item style={styles.item}>
         <Label style={styles.label}>{R.strings.category}</Label>
-        <Text style={styles.text}>{request && request.category ? request.category.name : ''}</Text>
+        <Text style={styles.text}>
+          {request && request.category ? request.category.name : ''}
+        </Text>
       </Item>
       <Item style={styles.item}>
         <Label style={styles.label}>{R.strings.project}</Label>
-        <Text style={styles.text}>{request && request.project ? request.project.name : ''}</Text>
+        <Text style={styles.text}>
+          {request && request.project ? request.project.name : ''}
+        </Text>
       </Item>
       <Item style={styles.item}>
         <Label style={styles.label}>{R.strings.notes}</Label>
         <Text style={styles.text}>{payment.note}</Text>
       </Item>
-      { footerActionButton() }
+      {footerActionButton()}
     </View>
   );
 };

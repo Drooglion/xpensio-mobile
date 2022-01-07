@@ -1,11 +1,13 @@
 import { IPayment } from 'types/Payment';
+import StringUtils from 'library/utils/StringUtils';
+import NumberUtils from 'library/utils/NumberUtils';
 
 class Payment {
   readonly id: string;
   readonly image: string | null;
   readonly merchantName: string;
   readonly status: PaymentStatus;
-  readonly attachments: string[];
+  readonly attachments: Record<string, string>[];
   readonly createdAt: string;
   readonly createdAtFormatted: string;
   readonly amountTotal: number;
@@ -47,6 +49,17 @@ class Payment {
   isDisapproved() {
     return PaymentStatus[this.status] === 'DISAPPROVED';
   }
+
+  merchantNameInitials() {
+    return StringUtils.getInitials(this.merchantName);
+  }
+
+  amountFormatted(currency?: string) {
+    return NumberUtils.formatCurrency(
+      currency || this.originalCurrency,
+      this.amountTotal,
+    );
+  }
 }
 
 export enum PaymentStatus {
@@ -55,4 +68,4 @@ export enum PaymentStatus {
   'DENIED' = -1,
 }
 
-export default Payment
+export default Payment;

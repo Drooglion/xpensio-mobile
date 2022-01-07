@@ -24,7 +24,7 @@ import styles from './styles';
 import Payment from 'models/Payment';
 
 type Props = {
-  onItemClick: () => void;
+  onItemClick: (payment: Payment) => void;
   data: Payment[][];
 };
 
