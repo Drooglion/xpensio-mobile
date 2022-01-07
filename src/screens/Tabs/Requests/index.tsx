@@ -149,10 +149,121 @@ const DATA = [
   },
 ];
 
+const DATATEAM = [
+  {
+    id: 1,
+    label: 'NEEDS APPROVAL (3)',
+    data: [
+      {
+        id: 123,
+        title: 'Apple Macbook Pro',
+        description: 'New Laptop',
+        amount: 89990,
+        status: 'PENDING',
+        comment: {
+          author: 'Dominick Danao',
+          content: 'Will be used by new product designer',
+          image:
+            'https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
+        },
+      },
+      {
+        id: 456,
+        title: 'Linkedin Pre-Registration',
+        description: 'Us Expansion',
+        amount: 12000,
+        status: 'PENDING',
+        comment: {
+          author: 'Mitch Belen',
+          content: 'For promoting in LinkedIn to connect with companies',
+          image: '',
+        },
+      },
+      {
+        id: 789,
+        title: 'Github License',
+        description: 'Repository',
+        amount: 15000,
+        status: 'PENDING',
+        comment: {
+          author: 'Jerick Coneras',
+          content: 'Collaboration tool for engineers',
+          image:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+        },
+      },
+    ],
+  },
+  {
+    id: 2,
+    label: 'PAST REQUESTS',
+    data: [
+      {
+        id: 1234,
+        title: 'AWS Subscription',
+        description: 'New campaign',
+        amount: 7500,
+        status: 'DENIED',
+        comment: {
+          author: 'Jerick Coneras',
+          image:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+        },
+      },
+      {
+        id: 4567,
+        title: 'Postman License',
+        description: 'Us Expansion',
+        amount: 3000,
+        status: 'APPROVED',
+        comment: {
+          author: 'Jon Danao',
+          image: '',
+        },
+      },
+      {
+        id: 8901,
+        title: 'PandaDoc',
+        description: 'Brand Video',
+        amount: 8000,
+        status: 'APPROVED',
+        comment: {
+          author: 'Dominick Danao',
+          image:
+            'https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
+        },
+      },
+      {
+        id: 6543,
+        title: 'Mailchimp',
+        description: 'Brand Video',
+        amount: 3000,
+        status: 'CANCELLED',
+        comment: {
+          author: 'Mitch Belen',
+          image: '',
+        },
+      },
+      {
+        id: 6348,
+        title: 'Digital Ocean',
+        description: 'Brand Video',
+        amount: 2000,
+        status: 'APPROVED',
+        comment: {
+          author: 'Jerick Coneras',
+          image:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+        },
+      },
+    ],
+  },
+];
+
 const Requests = ({ navigation }) => {
   const { t } = useTranslation();
   let tab: {} | undefined | null = {};
-  const actAsAdmin: boolean = false;
+  const actAsAdmin: boolean = true;
   const tabs = !actAsAdmin ? [t('myRequests')] : [t('myRequests'), t('team')];
 
   const onItemClick = item => {};
@@ -166,6 +277,7 @@ const Requests = ({ navigation }) => {
   };
 
   const [dataFiltered, setDataFiltered] = useState(DATA);
+  const [dataFilteredTeam, setDataFilteredTeam] = useState(DATATEAM);
 
   const searchData = text => {
     const result = DATA.map(item => ({
@@ -178,8 +290,8 @@ const Requests = ({ navigation }) => {
     setDataFiltered(result);
   };
 
-  const RenderItem = ({ item }) => (
-    <TouchableOpacity>
+  const RenderItemMyRequest = ({ item }) => (
+    <TouchableOpacity onPress={() => navigation.navigate('Request Details')}>
       <View style={styles.itemContainer}>
         <View style={styles.requestContentContainer}>
           <View style={styles.iconContainer}>
@@ -224,10 +336,79 @@ const Requests = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  const generateColor = () => {
+    const randomColor = Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, '0');
+    return `#${randomColor}`;
+  };
+
+  const RenderItemTeamRequest = ({ item }) => (
+    <TouchableOpacity onPress={() => navigation.navigate('Request Details')}>
+      <View style={styles.itemContainer}>
+        <View style={styles.requestContentContainer}>
+          <View
+            style={[
+              styles.avatarContainer,
+              { backgroundColor: generateColor() },
+            ]}>
+            {item.comment.image ? (
+              <Image
+                style={styles.avatar}
+                source={{
+                  uri: item.comment.image,
+                }}
+              />
+            ) : (
+              <Text style={styles.noAvatar}>
+                {item.comment.author.charAt(0).toUpperCase()}
+              </Text>
+            )}
+          </View>
+          <View style={styles.requestTitleContainer}>
+            <Text numberOfLines={1} style={styles.txtTitleTeam}>
+              {item.title}
+            </Text>
+            <Text style={styles.txtDescription}>{item.comment.author}</Text>
+          </View>
+        </View>
+        <View style={styles.requestAmountContainer}>
+          <Text style={styles.txtAmount}>
+            {'\u20B1'}
+            {currencyFomart(item.amount)}
+          </Text>
+          <Text
+            style={[
+              styles.txtStatus,
+              {
+                color:
+                  item.status === 'PENDING'
+                    ? R.colors.pending
+                    : item.status === 'APPROVED'
+                    ? R.colors.success
+                    : item.status === 'DENIED' || item.status === 'CANCELLED'
+                    ? R.colors.error
+                    : '',
+              },
+            ]}>
+            {item.status}
+          </Text>
+        </View>
+      </View>
+      {item.comment.content ? (
+        <View style={styles.noteContainer}>
+          <Text style={styles.noteDetails}>"{item.comment.content}"</Text>
+        </View>
+      ) : (
+        <Text></Text>
+      )}
+    </TouchableOpacity>
+  );
+
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container>
-        <Header title={t('requests')} />
+        <Header title={t('requests')} count={3} />
         <View style={{ flexGrow: 1 }}>
           <TabSelection tabs={tabs} onChange={goToTabPage} />
           <Tabs
@@ -261,7 +442,7 @@ const Requests = ({ navigation }) => {
                 stickySectionHeadersEnabled={false}
                 sections={dataFiltered}
                 keyExtractor={(item, index) => item + index}
-                renderItem={RenderItem}
+                renderItem={RenderItemMyRequest}
                 renderSectionHeader={({ section: { date } }) => (
                   <Text style={styles.txtHeader}>{date}</Text>
                 )}
@@ -270,6 +451,32 @@ const Requests = ({ navigation }) => {
             {!actAsAdmin ? null : (
               <Tab heading={<TabHeading />}>
                 {/* <TeamRequests onItemClick={onItemClick} /> */}
+                <View style={styles.listContainer}>
+                  <View style={styles.searchContainer}>
+                    <TextInput
+                      style={styles.searchInput}
+                      placeholder="Search"
+                      onChangeText={text => searchData(text)}
+                    />
+                    <Icon name="search-sharp" style={styles.searchIcon} />
+                  </View>
+                  <TouchableOpacity>
+                    <Image
+                      source={require('../../../res/images/ic_filter.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <SectionList
+                  showsVerticalScrollIndicator={false}
+                  style={styles.sectionContainer}
+                  stickySectionHeadersEnabled={false}
+                  sections={DATATEAM}
+                  keyExtractor={(item, index) => item + index}
+                  renderItem={RenderItemTeamRequest}
+                  renderSectionHeader={({ section: { label } }) => (
+                    <Text style={styles.txtHeader}>{label}</Text>
+                  )}
+                />
               </Tab>
             )}
           </Tabs>

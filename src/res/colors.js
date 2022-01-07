@@ -15,6 +15,10 @@ const colors = {
   divider: '#DDDDE6',
   border: '#DDDDE6',
 
+  titleDetails: '#bcbcbc',
+  titleCategory: '#ec457c',
+  approve: '#76d572',
+
   active: '#8B5FF6',
   inactive: '#B9B9B9',
 
@@ -27,14 +31,7 @@ const colors = {
   searchText: '#000000',
 
   googleRed: '#EA4336',
-  avatars: [
-    '#fd8181',
-    '#fde689',
-    '#beff95',
-    '#a88eea',
-    '#f59177',
-    '#8181fd',
-  ],
+  avatars: ['#fd8181', '#fde689', '#beff95', '#a88eea', '#f59177', '#8181fd'],
 
   bottomTabBgColor: '#FCFCFC',
   bottomTabBorderColor: '#F0F0F8',

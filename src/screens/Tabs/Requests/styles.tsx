@@ -144,4 +144,38 @@ export default StyleSheet.create({
     justifyContent: 'center',
     paddingBottom: 10,
   },
+  noteContainer: {
+    left: 58,
+    marginBottom: 25,
+    width: '70%',
+  },
+  noteDetails: {
+    fontStyle: 'italic',
+    fontSize: 10,
+    paddingBottom: 10,
+    color: R.colors.subhead,
+  },
+  txtTitleTeam: {
+    fontSize: 18,
+    width: 150,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    resizeMode: 'cover',
+    borderRadius: 60 / 2,
+  },
+  avatarContainer: {
+    backgroundColor: 'orange',
+    borderRadius: 9999,
+    width: 40,
+    height: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noAvatar: {
+    color: 'white',
+    fontSize: 20,
+  },
 });

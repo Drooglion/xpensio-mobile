@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import PropTypes from 'prop-types';
 import {
   Header as NBHeader,
@@ -51,20 +51,41 @@ class Header extends Component {
   };
 
   renderBody() {
-    const { content, title, hasBack, inverseFontColor, subtitle } = this.props;
+    const { content, title, hasBack, inverseFontColor, subtitle, count } =
+      this.props;
     const titleStyle = inverseFontColor
       ? StyleSheet.flatten([
           styles[hasBack ? 'backTitle' : 'title'],
           { color: R.colors.white },
+          { paddingBottom: 35 },
         ])
       : styles[hasBack ? 'backTitle' : 'title'];
+
     return (
       content || (
         <Body style={styles.body}>
-          <Title allowFontScaling={false} style={titleStyle}>
+          {/* <Title allowFontScaling={false} style={titleStyle}>
             {title}
-          </Title>
-          {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+          </Title> */}
+          {count ? (
+            <View style={styles.withCountContainer}>
+              <Title allowFontScaling={false} style={titleStyle}>
+                {title}
+              </Title>
+              <View style={styles.counterContainer}>
+                <Text style={styles.textCounter}>{count}</Text>
+              </View>
+            </View>
+          ) : (
+            <Title allowFontScaling={false} style={titleStyle}>
+              {title}
+            </Title>
+          )}
+          {subtitle ? (
+            <Text style={inverseFontColor ? styles.requested : styles.subtitle}>
+              {subtitle}
+            </Text>
+          ) : null}
         </Body>
       )
     );
