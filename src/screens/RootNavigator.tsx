@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 /* Navigators */
 import Tabs from './Tabs';
+import RequestDetails from './Tabs/Requests/RequestDetails';
 // import { useAuth } from '@lib/contexts/authContext';
 
 /* Auth */
@@ -57,6 +58,7 @@ const RootNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Tabs">{() => <Tabs />}</Stack.Screen>
+        <Stack.Screen name="Request Details" component={RequestDetails} />
         {/* {state.isLoading ? (
           <Stack.Screen name="Splash" component={Splash} />
         ) : state.isSIgnout || !isNil(state.token) ? (
