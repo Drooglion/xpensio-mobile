@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 /* Navigators */
 import Tabs from './Tabs';
+import RequestDetails from './Tabs/Requests/RequestDetails';
 // import { useAuth } from '@lib/contexts/authContext';
 
 /* Auth */
@@ -19,11 +20,7 @@ import ForgotPassword from './Auth/ForgotPassword';
 // import Settings from './Settings/Navigator';
 // import Media from './Media/Navigator';
 
-import CardScanner from './Tabs/Cards/CardScanner';
-import ActivateCard from './Tabs/Cards/ActivateCard';
-import ActivateCardSuccess from './Tabs/Cards/ActivateCardSuccess';
-
-const Stack = createStackNavigator<any>();
+const Stack = createStackNavigator();
 
 const RootNavigator = () => {
   //   const { state, dispatch } = useAuth();
@@ -61,6 +58,7 @@ const RootNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Tabs">{() => <Tabs />}</Stack.Screen>
+        <Stack.Screen name="Request Details" component={RequestDetails} />
         {/* {state.isLoading ? (
           <Stack.Screen name="Splash" component={Splash} />
         ) : state.isSIgnout || !isNil(state.token) ? (
@@ -84,13 +82,7 @@ const RootNavigator = () => {
           </>
         )} */}
         {/* <Stack.Screen name="Media" component={Media} />
-        <Stack.Screen name="Settings" component={Settings} /> */}
-        <Stack.Screen name="Scanner" component={CardScanner} />
-        <Stack.Screen name="ActivateCard" component={ActivateCard} />
-        <Stack.Screen
-          name="ActivateCardSuccess"
-          component={ActivateCardSuccess}
-        />
+      options={{ headerShown: false }}  <Stack.Screen name="Settings" component={Settings} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

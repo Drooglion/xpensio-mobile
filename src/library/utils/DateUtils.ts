@@ -1,12 +1,12 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 
-moment.locale('en');
-const NOW = moment();
+dayjs.locale('en');
+const NOW = dayjs();
 const TODAY = NOW.clone().startOf('day');
 const YESTERDAY = NOW.clone().subtract(1, 'days').startOf('day');
 
 const getSectionHeaderDate = (value: string | number | Date) => {
-  const date = moment(value);
+  const date = dayjs(value);
   let headerDate = date.format('dddd, D MMM YYYY');
 
   if (date.isSame(TODAY, 'd')) {
@@ -19,12 +19,12 @@ const getSectionHeaderDate = (value: string | number | Date) => {
 };
 
 const formatExpiry = (value: string | number | Date) => {
-  const date = moment(value);
+  const date = dayjs(value);
   return date.format('MMMM D, YYYY');
 };
 
 const formatReceiptDate = (value: string | number | Date) => {
-  const date = moment(value);
+  const date = dayjs(value);
   return date.format('MMMM D, YYYY h:mm A');
 };
 
@@ -32,19 +32,19 @@ const formatNotificationDate = (date: string | number, type: number) => {
   let formattedDate = date;
   switch (type) {
     case 1:
-      formattedDate = moment(date).format('dddd, MMM. DD');
+      formattedDate = dayjs(date).format('dddd, MMM. DD');
       break;
     case 2:
       // Mon, 15 October 2018, 10:00 AM
-      formattedDate = moment(date).format('dddd, DD MMMM YYYY, hh:mm A');
+      formattedDate = dayjs(date).format('dddd, DD MMMM YYYY, hh:mm A');
       break;
     case 3:
       // October 18, 2018
-      formattedDate = moment(date).format(' MMMM DD, YYYY ');
+      formattedDate = dayjs(date).format(' MMMM DD, YYYY ');
       break;
 
     case 4:
-      formattedDate = moment(date).fromNow();
+      // formattedDate = dayjs(date).fromNow();
       break;
 
     default:
@@ -54,7 +54,7 @@ const formatNotificationDate = (date: string | number, type: number) => {
 };
 
 const formatTime = (value: string | number | Date) =>
-  moment(value).format('h:mm A');
+  dayjs(value).format('h:mm A');
 
 export default {
   getSectionHeaderDate,

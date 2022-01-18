@@ -35,6 +35,12 @@ export default StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
   },
+  requested: {
+    ...R.theme.subhead,
+    fontSize: 12,
+    lineHeight: 15,
+    color: R.colors.white,
+  },
   backTitle: {
     ...R.theme.title2,
     flex: 1,
@@ -55,5 +61,24 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(52, 52, 52, 0.7)',
+  },
+  withCountContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
+  counterContainer: {
+    backgroundColor: 'orange',
+    borderRadius: 9999,
+    width: 30,
+    height: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textCounter: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });

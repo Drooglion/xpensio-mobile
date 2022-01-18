@@ -9,6 +9,8 @@ module.exports = {
           'native-base-theme': './native-base-theme',
           res: './src/res',
           library: './src/library',
+          models: './src/models',
+          types: './src/types',
         },
       },
     ],

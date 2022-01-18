@@ -9,9 +9,9 @@ import { Thumbnail } from 'native-base';
 // import SearchShowsStack from '@screens/MainTab/SearchShows/Navigator';
 // import { Platform } from 'react-native';
 
-import PaymentsStack from './Payments';
+import PaymentsStack from './Payments/Navigator';
 import RequestsStack from './Requests';
-import CardsStack from './Cards';
+import CardsStack from './Cards/Navigator';
 import NotificationsStack from './Notifications';
 import R from 'res/R';
 

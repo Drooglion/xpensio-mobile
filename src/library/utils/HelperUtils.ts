@@ -1,6 +1,6 @@
 import R from 'res/R';
-import { Client } from 'bugsnag-react-native';
-import Config from 'react-native-config';
+// import { Client } from 'bugsnag-react-native';
+// import Config from 'react-native-config';
 
 const statusColor = (status: number) => {
   switch (status) {
@@ -32,7 +32,8 @@ const verificationStatusColor = (status: string) => {
   }
 };
 
-const bugsnag = new Client(Config.BUGSNAG_API);
+// const bugsnag = new Client(Config.BUGSNAG_API);
+const bugsnag = undefined;
 
 export default {
   statusColor,

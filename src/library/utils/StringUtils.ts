@@ -1,6 +1,10 @@
 import { chunk } from 'lodash';
 
 const getInitials = text => {
+  if (!text) {
+    return null;
+  }
+
   let initials = text.match(/\b\w/g) || [];
   initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
 
@@ -94,6 +98,11 @@ const cardRequestStatus = status => {
   return list[status];
 };
 
+/* This method is now obsolete.
+The class Payment have instance methods that tells us about the payment status better.
+e.g. payment.isApproved  with return true or false
+See more at src/models/Payment.ts
+*/
 const paymentStatus = status => {
   const list = {
     0: 'DISAPPROVED',

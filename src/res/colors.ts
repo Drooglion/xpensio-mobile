@@ -15,6 +15,10 @@ const colors = {
   divider: '#DDDDE6',
   border: '#DDDDE6',
 
+  titleDetails: '#bcbcbc',
+  titleCategory: '#ec457c',
+  approve: '#76d572',
+
   active: '#8B5FF6',
   inactive: '#B9B9B9',
 

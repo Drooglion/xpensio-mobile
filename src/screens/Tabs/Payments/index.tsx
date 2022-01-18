@@ -11,22 +11,24 @@ import { isEmpty } from 'lodash';
 
 import Header from 'library/components/Header';
 // import BalanceHeader from 'library/components/BalanceHeader';
-// import MyPayments from 'library/components/MyPayments';
+import MyPayments from 'library/components/MyPayments';
 // import TeamPayments from 'library/components/TeamPayments';
 import TabSelection from 'library/components/TabSelection';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
 
 // import StringUtils from 'library/utils/StringUtils';
-//
-// import STORE_QUERIES from 'library/store/queries';
 
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
 
-const Payments = ({ navigation }) => {
+const Payments = () => {
   let tab: {} | undefined | null = {};
+
   const { t } = useTranslation();
+  const navigation = useNavigation();
+
   const actAsAdmin: boolean = false;
   const tabs = !actAsAdmin ? [t('myPayments')] : [t('myPayments'), t('team')];
 
@@ -47,41 +49,38 @@ const Payments = ({ navigation }) => {
   //     navigation.navigate('PaymentsDetails', params);
   //   };
 
-  //   const handleOnPress = ({ item, refetch, paymentTab }) => {
-  //     if (StringUtils.paymentStatus(item.status) === 'APPROVED') {
-  //       if (isEmpty(item.attachments)) {
-  //         navigation.navigate({
-  //           routeName: 'Camera',
-  //           key: 'Camera',
-  //           params: {
-  //             item,
-  //             refetch,
-  //             callback: () => snapCallback({ item, refetch }),
-  //           },
-  //         });
-  //       } else {
-  //         navigation.navigate({
-  //           routeName: 'PaymentsDetails',
-  //           key: 'PaymentsDetails',
-  //           params: {
-  //             id: item.id,
-  //             refetch,
-  //             paymentTab,
-  //           },
-  //         });
-  //       }
-  //     } else {
-  //       navigation.navigate({
-  //         routeName: 'PaymentsDetails',
-  //         key: 'PaymentsDetails',
-  //         params: {
-  //           id: item.id,
-  //           refetch,
-  //           paymentTab,
-  //         },
-  //       });
-  //     }
-  //   };
+  const handleOnPress = ({ item, paymentTab }) => {
+    if (StringUtils.paymentStatus(item.status) === 'APPROVED') {
+      if (isEmpty(item.attachments)) {
+        navigation.navigate({
+          routeName: 'Camera',
+          key: 'Camera',
+          params: {
+            item,
+            callback: () => snapCallback({ item }),
+          },
+        });
+      } else {
+        navigation.navigate({
+          routeName: 'PaymentsDetails',
+          key: 'PaymentsDetails',
+          params: {
+            id: item.id,
+            paymentTab,
+          },
+        });
+      }
+    } else {
+      navigation.navigate({
+        routeName: 'PaymentsDetails',
+        key: 'PaymentsDetails',
+        params: {
+          id: item.id,
+          paymentTab,
+        },
+      });
+    }
+  };
 
   return (
     <StyleProvider style={getTheme(theme)}>
@@ -99,13 +98,13 @@ const Payments = ({ navigation }) => {
             tabContainerStyle={styles.tabContainer}
             tabBarUnderlineStyle={styles.tabUnderline}>
             <Tab heading={<TabHeading />}>
-              {/* <MyPayments onItemClick={onMyPaymentPress} /> */}
+              <MyPayments />
             </Tab>
-            {!actAsAdmin ? null : (
+            {/* {!actAsAdmin ? null : (
               <Tab heading={<TabHeading />}>
-                {/* <TeamPayments onItemClick={onTeamPaymentPress} /> */}
+                <TeamPayments onItemClick={onTeamPaymentPress} />
               </Tab>
-            )}
+            )} */}
           </Tabs>
         </View>
       </Container>
