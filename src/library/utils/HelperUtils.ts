@@ -1,9 +1,8 @@
-/* eslint-disable import/no-unresolved */
 import R from 'res/R';
 import { Client } from 'bugsnag-react-native';
 import Config from 'react-native-config';
 
-const statusColor = (status) => {
+const statusColor = (status: number) => {
   switch (status) {
     case 0:
       return R.colors.pending;
@@ -19,7 +18,7 @@ const statusColor = (status) => {
   }
 };
 
-const verificationStatusColor = (status) => {
+const verificationStatusColor = (status: string) => {
   switch (status) {
     case 'pending':
     case 'in_progress':

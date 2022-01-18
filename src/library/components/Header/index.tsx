@@ -10,10 +10,11 @@ import {
   Icon as NBIcon,
   Text,
 } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import R from 'res/R';
-// import ProfileImgLink from 'library/components/ProfileImgLink';
+import ProfileImgLink from 'library/components/ProfileImgLink';
 import styles from './styles';
 
 export interface AppHeaderProps {
@@ -30,6 +31,7 @@ export interface AppHeaderProps {
   iosBarStyle?: string;
   androidStatusBarColor?: string;
   content?: React.ReactNode | null;
+  user?: any;
 }
 
 const defaultProps: AppHeaderProps = {
@@ -46,6 +48,7 @@ const defaultProps: AppHeaderProps = {
   iosBarStyle: 'dark-content',
   androidStatusBarColor: R.colors.white,
   content: null,
+  user: null,
 };
 
 const Header = ({
@@ -62,7 +65,9 @@ const Header = ({
   iosBarStyle,
   androidStatusBarColor,
   content,
+  user,
 }: AppHeaderProps) => {
+  const navigator = useNavigation();
   const headerStyle = backgroundColor
     ? StyleSheet.flatten([styles.header, { backgroundColor }])
     : styles.header;
@@ -72,11 +77,10 @@ const Header = ({
     if (linkToProfile) {
       rightComponent = (
         <Right style={styles.right}>
-          <TouchableOpacity onPress={() => {}} activeOpacity={1}>
-            {/* <ProfileImgLink
-              uri={photoUrl}
-              size={40}
-            /> */}
+          <TouchableOpacity
+            onPress={() => navigator.navigate('Profile' as never)}
+            activeOpacity={1}>
+            <ProfileImgLink user={user} size={40} />
           </TouchableOpacity>
         </Right>
       );
@@ -122,6 +126,7 @@ const Header = ({
       noLeft
       transparent={transparent}
       style={headerStyle}
+      //@ts-ignore
       iosBarStyle={iosBarStyle}
       androidStatusBarColor={androidStatusBarColor}>
       {hasBack ? (

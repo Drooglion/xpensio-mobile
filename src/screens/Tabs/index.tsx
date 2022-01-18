@@ -12,6 +12,7 @@ import { Thumbnail } from 'native-base';
 import PaymentsStack from './Payments';
 import RequestsStack from './Requests';
 import CardsStack from './Cards';
+import NotificationsStack from './Notifications';
 import R from 'res/R';
 
 const Tab = createBottomTabNavigator();
@@ -57,7 +58,7 @@ export default function Tabs() {
       <Tab.Screen name="Payments" component={PaymentsStack} />
       <Tab.Screen name="Requests" component={RequestsStack} />
       <Tab.Screen name="My cards" component={CardsStack} />
-      <Tab.Screen name="Notifications" component={RequestsStack} />
+      <Tab.Screen name="Notifications" component={NotificationsStack} />
     </Tab.Navigator>
   );
 }

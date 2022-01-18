@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import { StyleSheet } from 'react-native';
 import R from 'res/R';
 
@@ -33,9 +32,11 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     paddingRight: 0,
   },
+  //@ts-ignore
   message: {
     ...R.theme.body,
   },
+  //@ts-ignore
   amount: {
     ...R.theme.body,
     fontSize: 17,
@@ -45,8 +46,9 @@ export default StyleSheet.create({
     fontSize: 11,
     lineHeight: 16,
     color: R.colors.subhead,
-    marginTop: 3
+    marginTop: 3,
   },
+  //@ts-ignore
   status: {
     ...R.fonts.AirbnbCerealAppMedium,
     fontSize: 9,
@@ -73,6 +75,7 @@ export default StyleSheet.create({
     color: R.colors.body2,
     marginBottom: R.metrics.baseMargin,
   },
+  //@ts-ignore
   team: {
     ...R.fonts.AvenirBookOblique,
     fontSize: 8,

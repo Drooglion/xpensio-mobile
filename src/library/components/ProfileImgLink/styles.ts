@@ -1,11 +1,10 @@
-/* eslint-disable import/no-unresolved */
 import { StyleSheet } from 'react-native';
 import R from 'res/R';
 
 export default StyleSheet.create({
   profileImg: {
     paddingTop: R.metrics.baseMargin,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   imgContainer: {
     alignItems: 'center',
@@ -14,9 +13,11 @@ export default StyleSheet.create({
     shadowColor: R.colors.subhead,
     shadowOffset: { height: 0, width: 0 },
   },
+  img: {},
+  //@ts-ignore
   imgBtnTxt: {
     ...R.fonts.AirbnbCerealAppMedium,
     color: R.colors.secondary,
-    fontSize: 12
+    fontSize: 12,
   },
 });

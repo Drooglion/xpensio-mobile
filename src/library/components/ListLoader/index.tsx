@@ -1,11 +1,9 @@
-/* eslint-disable import/no-unresolved */
-
 import React from 'react';
 import { View } from 'react-native';
 import ContentLoader from 'library/components/ContentLoader';
 import { Circle, Rect } from 'react-native-svg';
 
-const ListLoader = ({ style }) => (
+const ListLoader = ({ style }: { style?: any }) => (
   <View style={style}>
     <ContentLoader height={70} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
       <Rect x="90" y="20" rx="4" ry="4" width="250" height="8" />
