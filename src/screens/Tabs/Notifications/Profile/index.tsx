@@ -8,7 +8,7 @@ import User from 'models/User';
 import Header from 'library/components/Header';
 import Loading from 'library/components/Loading';
 import SignOutModal from 'library/components/SignOutModal';
-// import ProfileAnalytics from 'library/components/ProfileAnalytics';
+import ProfileAnalytics from 'library/components/ProfileAnalytics';
 import ProfileImg from 'library/components/ProfileImg';
 import ProfileList from 'library/components/ProfileList';
 
@@ -80,7 +80,7 @@ const Profile = () => {
               </Text>
             </View>
           </View>
-          {/* <ProfileAnalytics /> */}
+          <ProfileAnalytics amount={17} receiptsMatch={90} />
           {/* <ProfileList
             navigation={navigation}
             signOut={() => setShowSignOut(true)}

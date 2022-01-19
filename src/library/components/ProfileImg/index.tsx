@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-// import ImagePicker from 'react-native-image-picker';
+import { launchCamera } from 'react-native-image-picker';
 import User from 'models/User';
 import * as Animatable from 'react-native-animatable';
 import { Button, Text, Icon, View } from 'native-base';
@@ -32,7 +32,12 @@ const ProfileImg = ({
   };
 
   const uploadProfilePhoto = () => {
-    // const options = { cameraType: 'front' };
+    const options = {
+      cameraType: 'front',
+      mediaType: 'photo',
+      saveToPhotos: true,
+    };
+    launchCamera(options, () => {});
     // ImagePicker.showImagePicker(options, (response) => {
     //   if (response.didCancel) {
     //     console.log('User cancelled image picker');
@@ -95,7 +100,7 @@ const ProfileImg = ({
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.upload}
-            onPress={this.uploadProfilePhoto}>
+            onPress={uploadProfilePhoto}>
             <Icon style={styles.uploadIcon} name="camera" />
           </TouchableOpacity>
         ) : null}
