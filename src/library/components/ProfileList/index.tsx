@@ -12,12 +12,14 @@ import { useTranslation } from 'react-i18next';
 import styles from './styles';
 import { useNavigation } from '@react-navigation/native';
 import User from 'models/User';
+import Team from 'models/Team';
 
 type Props = {
   profile: User;
+  teams: Team[];
   signOut: () => void;
 };
-const ProfileList = ({ profile, signOut }: Props) => {
+const ProfileList = ({ profile, teams, signOut }: Props) => {
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -54,11 +56,7 @@ const ProfileList = ({ profile, signOut }: Props) => {
   };
 
   const editProfile = () => {
-    navigation.navigate({
-      key: 'EditProfile',
-      routeName: 'EditProfile',
-      params: profile,
-    });
+    navigation.navigate('EditProfile', { profile });
   };
 
   const onItemClick = team => {
@@ -69,64 +67,36 @@ const ProfileList = ({ profile, signOut }: Props) => {
     });
   };
 
-  // const memberCountLabel = memberCount =>
-  //   memberCount !== 0
-  //     ? `${memberCount} member${memberCount > 1 ? 's' : ''}`
-  //     : null;
-
-  // const renderTeams = () => (
-  //   <List style={styles.list}>
-  //     <ListItem itemDivider style={styles.listItemDivider}>
-  //       <Text uppercase style={styles.listItemDividerTxt}>
-  //         {t('teams')}
-  //       </Text>
-  //     </ListItem>
-  //     <Query query={TEAMS.TEAM_LIST} fetchPolicy="network-only">
-  //       {({ error, loading, data }) => {
-  //         if (error) {
-  //           HelperUtils.bugsnag.notify(error);
-  //           return null;
-  //         }
-  //         if (loading) {
-  //           return (
-  //             <ListItem style={[styles.listItem, styles.center]}>
-  //               <LoadingIndicator size={5} />
-  //             </ListItem>
-  //           );
-  //         }
-
-  //         const {
-  //           teams: { payload },
-  //         } = data;
-
-  //         return payload.map(team => (
-  //           <ListItem
-  //             style={styles.listItem}
-  //             onPress={() => onItemClick(team)}
-  //             key={team.id}>
-  //             <Text style={styles.listTxt}>{team.name}</Text>
-  //             <View style={styles.listItemRight}>
-  //               <Text
-  //                 style={[
-  //                   styles.listItemRightTxt,
-  //                   {
-  //                     marginRight: 20,
-  //                   },
-  //                 ]}>
-  //                 {memberCountLabel(team.memberCount)}
-  //               </Text>
-  //               <Icon name="arrow-forward" style={styles.icon} />
-  //             </View>
-  //           </ListItem>
-  //         ));
-  //       }}
-  //     </Query>
-  //   </List>
-  // );
-
   return (
     <>
-      {/* {renderTeams()} */}
+      <List style={styles.list}>
+        <ListItem itemDivider style={styles.listItemDivider}>
+          <Text uppercase style={styles.listItemDividerTxt}>
+            {t('teams')}
+          </Text>
+        </ListItem>
+        {teams.map(team => (
+          <ListItem
+            style={styles.listItem}
+            onPress={() => onItemClick(team)}
+            disabled
+            key={team.id}>
+            <Text style={styles.listTxt}>{team.name}</Text>
+            <View style={styles.listItemRight}>
+              <Text
+                style={[
+                  styles.listItemRightTxt,
+                  {
+                    marginRight: 20,
+                  },
+                ]}>
+                {t('memberCount', { count: team.memberCount })}
+              </Text>
+              <Icon name="arrow-forward" style={styles.icon} />
+            </View>
+          </ListItem>
+        ))}
+      </List>
       <List style={styles.list}>
         <ListItem itemDivider style={styles.listItemDivider}>
           <Text uppercase style={styles.listItemDividerTxt}>
@@ -143,11 +113,14 @@ const ProfileList = ({ profile, signOut }: Props) => {
             {profile.formattedVerificationStatus()}
           </Text>
         </ListItem>
-        <ListItem style={styles.listItem} onPress={editProfile}>
+        <ListItem style={styles.listItem} onPress={editProfile} disabled>
           <Text style={styles.listTxt}>{t('personalDetails')}</Text>
           <Icon name="arrow-forward" style={styles.icon} />
         </ListItem>
-        <ListItem style={styles.listItem} onPress={identificationSettings}>
+        <ListItem
+          style={styles.listItem}
+          onPress={identificationSettings}
+          disabled>
           <Text style={styles.listTxt}>{t('identification')}</Text>
           <Icon name="arrow-forward" style={styles.icon} />
         </ListItem>
@@ -172,7 +145,11 @@ const ProfileList = ({ profile, signOut }: Props) => {
               <Switch value={false} disabled />
             </ListItem>
           */}
-        <ListItem style={styles.listItem} button onPress={changePassword}>
+        <ListItem
+          style={styles.listItem}
+          button
+          onPress={changePassword}
+          disabled>
           <Text style={styles.listTxt}>{t('changePassword')}</Text>
           <Icon name="arrow-forward" style={styles.icon} />
         </ListItem>

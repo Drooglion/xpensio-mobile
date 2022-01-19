@@ -90,7 +90,7 @@ const PaymentsList = ({ onItemClick, data }: Props) => {
       <UserAvatar
         size={R.metrics.avatar}
         name={StringUtils.getInitials(item.merchantName)}
-        fontDecrease="2"
+        fontDecrease={2}
         colors={R.colors.avatars}
       />
     );

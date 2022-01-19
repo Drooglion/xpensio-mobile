@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 
 import User from 'models/User';
+import Team from 'models/Team';
 import Header from 'library/components/Header';
 import Loading from 'library/components/Loading';
 import SignOutModal from 'library/components/SignOutModal';
@@ -29,6 +30,19 @@ const profile: User = new User({
   photoUrl: null,
   status: 'verified',
 });
+
+const team1: Team = new Team({
+  id: '12312312',
+  name: 'Executives',
+  memberCount: 3,
+});
+const team2: Team = new Team({
+  id: '12312311',
+  name: 'Marketing',
+  memberCount: 10,
+});
+
+const teams: Team[] = [team1, team2];
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -85,7 +99,11 @@ const Profile = () => {
             </View>
           </View>
           <ProfileAnalytics amount={17} receiptsMatch={90} />
-          <ProfileList signOut={() => setShowSignOut(true)} profile={profile} />
+          <ProfileList
+            teams={teams}
+            signOut={() => setShowSignOut(true)}
+            profile={profile}
+          />
         </Content>
       </Container>
     </StyleProvider>

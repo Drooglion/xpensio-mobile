@@ -146,6 +146,8 @@ export default {
     manager: 'Manager',
     marketing: 'Marketing',
     members: 'Members',
+    memberCount_one: '{{count}} member',
+    memberCount: '{{count}} members',
     memberRequestedPlasticCard: 'Member requested a plastic card.',
     memberRequestedVirtualCard: 'Member requested a virtual card.',
     merchant: 'Merchant',
