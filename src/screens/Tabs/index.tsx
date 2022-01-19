@@ -1,18 +1,11 @@
 import React, { useCallback } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Thumbnail } from 'native-base';
-// import Icon from 'react-native-vector-icons/Foundation';
-// import AffiliatesStack from '@screens/MainTab/Affiliates/Navigator';
-// import HomeStack from '@screens/MainTab/Home/Navigator';
-// import LiveShowStack from '@screens/MainTab/LiveShow/Navigator';
-// import DonateStack from '@screens/MainTab/Donate/Navigator';
-// import SearchShowsStack from '@screens/MainTab/SearchShows/Navigator';
-// import { Platform } from 'react-native';
 
 import PaymentsStack from './Payments/Navigator';
 import RequestsStack from './Requests';
 import CardsStack from './Cards/Navigator';
-import NotificationsStack from './Notifications';
+import NotificationsStack from './Notifications/Navigator';
 import R from 'res/R';
 
 const Tab = createBottomTabNavigator();
