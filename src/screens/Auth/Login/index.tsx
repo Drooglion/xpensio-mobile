@@ -31,8 +31,19 @@ import R from 'res/R';
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
+import { useAuth } from 'library/contexts/authContext';
 
 const Login = () => {
+  const { signIn } = useAuth();
+
+  const login = async () => {
+    try {
+      signIn({ token: '123', user: { id: '123' } });
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container style={styles.container}>
@@ -76,7 +87,7 @@ const Login = () => {
               {capitalize(inputs.errorMessage)}
             </Text> */}
             <ForgotPasswordButton onPress={() => {}} />
-            <Button style={styles.signIn} onPress={() => {}} disabled={false}>
+            <Button style={styles.signIn} onPress={login} disabled={false}>
               <Text>{R.strings.signIn}</Text>
               {/* {inputs.signinInProgress ? (
                 <LoadingIndicator size={5} color={R.colors.white} />
@@ -91,7 +102,7 @@ const Login = () => {
               textPadding={10}
               hrStyles={styles.hr}
             /> */}
-            <SignInWithGoogleButton disabled={false} onPress={() => {}} />
+            <SignInWithGoogleButton disabled={false} onPress={login} />
           </Form>
         </Content>
       </Container>

@@ -20,6 +20,7 @@ import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import R from 'res/R';
 import styles from './styles';
+import { useAuth } from 'library/contexts/authContext';
 
 /* Dummy data*/
 const profile: User = new User({
@@ -51,11 +52,14 @@ const Profile = () => {
   const [showSignOut, setShowSignOut] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Record<string, string>>({});
+  const { signOut } = useAuth();
 
   const refetchProfile = () => {};
 
-  const signOut = () => {
+  const onSignOut = () => {
     setShowSignOut(false);
+    navigation.navigate('Payments');
+    signOut();
     // AuthUtils.signOut(navigation, client);
   };
 
@@ -81,7 +85,7 @@ const Profile = () => {
           }>
           <SignOutModal
             isVisible={showSignOut}
-            onSignOut={signOut}
+            onSignOut={onSignOut}
             onCancel={() => setShowSignOut(false)}
           />
           <View>

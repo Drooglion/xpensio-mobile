@@ -148,7 +148,6 @@ const PaymentsList = ({ onItemClick, data }: Props) => {
   };
 
   const renderItemRows = ({ item }: { item: Item[] }) => {
-    console.log({ item });
     const itemSectionTitle = item[0]?.createdAtFormatted;
     const itemSection = renderSection(itemSectionTitle);
 

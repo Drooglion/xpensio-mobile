@@ -85,7 +85,7 @@ const Payments = () => {
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container>
-        <Header title="S$ 1,500.00" subtitle={t('availableFunds')} />
+        <Header title="$ 1,500.00" subtitle={t('availableFunds')} />
         {/* <BalanceHeader /> */}
         <View style={{ flexGrow: 1 }}>
           <TabSelection tabs={tabs} onChange={goToTabPage} />
