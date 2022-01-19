@@ -18,6 +18,7 @@ const statusColor = (status: number) => {
   }
 };
 
+/* Obselete, replaced by models/User.ts isntance methods */
 const verificationStatusColor = (status: string) => {
   switch (status) {
     case 'pending':

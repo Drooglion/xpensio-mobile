@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PixelRatio, RefreshControl } from 'react-native';
 import { Container, Content, StyleProvider, Text, View } from 'native-base';
+import { useTranslation } from 'react-i18next';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -26,9 +27,11 @@ const profile: User = new User({
   lastName: 'Lucas',
   email: 'moses@xpens.io',
   photoUrl: null,
+  status: 'verified',
 });
 
 const Profile = () => {
+  const { t } = useTranslation();
   const role = null;
   const navigation = useNavigation();
   const [showSignOut, setShowSignOut] = useState<boolean>(false);
@@ -50,6 +53,7 @@ const Profile = () => {
     <StyleProvider style={getTheme(theme)}>
       <Container>
         <Header
+          title={t('profile')}
           hasBack
           transparent
           backgroundColor={R.colors.transparent}
@@ -81,11 +85,7 @@ const Profile = () => {
             </View>
           </View>
           <ProfileAnalytics amount={17} receiptsMatch={90} />
-          {/* <ProfileList
-            navigation={navigation}
-            signOut={() => setShowSignOut(true)}
-            profile={profile.payload}
-          /> */}
+          <ProfileList signOut={() => setShowSignOut(true)} profile={profile} />
         </Content>
       </Container>
     </StyleProvider>
