@@ -32,16 +32,14 @@ const RootNavigator = () => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let token;
-      let userId;
 
       try {
         token = await AsyncStorage.getItem('AUTH_TOKEN');
-        userId = await AsyncStorage.getItem('AUTH_USER_ID');
       } catch (e) {
         console.log(e);
       }
 
-      dispatch({ type: 'RESTORE_TOKEN', token, userId });
+      dispatch({ type: 'RESTORE_TOKEN', token });
     };
 
     bootstrapAsync();

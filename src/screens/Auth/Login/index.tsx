@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
+import capitalize from 'lodash/capitalize';
 // import AsyncStorage from '@react-native-community/async-storage';
 // import firebase from 'react-native-firebase';
 import {
@@ -21,7 +22,7 @@ import {
 // import capitalize from 'lodash/capitalize';
 
 import ForgotPasswordButton from 'library/components/ForgotPasswordButton';
-// import LoadingIndicator from 'library/components/LoadingIndicator';
+import LoadingIndicator from 'library/components/LoadingIndicator';
 // import STORE_MUTATIONS from 'library/store/mutations';
 // import ACCOUNT from 'library/api/Account';
 import SignInWithGoogleButton from 'library/components/SignInWithGoogleButton';
@@ -35,7 +36,7 @@ import useForm from 'hooks/useForm';
 import useSigninUser from 'hooks/api/private/auth/useSignInUser';
 
 const Login = () => {
-  const { submit } = useSigninUser();
+  const { submit, isSubmitting, error } = useSigninUser();
   const { inputs, handleChange } = useForm({ email: '', password: '' });
 
   const login = async () => {
@@ -85,17 +86,17 @@ const Login = () => {
                 value={inputs.password}
               />
             </Item>
-            {/* <Text style={styles.txtErrorLogin}>
-              {capitalize(inputs.errorMessage)}
-            </Text> */}
+            <Text style={styles.txtErrorLogin}>{capitalize(error)}</Text>
             <ForgotPasswordButton onPress={() => {}} />
-            <Button style={styles.signIn} onPress={login} disabled={false}>
-              <Text>{R.strings.signIn}</Text>
-              {/* {inputs.signinInProgress ? (
+            <Button
+              style={styles.signIn}
+              onPress={login}
+              disabled={isSubmitting}>
+              {isSubmitting ? (
                 <LoadingIndicator size={5} color={R.colors.white} />
               ) : (
                 <Text>{R.strings.signIn}</Text>
-              )} */}
+              )}
             </Button>
             {/* <Hr
               lineColor={R.colors.divider}
@@ -104,7 +105,7 @@ const Login = () => {
               textPadding={10}
               hrStyles={styles.hr}
             /> */}
-            <SignInWithGoogleButton disabled={false} onPress={login} />
+            <SignInWithGoogleButton disabled={isSubmitting} onPress={login} />
           </Form>
         </Content>
       </Container>

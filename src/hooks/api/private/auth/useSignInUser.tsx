@@ -16,6 +16,7 @@ import { useAuth } from 'contexts/authContext';
  * Returns
  * submit: setParams that triggers to submit
  * isSubmitting: boolean
+ * errors: string[]
  *
  */
 
@@ -27,6 +28,7 @@ type ParamsType = {
 const useSigninUser = () => {
   const [params, setParams] = useState<ParamsType | {}>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string>();
   const { dispatch } = useResource();
   const { signIn } = useAuth();
 
@@ -45,19 +47,22 @@ const useSigninUser = () => {
           dispatch({ type: 'SET_USER', user });
           console.log({ token: user.token, user: user });
           signIn({ token: user.token, user: user });
-        } catch (error) {
-          console.log({ error });
+        } catch (err: any) {
+          console.log({ err });
+          /* Because api returns a firebase related error message, set a friendly message instead. */
+          setError(err!.response.data.payload.messages[0] as string);
           setIsSubmitting(false);
         }
       }
     };
 
     submit();
-  }, [params]);
+  }, [params, dispatch, signIn]);
 
   return {
     isSubmitting,
     submit: setParams,
+    error,
   };
 };
 
