@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 
 import isEmpty from 'lodash/isEmpty';
 import User from 'models/User';
-import axios from 'axios';
 import { useResource } from 'contexts/resourceContext';
 import { useAuth } from 'contexts/authContext';
+import useApi from 'hooks/useApi';
 
 /*
  * Signin User
@@ -31,15 +31,16 @@ const useSigninUser = () => {
   const [error, setError] = useState<string>();
   const { dispatch } = useResource();
   const { signIn } = useAuth();
+  const { api } = useApi();
 
   useEffect(() => {
     const submit = async () => {
       if (!isEmpty(params)) {
         setIsSubmitting(true);
         try {
-          const response = await axios({
+          const response = await api({
             method: 'post',
-            url: 'https://backend.xpens.io/api/v1/account/login',
+            url: 'account/login',
             data: params,
           });
 
