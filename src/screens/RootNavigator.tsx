@@ -8,7 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 /* Navigators */
 import Tabs from './Tabs';
 import RequestDetails from './Tabs/Requests/RequestDetails';
-import { useAuth } from 'library/contexts/authContext';
+import { useAuth } from 'contexts/authContext';
 
 /* Auth */
 // import Auth from './Auth/Root';
@@ -33,7 +33,6 @@ const RootNavigator = () => {
     const bootstrapAsync = async () => {
       let token;
       let userId;
-      let completeRegistration;
 
       try {
         token = await AsyncStorage.getItem('AUTH_TOKEN');

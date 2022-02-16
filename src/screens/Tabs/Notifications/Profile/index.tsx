@@ -20,7 +20,7 @@ import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import R from 'res/R';
 import styles from './styles';
-import { useAuth } from 'library/contexts/authContext';
+import { useAuth } from 'contexts/authContext';
 
 /* Dummy data*/
 const profile: User = new User({

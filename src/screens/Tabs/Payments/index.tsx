@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Container,
   Tabs,
@@ -8,6 +8,7 @@ import {
   View,
 } from 'native-base';
 import { isEmpty } from 'lodash';
+import Config from 'react-native-config';
 
 import Header from 'library/components/Header';
 // import BalanceHeader from 'library/components/BalanceHeader';
@@ -22,12 +23,15 @@ import { useNavigation } from '@react-navigation/native';
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
+import { useResource } from 'contexts/resourceContext';
 
 const Payments = () => {
   let tab: {} | undefined | null = {};
+  console.log({ config: Config.API_URL });
 
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const { state, dispatch } = useResource();
 
   const actAsAdmin: boolean = false;
   const tabs = !actAsAdmin ? [t('myPayments')] : [t('myPayments'), t('team')];

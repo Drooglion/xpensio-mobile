@@ -31,14 +31,16 @@ import R from 'res/R';
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
-import { useAuth } from 'library/contexts/authContext';
+import useForm from 'hooks/useForm';
+import useSigninUser from 'hooks/api/private/auth/useSignInUser';
 
 const Login = () => {
-  const { signIn } = useAuth();
+  const { submit } = useSigninUser();
+  const { inputs, handleChange } = useForm({ email: '', password: '' });
 
   const login = async () => {
     try {
-      signIn({ token: '123', user: { id: '123' } });
+      submit(inputs);
     } catch (err) {
       console.log({ err });
     }
@@ -65,8 +67,8 @@ const Login = () => {
                 autoCapitalize="none"
                 autoCorrect={false}
                 selectionColor={R.colors.cursor}
-                onChangeText={() => {}}
-                value=""
+                onChangeText={(text: string) => handleChange('email', text)}
+                value={inputs.email}
               />
             </Item>
             <Item error={false} style={styles.item} underline>
@@ -78,9 +80,9 @@ const Login = () => {
                 autoCorrect={false}
                 secureTextEntry
                 selectionColor={R.colors.cursor}
-                onChangeText={() => {}}
                 onSubmitEditing={() => {}}
-                value=""
+                onChangeText={(text: string) => handleChange('password', text)}
+                value={inputs.password}
               />
             </Item>
             {/* <Text style={styles.txtErrorLogin}>

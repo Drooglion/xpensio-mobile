@@ -7,7 +7,7 @@ const reducer = (prevState, action) => {
       return {
         ...prevState,
         token: action.token,
-        userId: action.userId,
+        user: action.user,
         isLoading: false,
       };
     case 'SIGN_IN':
@@ -15,14 +15,14 @@ const reducer = (prevState, action) => {
         ...prevState,
         isSignout: false,
         token: action.token,
-        userId: action.userId,
+        user: action.user,
       };
     case 'SIGN_OUT':
       return {
         ...prevState,
         isSignout: true,
         token: null,
-        userId: null,
+        user: null,
       };
   }
 };
@@ -31,7 +31,7 @@ const initialState = {
   isLoading: true,
   isSignout: false,
   token: null,
-  userId: null,
+  user: null,
 };
 
 const AuthContext = React.createContext(undefined);
@@ -56,9 +56,8 @@ export const AuthContextProvider = ({ children }) => {
       dispatch,
       signIn: async ({ token, user }) => {
         try {
-          const userId = user.id;
           await AsyncStorage.setItem('AUTH_TOKEN', token);
-          await AsyncStorage.setItem('AUTH_USER_ID', userId);
+          await AsyncStorage.setItem('AUTH_USER_ID', user);
           dispatch({
             type: 'SIGN_IN',
             token,

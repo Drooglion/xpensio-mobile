@@ -11,7 +11,9 @@ import getTheme from './native-base-theme/components';
 import platform from './native-base-theme/variables/platform';
 // import Login from './src/screens/Auth/Login';
 import RootNavigator from './src/screens/RootNavigator';
-import { AuthContextProvider } from 'library/contexts/authContext';
+import { AuthContextProvider } from 'contexts/authContext';
+
+import { ResourceProvider } from 'contexts/resourceContext';
 
 const App = () => {
   useEffect(() => {
@@ -21,7 +23,9 @@ const App = () => {
   return (
     <StyleProvider style={getTheme(platform)}>
       <AuthContextProvider>
-        <RootNavigator />
+        <ResourceProvider>
+          <RootNavigator />
+        </ResourceProvider>
       </AuthContextProvider>
     </StyleProvider>
   );
