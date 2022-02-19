@@ -17,7 +17,7 @@ export interface IUserTeams {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-  team: ITeam[]
+  team: ITeam[];
 }
 
 export enum TeamRole {

@@ -10,25 +10,27 @@ import EmptyVirtualCard from 'library/components/EmptyVirtualCard';
 import VirtualCard from './VirtualCard';
 
 import styles from './styles';
-import { VirtualCardType } from 'library/types/Cards';
-import { CompanyType } from 'library/types/User';
 import OtpConfirmModal from '../OtpConfirmModal';
+import { ICard, ICardUser } from 'types/Card';
+import { IUserCompany } from 'types/User';
 
 const { width } = Dimensions.get('window');
 
 type CarouselItemType = {
-  data?: VirtualCardType;
+  data?: ICard;
   isAdd: boolean;
 };
 
 export interface VirtualCardsProps {
-  company?: CompanyType;
-  virtualCards: VirtualCardType[];
+  user?: ICardUser;
+  company?: IUserCompany;
+  virtualCards: ICard[];
   hasPendingRequest: boolean;
   onRequestCard(): void;
 }
 
 const VirtualCards = ({
+  user,
   company,
   virtualCards,
   hasPendingRequest,
@@ -239,11 +241,13 @@ const VirtualCards = ({
               key={index}
               cardNumber={card.cardNumber}
               last4={card.last4}
-              expiryMonth={card.expiryMonth}
-              expiryYear={card.expiryYear}
-              cardholder={card.cardholder}
+              expiryMonth={card.expiryMonth.toString().padStart(2, '0')}
+              expiryYear={card.expiryYear.toString()}
+              cardholder={
+                user ? `${user.firstName} ${user.lastName}` : 'Cardholder'
+              }
               status={card.status}
-              company={company ? company.companyName : ''}
+              company={company ? company.name : ''}
             />
             <View style={styles.actionContainer}>
               <Text style={styles.txtDesc}>{t('virtualCardDesc')}</Text>
@@ -324,16 +328,18 @@ const VirtualCards = ({
               <Text uppercase style={styles.label}>
                 {t('company')}
               </Text>
-              <Text style={styles.text}>
-                {company ? company.companyName : ''}
-              </Text>
+              <Text style={styles.text}>{company ? company.name : ''}</Text>
             </Item>
             <Item style={styles.item}>
               <Text uppercase style={styles.label}>
                 {t('address')}
               </Text>
               <Text style={styles.text}>
-                {company ? company.companyAddress : ''}
+                {company
+                  ? company.address
+                    ? company.address
+                    : 'Company address'
+                  : 'Company address'}
               </Text>
             </Item>
             <Item style={styles.item}>

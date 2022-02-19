@@ -29,6 +29,21 @@ export interface ICompanyConfiguration {
   countryCode: string;
   spendingLimit: number;
   perPurchaseLimit: number;
-  token: string;
-  firebaseToken: string;
+  //token: string;
+  //firebaseToken: string;
+}
+
+export interface IUserCompany {
+  id: string;
+  name: string;
+  address?: string;
+  companyPhoto: string | null;
+  createdAt: string;
+}
+
+export interface IUserTask {
+  code: string;
+  description: string;
+  visible: boolean;
+  completed: boolean;
 }

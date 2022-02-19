@@ -1,5 +1,6 @@
 import React, { FC, useReducer } from 'react';
 import User from 'models/User';
+import Card from 'models/Card';
 
 const reducer = (prevState, action) => {
   switch (action.type) {
@@ -8,15 +9,22 @@ const reducer = (prevState, action) => {
         ...prevState,
         user: action.user,
       };
+    case 'SET_CARD':
+      return {
+        ...prevState,
+        card: action.card,
+      };
   }
 };
 
 type StateType = {
   user: User | undefined;
+  card: Card | undefined;
 };
 
 const initialState: StateType = {
   user: undefined,
+  card: undefined,
 };
 
 type ResourceContextType = {

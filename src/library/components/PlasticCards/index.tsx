@@ -10,30 +10,32 @@ import OtpConfirmModal from 'library/components/OtpConfirmModal';
 import PlasticCard from './PlasticCard';
 
 import styles from './styles';
-import { PlasticCardType } from 'library/types/Cards';
-import { CompanyType } from 'library/types/User';
+import { ICard, ICardUser } from 'types/Card';
+import { IUserCompany } from 'types/User';
 
 const { width } = Dimensions.get('window');
 
 type CarouselItemType = {
-  data?: PlasticCardType;
+  data?: ICard;
   isAdd: boolean;
 };
 
 export interface PlasticCardProps {
-  plasticCards: PlasticCardType[];
-  company?: CompanyType;
-  onOpenScanner(card: PlasticCardType): void;
+  user?: ICardUser;
+  company?: IUserCompany;
+  plasticCards: ICard[];
+  onOpenScanner(card: ICard): void;
 }
 
 const PlasticCards = ({
-  plasticCards,
+  user,
   company,
+  plasticCards,
   onOpenScanner,
 }: PlasticCardProps) => {
   const { t } = useTranslation();
   const carouselRef = useRef<any>(null);
-  const [cards, setCards] = useState<PlasticCardType[]>([]);
+  const [cards, setCards] = useState<ICard[]>([]);
   const [selectedCard, setSelectedCard] = useState<number>();
   const [action, setAction] = useState<string>();
   const [confirmPinVisible, setConfirmPinVisible] = useState<boolean>(false);
@@ -121,23 +123,26 @@ const PlasticCards = ({
     setConfirmPinVisible(false);
   };
 
-  const scanCard = (item: PlasticCardType) => {
+  const scanCard = (item: ICard) => {
     console.log('scan', item);
     onOpenScanner(item);
   };
 
-  const renderCard = (item: PlasticCardType, index: number) => {
+  const renderCard = (item: ICard, index: number) => {
     const cardStatus = StringUtils.cardStatus(item.status);
     const locked = cardStatus === 'LOCKED';
     return (
       <View key={index} style={styles.container}>
         <PlasticCard
           last4={item.last4}
-          cardholder={item.cardholder}
-          company={company ? company.companyName : ''}
+          cardholder={
+            user ? `${user.firstName} ${user.lastName}` : 'Cardholder'
+          }
+          company={company ? company.name : ''}
           status={item.status}
         />
         <View style={styles.actionContainer}>
+          {/* @ts-ignore */}
           <Text style={styles.txtDesc}>{t('plasticCardDesc')}</Text>
           <View style={styles.btnGroup}>
             {cardStatus === 'FOR_ACTIVATION' ? (
