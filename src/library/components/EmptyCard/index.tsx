@@ -25,7 +25,6 @@ const EmptyCard = ({
         square
         source={R.images.ic_empty_virtual}
         resizeMode="contain"
-        //@ts-ignore
         style={styles.img}
       />
     </View>

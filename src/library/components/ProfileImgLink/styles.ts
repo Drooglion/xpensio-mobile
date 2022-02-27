@@ -14,7 +14,6 @@ export default StyleSheet.create({
     shadowOffset: { height: 0, width: 0 },
   },
   img: {},
-  //@ts-ignore
   imgBtnTxt: {
     ...R.fonts.AirbnbCerealAppMedium,
     color: R.colors.secondary,

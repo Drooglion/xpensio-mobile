@@ -57,10 +57,10 @@ const VirtualCards = ({
         items.push({ data: i, isAdd: false });
       });
       items.push({ data: undefined, isAdd: true });
+      console.log('virtual', items);
       setCards(items);
       if (items.length > 0) {
         setSelectedCard(0);
-        console.log('default selected card', items[0]);
       }
     }
   }, [virtualCards, cards]);
@@ -223,6 +223,7 @@ const VirtualCards = ({
     //console.log('card', item);
 
     if (item.isAdd) {
+      console.log('added empty');
       renderedItem = (
         <EmptyVirtualCard
           key={index}
@@ -312,7 +313,7 @@ const VirtualCards = ({
         enableSnap
         lockScrollWhileSnapping
         horizontal
-        scrollEnabled={virtualCards.length > 1}
+        scrollEnabled={cards.length > 1}
         useScrollView
       />
       <BottomSheet

@@ -1,5 +1,8 @@
-/* eslint-disable global-require */
-const images = {
+type imagesType = {
+  [key: string]: any;
+};
+
+const images: imagesType = {
   bg_virtual_card_disabled: require('./images/bg_virtual_card_disabled.png'),
   bg_plastic_card_disabled: require('./images/bg_plastic_card_disabled.png'),
   bg_virtual_card: require('./images/bg_virtual_card.png'),

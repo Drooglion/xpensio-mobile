@@ -1,8 +1,4 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable no-console */
-
 import React, { FC, useState } from 'react';
-import { withNavigation } from 'react-navigation';
 import { Dimensions, TouchableOpacity, View } from 'react-native';
 import { Text, Icon } from 'native-base';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
@@ -23,12 +19,12 @@ const { width, height } = Dimensions.get('window');
 const imageHeight = height * 0.3;
 const stickyHeaderHeight = 60;
 
-import { Payment } from 'types/Payment';
+import { IPayment } from 'types/Payment';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
-  payment: Payment;
+  payment: IPayment;
   onBackPress: () => void;
   refetch?: () => void;
 };
@@ -78,12 +74,17 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
   const noAttachments = () => (
     <ImageLoad
       style={[styles.img, { height: imageHeight }]}
-      loadingStyle={{ size: 'large', color: R.colors.primary }}
       source={R.images.noimage}
     />
   );
 
-  const renderCarouselItem = ({ item, index }) => {
+  const renderCarouselItem = ({
+    item,
+    index,
+  }: {
+    item: any;
+    index: number;
+  }) => {
     let component = null;
     if (has(item, 'url')) {
       component = (
@@ -110,7 +111,7 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
             onPress={addMoreReceipt}
             style={[styles.addReceipt, { height: imageHeight }]}>
             <Icon style={styles.cameraIcon} name="camera" />
-            <Text style={styles.addReceiptTxt}>{R.strings.addReceipt}</Text>
+            <Text style={styles.addReceiptTxt}>{t('addReceipt')}</Text>
           </TouchableOpacity>
         ) : null;
     }
@@ -125,7 +126,6 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
         renderItem={renderCarouselItem}
         sliderWidth={width}
         itemWidth={width}
-        sliderStyle={{ width }}
         enableSnap
         lockScrollWhileSnapping
       />
@@ -167,7 +167,7 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
           <Header
             hasBack
             highlightBack={headerVisible}
-            backgroundColor="transparent"
+            backgroundColor={R.colors.transparent}
             inverseFontColor={headerVisible}
             onBackPress={onBackPress}
           />

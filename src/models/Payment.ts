@@ -1,41 +1,92 @@
-import { IPayment } from 'types/Payment';
+import { IPayment, IPaymentCard, IPaymentUser } from 'types/Payment';
 import StringUtils from 'library/utils/StringUtils';
 import NumberUtils from 'library/utils/NumberUtils';
 
 class Payment {
   readonly id: string;
-  readonly image: string | null;
+  readonly referenceId: string;
+  readonly orNumber: string | null;
+  readonly merchantLogo?: string | null;
   readonly merchantName: string;
-  readonly status: PaymentStatus;
-  readonly attachments: Record<string, string>[];
-  readonly createdAt: string;
-  readonly createdAtFormatted: string;
+  readonly merchantTin: string | null;
+  readonly merchantAddress: string | null;
+  readonly cardLast4: string;
+  readonly cardExpiryMonth: number;
+  readonly cardExpiryYear: number;
+  readonly amountTaxable: string | number | null;
+  readonly amountTax: string | number | null;
   readonly amountTotal: number;
-  readonly originalAmount: number;
+  readonly currency: string;
+  readonly originalAmount: string;
   readonly originalCurrency: string;
+  readonly status: PaymentStatus;
+  readonly note: string | null;
+  readonly createdAt: string;
+  readonly reason: string | null;
+  readonly request: string | null;
+  readonly team: string | null;
+  readonly category: string | null;
+  readonly project: string | null;
+  readonly card: IPaymentCard;
+  readonly attachments: any[];
+  readonly user: IPaymentUser;
 
   constructor({
     id,
-    image,
+    referenceId,
+    orNumber,
+    merchantLogo,
     merchantName,
-    status,
-    attachments,
-    createdAt,
-    createdAtFormatted,
+    merchantTin,
+    merchantAddress,
+    cardLast4,
+    cardExpiryMonth,
+    cardExpiryYear,
+    amountTaxable,
+    amountTax,
     amountTotal,
+    currency,
     originalAmount,
     originalCurrency,
+    status,
+    note,
+    createdAt,
+    reason,
+    request,
+    team,
+    category,
+    project,
+    card,
+    attachments,
+    user,
   }: IPayment) {
     this.id = id;
-    this.image = image;
+    this.referenceId = referenceId;
+    this.orNumber = orNumber;
+    this.merchantLogo = merchantLogo;
     this.merchantName = merchantName;
-    this.status = status;
-    this.attachments = attachments;
-    this.createdAt = createdAt;
-    this.createdAtFormatted = createdAtFormatted;
+    this.merchantTin = merchantTin;
+    this.merchantAddress = merchantAddress;
+    this.cardLast4 = cardLast4;
+    this.cardExpiryMonth = cardExpiryMonth;
+    this.cardExpiryYear = cardExpiryYear;
+    this.amountTaxable = amountTaxable;
+    this.amountTax = amountTax;
     this.amountTotal = amountTotal;
+    this.currency = currency;
     this.originalAmount = originalAmount;
     this.originalCurrency = originalCurrency;
+    this.status = status;
+    this.note = note;
+    this.createdAt = createdAt;
+    this.reason = reason;
+    this.request = request;
+    this.team = team;
+    this.category = category;
+    this.project = project;
+    this.card = card;
+    this.attachments = attachments;
+    this.user = user;
   }
 
   isApproved() {

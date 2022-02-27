@@ -142,7 +142,6 @@ const PlasticCards = ({
           status={item.status}
         />
         <View style={styles.actionContainer}>
-          {/* @ts-ignore */}
           <Text style={styles.txtDesc}>{t('plasticCardDesc')}</Text>
           <View style={styles.btnGroup}>
             {cardStatus === 'FOR_ACTIVATION' ? (

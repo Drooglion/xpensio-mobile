@@ -32,7 +32,7 @@ const MyCards = () => {
   const { t } = useTranslation();
   const tab = useRef<any>(null);
   const tabs = [t('virtual'), t('plastic')];
-  const { data, loading, error } = useGetMyCards();
+  const { data, refresh, loading, error } = useGetMyCards();
   const [user, setUser] = useState<ICardUser>();
   const [company, setCompany] = useState<IUserCompany>();
   const [virtualCards, setVirtualCards] = useState<ICard[]>([]);
@@ -59,9 +59,15 @@ const MyCards = () => {
 
     return () => {
       setVirtualCards([]);
+      setPlasticCards([]);
       setPendingVirtualCardRequests([]);
+      setPendingPlasticCardRequests([]);
     };
   }, [data]);
+
+  useEffect(() => {
+    setIsRefreshing(loading);
+  }, [loading]);
 
   const onItemClick = item => {};
 
@@ -72,7 +78,9 @@ const MyCards = () => {
     }
   };
 
-  const onRefreshData = () => {};
+  const onRefreshData = async () => {
+    await refresh();
+  };
 
   const onRequestVirtualCard = () => {};
 

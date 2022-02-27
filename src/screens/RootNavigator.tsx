@@ -7,7 +7,6 @@ import { NavigationContainer } from '@react-navigation/native';
 
 /* Navigators */
 import Tabs from './Tabs';
-import RequestDetails from './Tabs/Requests/RequestDetails';
 import { useAuth } from 'contexts/authContext';
 
 /* Auth */
@@ -62,7 +61,6 @@ const RootNavigator = () => {
         ) : (
           <>
             <Stack.Screen name="Tabs">{() => <Tabs />}</Stack.Screen>
-            <Stack.Screen name="Request Details" component={RequestDetails} />
           </>
         )}
       </Stack.Navigator>

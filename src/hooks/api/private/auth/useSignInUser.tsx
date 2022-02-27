@@ -5,6 +5,7 @@ import User from 'models/User';
 import { useResource } from 'contexts/resourceContext';
 import { useAuth } from 'contexts/authContext';
 import useApi from 'hooks/useApi';
+import Account from 'models/Account';
 
 /*
  * Signin User
@@ -46,8 +47,15 @@ const useSigninUser = () => {
 
           const user = new User(response.data.payload);
           dispatch({ type: 'SET_USER', user });
-          console.log({ token: user.token, user: user });
-          signIn({ token: user.token, user: user });
+          if (user.token) {
+            const acctRes = await api.get('account/me/');
+            const account = new Account(acctRes.data.payload);
+            console.log('account', account);
+            dispatch({ type: 'SET_ACCOUNT', account });
+            signIn({ token: user.token, user: account });
+          } else {
+            signIn({ token: user.token, user: null });
+          }
         } catch (err: any) {
           console.log({ err });
           /* Because api returns a firebase related error message, set a friendly message instead. */

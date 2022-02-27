@@ -12,7 +12,7 @@ class User {
   readonly role: RoleStatus;
   readonly createdAt: string;
   readonly companyConfiguration: ICompanyConfiguration;
-  readonly teams: IUserTeams;
+  readonly teams: IUserTeams[];
   readonly token: string;
   readonly firebaseToken: string;
 
@@ -47,6 +47,10 @@ class User {
 
   fullName() {
     return `${this.firstName} ${this.lastName}`;
+  }
+
+  isAdmin() {
+    return RoleStatus[this.role] === 'ADMIN';
   }
 
   verificationStatusColor() {

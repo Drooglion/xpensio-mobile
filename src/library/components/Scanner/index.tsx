@@ -25,9 +25,7 @@ const Scanner = ({ onRead }: ScannerProps) => {
         showMarker
       />
       <View style={styles.infoContainer}>
-        {/* @ts-ignore */}
         <Text style={styles.txtTitle}>{t('scanning')}</Text>
-        {/* @ts-ignore */}
         <Text style={styles.txtDesc}>{t('scanDesc')}</Text>
       </View>
     </Fragment>
