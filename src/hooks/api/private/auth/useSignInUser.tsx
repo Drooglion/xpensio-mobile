@@ -48,7 +48,11 @@ const useSigninUser = () => {
           const user = new User(response.data.payload);
           dispatch({ type: 'SET_USER', user });
           if (user.token) {
-            const acctRes = await api.get('account/me/');
+            const acctRes = await api.get('account/me/', {
+              headers: {
+                Authorization: `Token ${user.token}`,
+              },
+            });
             const account = new Account(acctRes.data.payload);
             console.log('account', account);
             dispatch({ type: 'SET_ACCOUNT', account });
