@@ -1,136 +1,203 @@
-import React, { useEffect } from 'react';
-import {
-  Button,
-  Container,
-  Content,
-  Footer,
-  FooterTab,
-  StyleProvider,
-  Text,
-  Tabs,
-  Tab,
-  TabHeading,
-} from 'native-base';
-import { useNavigation } from '@react-navigation/native';
+import React, { Fragment, useEffect, useState } from 'react';
+import { Container, Content, StyleProvider, View } from 'native-base';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
+import EmptyList from 'library/components/EmptyList';
+import Loading from 'library/components/Loading';
+import Header from 'library/components/Header';
+import DenyModal from 'library/components/DenyModal';
+
+import R from 'res/R';
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
-import R from 'res/R';
-import Header from 'library/components/Header';
-import Scanner from 'library/components/Scanner';
-import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+
+import DetailsTab from './DetailsTab';
+import useGetRequestDetails from 'hooks/api/private/requests/useGetRequestDetails';
+import { RequestNavigatorParamList } from '../Navigator';
+import Request from 'models/Request';
 import styles from './styles';
-import TabSelection from '../../../../library/components/TabSelection';
+import { useResource } from 'contexts/resourceContext';
+import useApi from 'hooks/useApi';
+import DialogModal from 'library/components/DialogModal';
+import LoadingModal from 'library/components/LoadingModal';
 
-const RequestDetails = () => {
-  let tab: {} | undefined | null = {};
-  const navigation = useNavigation();
+const RequestsDetail = () => {
   const { t } = useTranslation();
+  const navigation = useNavigation();
+  const route =
+    useRoute<RouteProp<RequestNavigatorParamList, 'RequestDetails'>>();
+  const { state } = useResource();
+  const { fetch, request, loading } = useGetRequestDetails();
+  const { api } = useApi();
 
-  const tabs = [t('details'), t('conversation')];
+  const [currency, setCurrency] = useState<string>('php');
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [details, setDetails] = useState<Request>();
+  const [loadingModalVisible, setLoadingModalVisible] = useState(false);
+  const [denyModalVisible, setDenyModalVisible] = useState(false);
+  const [reason, setReason] = useState('');
+  const [dialogTitle, setDialogTitle] = useState<string>('');
+  const [dialogIcon, setDialogIcon] = useState<string>();
+  const [dialogDesc, setDialogDesc] = useState<string>('');
+  const [dialogVisible, setDialogVisible] = useState(false);
 
-  const goToTabPage = page => {
-    tab.goToPage(page);
+  useEffect(() => {
+    if (route) {
+      if (route.params) {
+        const { id } = route.params;
+        if (id) {
+          fetch({ requestId: id });
+        }
+      }
+    }
+  }, [route, fetch]);
+
+  useEffect(() => {
+    if (state) {
+      if (state.user) {
+        setIsAdmin(state.user.isAdmin());
+        setCurrency(state.user.companyConfiguration.currency);
+      }
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (request) {
+      setDetails(request);
+    }
+  }, [request]);
+
+  const approveRequestHandler = async () => {
+    if (details) {
+      try {
+        setLoadingModalVisible(true);
+        const res = await api.put(`requests/${details.id}/approve`);
+        setDetails(new Request(res.data.payload));
+
+        setDialogTitle(t('success'));
+        setDialogIcon('success');
+        setDialogDesc(t('requestHasBeenApproved'));
+        setLoadingModalVisible(false);
+        setTimeout(() => {
+          setDialogVisible(true);
+        }, 500);
+      } catch (err: any) {
+        let errorDescription = '';
+
+        if (err.networkError && err.networkError.result) {
+          [errorDescription] = err.networkError.result.payload.messages;
+        } else {
+          errorDescription = err.message;
+        }
+        setDialogTitle(t('unableToApprove'));
+        setDialogIcon(undefined);
+        setDialogDesc(errorDescription);
+        setLoadingModalVisible(false);
+        setTimeout(() => {
+          setDialogVisible(true);
+        }, 500);
+      }
+    }
   };
 
-  const onCancel = () => {
-    navigation.goBack();
+  const handleDenyRequest = async () => {
+    if (details) {
+      try {
+        setLoadingModalVisible(true);
+        const res = await api.put(`requests/${details.id}/deny`, { reason });
+        setDetails(new Request(res.data.payload));
+
+        setDialogTitle(t('success'));
+        setDialogIcon('success');
+        setDialogDesc(t('requestHasBeenDenied'));
+        setLoadingModalVisible(false);
+        setTimeout(() => {
+          setDialogVisible(true);
+        }, 500);
+      } catch (err: any) {
+        let errorDescription = '';
+
+        if (err.networkError && err.networkError.result) {
+          [errorDescription] = err.networkError.result.payload.messages;
+        } else {
+          errorDescription = err.message;
+        }
+        setDialogTitle(t('unableToDeny'));
+        setDialogIcon(undefined);
+        setDialogDesc(errorDescription);
+        setLoadingModalVisible(false);
+        setTimeout(() => {
+          setDialogVisible(true);
+        }, 500);
+      }
+    }
   };
 
-  const currencyFomart = number => {
-    return number.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  const closeDialogHandler = () => {
+    setDialogVisible(false);
+  };
+
+  const toggleDenyModal = () => {
+    setDenyModalVisible(!denyModalVisible);
   };
 
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container>
-        <Header
-          title="Facebook Ads"
-          subtitle={t('requested by Vanessa Liwanag')}
-          hasBack
-          onBackPress={onCancel}
-          backgroundColor={R.colors.primary}
-          inverseFontColor
-          iosBarStyle={'light-content'}
-          androidStatusBarColor="#fff"
+        {loading ? (
+          <Loading />
+        ) : details ? (
+          <Fragment>
+            <Header
+              title={t('requestDetails')}
+              hasBack
+              onBackPress={() => navigation.goBack()}
+            />
+            <Content
+              contentContainerStyle={styles.tabsContainer}
+              scrollEnabled={false}>
+              <DetailsTab
+                currency={currency}
+                isAdmin={isAdmin}
+                request={details}
+                onApprove={approveRequestHandler}
+                onDeny={toggleDenyModal}
+              />
+            </Content>
+          </Fragment>
+        ) : (
+          <View>
+            <Header hasBack onBackPress={() => navigation.goBack()} />
+            <EmptyList
+              image={R.images.empty_requests}
+              text={t('requestUnavailable')}
+            />
+          </View>
+        )}
+        <LoadingModal
+          visible={loadingModalVisible}
+          onDismiss={() => setLoadingModalVisible(false)}
         />
-        <View style={{ flexGrow: 1 }}>
-          <Tabs
-            initialPage={0}
-            ref={e => {
-              tab = e;
-            }}
-            locked
-            tabContainerStyle={styles.tabContainer}
-            tabBarUnderlineStyle={{ backgroundColor: 'white' }}>
-            <Tab
-              heading={'Details'}
-              tabStyle={{ backgroundColor: R.colors.primary }}
-              activeTabStyle={{ backgroundColor: R.colors.primary }}
-              textStyle={styles.textStyle}
-              activeTextStyle={styles.activeTextStyle}>
-              <View style={styles.detailsContainer}>
-                <View style={styles.group}>
-                  <Text style={styles.title}>DESCRIPTION</Text>
-                  <Text>
-                    New Campaign for XPENSIO - Expense Management on Facebook.
-                  </Text>
-                </View>
-                <View style={styles.group}>
-                  <Text style={styles.title}>TEAM</Text>
-                  <Text>Product Team</Text>
-                </View>
-                <View style={styles.group}>
-                  <Text style={styles.title}>CATEGORY</Text>
-                  <View style={styles.category}>
-                    <Text style={styles.textCategory}>Advertising</Text>
-                  </View>
-                </View>
-                <View style={styles.group}>
-                  <Text style={styles.title}>PROJECT</Text>
-                  <Text>New Campaign</Text>
-                </View>
-                <View style={styles.group}>
-                  <Text style={styles.title}>DATE REQUESTED</Text>
-                  <Text>Monday, 15 October 2018 9:00 AM</Text>
-                </View>
-                <View style={styles.group}>
-                  <Text style={styles.title}>PURCHASE TYPE</Text>
-                  <Text>Single purchase</Text>
-                </View>
-                <View style={styles.group}>
-                  <Text style={styles.title}>AMOUNT</Text>
-                  <Text>
-                    {'\u20B1'}
-                    {currencyFomart(10000)}
-                  </Text>
-                </View>
-                <View style={styles.btnGroup}>
-                  <Button bordered danger style={styles.btn} onPress={() => {}}>
-                    <Text style={styles.btnTxtAction}>{R.strings.deny}</Text>
-                  </Button>
-                  <Button
-                    success
-                    style={[styles.btn, { backgroundColor: R.colors.approve }]}
-                    onPress={() => {}}>
-                    <Text style={styles.btnTxtAction}>{R.strings.approve}</Text>
-                  </Button>
-                </View>
-              </View>
-            </Tab>
-
-            <Tab
-              heading={'Conversation'}
-              tabStyle={{ backgroundColor: R.colors.primary }}
-              activeTabStyle={{ backgroundColor: R.colors.primary }}
-              textStyle={styles.textStyle}
-              activeTextStyle={styles.activeTextStyle}></Tab>
-          </Tabs>
-        </View>
+        <DialogModal
+          visible={dialogVisible}
+          title={dialogTitle}
+          icon={dialogIcon}
+          description={dialogDesc}
+          onClose={closeDialogHandler}
+        />
+        {isAdmin && (
+          <DenyModal
+            visible={denyModalVisible}
+            reason={reason}
+            onReasonChanged={setReason}
+            onCancel={toggleDenyModal}
+            onSubmit={handleDenyRequest}
+          />
+        )}
       </Container>
     </StyleProvider>
   );
 };
 
-export default RequestDetails;
+export default RequestsDetail;

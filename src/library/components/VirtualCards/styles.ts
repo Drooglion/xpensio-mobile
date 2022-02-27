@@ -53,7 +53,6 @@ export default StyleSheet.create({
     top: 10,
     width: width * (PixelRatio.get() < 3 ? 0.4 : 0.45),
   },
-  //@ts-ignore
   cardNumber: {
     ...R.fonts.AirbnbCerealAppBold,
     fontSize: PixelRatio.get() < 3 ? 12 : 15,
@@ -63,7 +62,6 @@ export default StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 10,
   },
-  //@ts-ignore
   cardTxtName: {
     ...R.fonts.AirbnbCerealAppBold,
     fontSize: PixelRatio.get() < 3 ? 12 : 15,
@@ -73,13 +71,11 @@ export default StyleSheet.create({
     fontSize: PixelRatio.get() < 3 ? 8 : 10,
     paddingTop: 5,
   },
-  //@ts-ignore
   cardTxtMute: {
     ...R.fonts.AirbnbCerealAppBold,
     color: R.colors.subhead,
     fontSize: PixelRatio.get() < 3 ? 6 : 8,
   },
-  //@ts-ignore
   cardTxtExp: {
     ...R.fonts.AirbnbCerealAppMedium,
     fontSize: PixelRatio.get() < 3 ? 13 : 16,
@@ -102,7 +98,6 @@ export default StyleSheet.create({
   bottomSheetDetails: {
     justifyContent: 'center',
   },
-  //@ts-ignore
   virtualCardViewWarning: {
     ...R.theme.title2,
     fontSize: 10,
@@ -123,7 +118,6 @@ export default StyleSheet.create({
     paddingTop: R.metrics.smallMargin,
     paddingBottom: 2,
   },
-  //@ts-ignore
   text: {
     ...R.theme.body,
     fontSize: 15,

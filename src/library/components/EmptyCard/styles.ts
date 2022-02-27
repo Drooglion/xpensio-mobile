@@ -22,7 +22,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  //@ts-ignore
   txtTitle: {
     ...R.theme.headline,
     fontSize: 17,

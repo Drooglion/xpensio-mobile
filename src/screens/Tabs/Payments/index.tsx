@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Container,
   Tabs,
@@ -8,6 +8,7 @@ import {
   View,
 } from 'native-base';
 import { isEmpty } from 'lodash';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
 
 import Header from 'library/components/Header';
@@ -24,20 +25,79 @@ import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
 import { useResource } from 'contexts/resourceContext';
+import useGetMyPayments from 'hooks/api/private/payments/useGetMyPayments';
+import { IPayment } from 'types/Payment';
+import ListLoader from 'library/components/ListLoader';
+import useGetWalletBalance from 'hooks/api/private/account/useGetWalletBalance';
+import NumberUtils from 'library/utils/NumberUtils';
 
 const Payments = () => {
-  let tab: {} | undefined | null = {};
-  console.log({ config: Config.API_URL });
-
+  const tab = useRef<any>(null);
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const {
+    data,
+    refresh,
+    loading: paymentsLoading,
+    error: paymentsError,
+  } = useGetMyPayments();
+  const {
+    balance,
+    getBalance,
+    loading: balanceLoading,
+    error: balanceError,
+  } = useGetWalletBalance();
   const { state, dispatch } = useResource();
+
+  const [userId, setUserId] = useState<string>();
+  const [payments, setPayments] = useState<IPayment[]>([]);
 
   const actAsAdmin: boolean = false;
   const tabs = !actAsAdmin ? [t('myPayments')] : [t('myPayments'), t('team')];
 
-  const goToTabPage = page => {
-    tab.goToPage(page);
+  useEffect(() => {
+    const getUserId = async () => {
+      const id = await AsyncStorage.getItem('USER_ID');
+      console.log('userId', id);
+      if (id) {
+        setUserId(id);
+      }
+    };
+
+    getUserId();
+  }, []);
+
+  useEffect(() => {
+    console.log('state', state);
+  }, [state]);
+
+  useEffect(() => {
+    if (userId) {
+      getBalance({ userId });
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (balance) {
+      console.log('wallet balance', balance);
+    }
+    if (balanceError) {
+      console.log('error', balanceError);
+    }
+  }, [balance, balanceError]);
+
+  useEffect(() => {
+    if (data) {
+      console.log('payments', data.items);
+      setPayments(data.items);
+    }
+  }, [data]);
+
+  const goToTabPage = (page: any) => {
+    console.log('page', page);
+    if (tab.current) {
+      tab.current.goToPage(page);
+    }
   };
 
   const onMyPaymentPress = (item, refetch) => {
@@ -89,20 +149,31 @@ const Payments = () => {
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container>
-        <Header title="$ 1,500.00" subtitle={t('availableFunds')} />
+        <Header
+          title={
+            balanceError
+              ? t('notAvailable')
+              : balance
+              ? NumberUtils.formatCurrency(balance.currency, balance.value)
+              : t('notAvailable')
+          }
+          subtitle={t('availableFunds')}
+        />
         {/* <BalanceHeader /> */}
-        <View style={{ flexGrow: 1 }}>
+        <View style={styles.tabsContainer}>
           <TabSelection tabs={tabs} onChange={goToTabPage} />
           <Tabs
             initialPage={0}
-            ref={e => {
-              tab = e;
-            }}
+            ref={tab}
             locked
             tabContainerStyle={styles.tabContainer}
             tabBarUnderlineStyle={styles.tabUnderline}>
             <Tab heading={<TabHeading />}>
-              <MyPayments />
+              {paymentsLoading ? (
+                <ListLoader style={styles.listLoader} />
+              ) : (
+                <MyPayments data={payments} />
+              )}
             </Tab>
             {/* {!actAsAdmin ? null : (
               <Tab heading={<TabHeading />}>

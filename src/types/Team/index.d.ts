@@ -7,6 +7,7 @@ export interface ITeam {
   updatedAt: string;
   deletedAt: string | null;
   defaultTeam: boolean;
+  monthlyLimit?: number;
 }
 
 export interface IUserTeams {
@@ -17,7 +18,7 @@ export interface IUserTeams {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-  team: ITeam[];
+  team: ITeam;
 }
 
 export enum TeamRole {

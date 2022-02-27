@@ -23,7 +23,6 @@ const PlasticCard = ({
       source={
         R.images[status === 1 ? 'bg_plastic_card' : 'bg_plastic_card_disabled']
       }
-      //@ts-ignore
       style={styles.img}
     />
     <View style={styles.cardDetails}>

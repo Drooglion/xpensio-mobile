@@ -1,5 +1,7 @@
 import { RoleStatus, UserStatus } from 'models/User';
+import { ICard, ICardRequest } from 'types/Card';
 import { IUserTeams } from 'types/Team';
+
 export interface IUser {
   id: string;
   firstName: string;
@@ -10,10 +12,11 @@ export interface IUser {
   role: RoleStatus;
   createdAt: string;
   companyConfiguration: ICompanyConfiguration;
-  teams: IUserTeams;
+  teams: IUserTeams[];
   token: string;
   firebaseToken: string;
 }
+
 export interface ICompanyConfiguration {
   id: string;
   currency: string;
@@ -46,4 +49,19 @@ export interface IUserTask {
   description: string;
   visible: boolean;
   completed: boolean;
+}
+
+export interface IUserAccount {
+  id: string;
+  companyId: string;
+  company: IUserCompany;
+  user: IUser;
+  roleName: string;
+  role: number;
+  root: boolean;
+  cards: ICard[];
+  cardRequests: ICardRequest[];
+  companyConfiguration: ICompanyConfiguration;
+  teams: IUserTeams[];
+  userTasks: IUserTask[];
 }

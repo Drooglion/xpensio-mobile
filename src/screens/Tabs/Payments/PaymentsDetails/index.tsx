@@ -1,7 +1,4 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable no-console */
-
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // import { Query, compose, graphql } from 'react-apollo';
 import {
   Container,
@@ -17,10 +14,6 @@ import {
   Right,
 } from 'native-base';
 import UserAvatar from 'react-native-user-avatar';
-
-// import PAYMENTS from 'library/api/Payments';
-// import STORE_QUERIES from 'library/store/queries';
-// import STORE_MUTATIONS from 'library/store/mutations';
 
 import EmptyList from 'library/components/EmptyList';
 import DenyModal from 'library/components/DenyModal';
@@ -42,26 +35,40 @@ import styles from './styles';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { IPayment } from 'types/Payment';
 
 const PaymentsDetails = () => {
-  let tab = {};
-  const currency = 'NZD';
+  const tab = useRef<any>(null);
+  const currency = 'php';
   const actAsAdmin = false;
 
   const { t } = useTranslation();
   const navigation = useNavigation();
   const route = useRoute();
-  const { payment, paymentTab } = route.params;
+  //const { payment, paymentTab } = route.params;
 
   /* hooks */
+  const [details, setDetails] = useState<IPayment>();
   const [activeTab, setActiveTab] = useState<number>(0);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [denyModalVisible, setDenyModalVisible] = useState<boolean>(false);
   const [denyReason, setDenyReason] = useState<string>('');
 
-  const onTabChange = index => {
-    setActiveTab(index);
-    tab.goToPage(index);
+  useEffect(() => {
+    if (route) {
+      if (route.params) {
+        const { payment } = route.params;
+        setDetails(payment);
+      }
+    }
+  }, [route]);
+
+  const goToTabPage = (page: number) => {
+    console.log('page', page);
+    if (tab.current) {
+      setActiveTab(page);
+      tab.current.goToPage(page);
+    }
   };
 
   const handleSave = async inputs => {
@@ -128,12 +135,12 @@ const PaymentsDetails = () => {
     setIsEditing(true);
   };
 
-  const toggleDenyModal = toggle => {
+  const toggleDenyModal = (toggle: boolean) => {
     setDenyModalVisible(toggle);
     setDenyReason('');
   };
 
-  const handleDenyReasonChange = value => {
+  const handleDenyReasonChange = (value: string) => {
     setDenyReason(value);
   };
 
@@ -158,69 +165,71 @@ const PaymentsDetails = () => {
           onSubmit={handleRejectPayment}
           submitDisabled={!denyReason}
         />
-        <ParallaxContent
-          payment={payment}
-          onBackPress={() => navigation.navigate('Payments')}
-          refetch={() => {}}>
-          <View style={styles.parallaxChild}>
-            <Item style={styles.paymentHeader}>
-              <Left style={styles.paymentHeaderLeft}>
-                <UserAvatar
-                  size={40}
-                  fontDecrease="2"
-                  name={payment.merchantNameInitials()}
-                />
-              </Left>
-              <Body style={styles.paymentHeaderBody}>
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={styles.merchantName}>
-                  {payment.merchantName}
-                </Text>
-                <Text style={styles.transactionDate}>
-                  {DateUtils.formatReceiptDate(payment.createdAt)}
-                </Text>
-              </Body>
-              <Right style={styles.paymentHeaderRight}>
-                <Text numberOfLines={1} style={styles.amountTotal}>
-                  {payment.amountFormatted(currency)}
-                </Text>
-              </Right>
-            </Item>
-            <TabSelection selected={activeTab} onTabSelect={onTabChange} />
-            <Tabs
-              initialPage={0}
-              ref={e => {
-                tab = e;
-              }}
-              locked
-              tabContainerStyle={styles.tabContainer}
-              tabBarUnderlineStyle={styles.tabUnderline}>
-              <Tab heading={<TabHeading />}>
-                {/* <SummaryTab
-              actAsAdmin={actAsAdmin}
-              paymentTab={paymentTab}
-              currency={currency}
-              payment={payment}
-              toggleDenyModal={toggleDenyModal}
-            /> */}
-              </Tab>
-              <Tab heading={<TabHeading />}>
-                {/* <ReceiptTab
-              currency={currency}
-              handleSave={handleSave}
-              toggleDenyModal={toggleDenyModal}
-              actAsAdmin={actAsAdmin}
-              payment={payment}
-              paymentTab={paymentTab}
-              setEditing={setEditing}
-              isEditing={isEditing}
-            /> */}
-              </Tab>
-            </Tabs>
-          </View>
-        </ParallaxContent>
+        {details ? (
+          <ParallaxContent
+            payment={details}
+            onBackPress={() => navigation.navigate('Payments' as never)}
+            refetch={() => {}}>
+            <View style={styles.parallaxChild}>
+              <Item style={styles.paymentHeader}>
+                <Left style={styles.paymentHeaderLeft}>
+                  <UserAvatar
+                    size={40}
+                    name={StringUtils.getInitials(details?.merchantName)}
+                  />
+                </Left>
+                <Body style={styles.paymentHeaderBody}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={styles.merchantName}>
+                    {details.merchantName}
+                  </Text>
+                  <Text style={styles.transactionDate}>
+                    {DateUtils.formatReceiptDate(details.createdAt)}
+                  </Text>
+                </Body>
+                <Right style={styles.paymentHeaderRight}>
+                  <Text numberOfLines={1} style={styles.amountTotal}>
+                    {NumberUtils.formatCurrency(
+                      details.currency,
+                      details.amountTotal,
+                    )}
+                  </Text>
+                </Right>
+              </Item>
+              <TabSelection active={activeTab} onTabSelect={goToTabPage} />
+              <Tabs
+                initialPage={0}
+                ref={tab}
+                locked
+                tabContainerStyle={styles.tabContainer}
+                tabBarUnderlineStyle={styles.tabUnderline}>
+                <Tab heading={<TabHeading />}>
+                  <SummaryTab
+                    actAsAdmin={actAsAdmin}
+                    paymentTab={activeTab}
+                    currency={currency}
+                    payment={details}
+                    toggleDenyModal={toggleDenyModal}
+                  />
+                </Tab>
+                <Tab heading={<TabHeading />}>
+                  <ReceiptTab
+                    currency={currency}
+                    handleSave={handleSave}
+                    toggleDenyModal={toggleDenyModal}
+                    actAsAdmin={actAsAdmin}
+                    payment={details}
+                    paymentTab={activeTab}
+                    setEditing={setEditing}
+                    isEditing={isEditing}
+                  />
+                </Tab>
+              </Tabs>
+            </View>
+          </ParallaxContent>
+        ) : null}
       </Container>
     </StyleProvider>
   );

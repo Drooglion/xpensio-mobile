@@ -59,14 +59,12 @@ export default StyleSheet.create({
     fontSize: PixelRatio.get() < 3 ? 8 : 12,
     paddingTop: 5,
   },
-  //@ts-ignore
   cardTxtMute: {
     ...R.fonts.AirbnbCerealAppBook,
     color: R.colors.grey,
     // fontSize: PixelRatio.get() < 3 ? 8 : 12,
     fontSize: 10,
   },
-  //@ts-ignore
   cardTxtExp: {
     ...R.fonts.AirbnbCerealAppMedium,
     // fontSize: PixelRatio.get() < 3 ? 15 : 18,

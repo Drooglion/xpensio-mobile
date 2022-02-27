@@ -34,7 +34,6 @@ export default StyleSheet.create({
     paddingLeft: 2,
     paddingRight: 2,
   },
-  //@ts-ignore
   tabTextActive: {
     ...R.theme.body,
     fontStyle: 'normal',
