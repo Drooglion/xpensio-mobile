@@ -7,12 +7,13 @@ import {
 } from 'types/User';
 import { IUserTeams } from 'types/Team';
 import { ICard, ICardRequest } from 'types/Card';
+import User from 'models/User'
 
 class Account {
   readonly id: string;
   readonly companyId: string;
   readonly company: IUserCompany;
-  readonly user: IUser;
+  readonly user: User;
   readonly roleName: string;
   readonly role: number;
   readonly root: boolean;

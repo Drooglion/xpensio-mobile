@@ -33,7 +33,7 @@ const AccountContainer: FC = ({ children }) => {
     submit();
   }, [dispatch, state.account]);
 
-  if (isLoading) {
+  if (isLoading || _isNil(state.account)) {
     return null;
   }
 

@@ -49,7 +49,8 @@ const teams: Team[] = [team1, team2];
 const Profile = () => {
   const { t } = useTranslation();
   const { state } = useResource();
-  console.log({ state });
+  const account = state!.account;
+  const user = new User(account!.user);
   const role = null;
   const navigation = useNavigation();
   const [showSignOut, setShowSignOut] = useState<boolean>(false);
@@ -93,15 +94,15 @@ const Profile = () => {
           />
           <View>
             <ProfileImg
-              user={profile}
+              user={user}
               size={PixelRatio.get() < 3 ? 100 : 110}
               showUploadBtn
             />
             <View style={styles.namePosition}>
-              <Text style={styles.name}>{profile.fullName()}</Text>
+              <Text style={styles.name}>{user.fullName()}</Text>
               <Text style={styles.position}>
                 {/* capitalize(StringUtils.roles(role)) */}
-                {profile.email}
+                {user.email}
               </Text>
             </View>
           </View>
@@ -109,7 +110,7 @@ const Profile = () => {
           <ProfileList
             teams={teams}
             signOut={() => setShowSignOut(true)}
-            profile={profile}
+            profile={user}
           />
         </Content>
       </Container>
