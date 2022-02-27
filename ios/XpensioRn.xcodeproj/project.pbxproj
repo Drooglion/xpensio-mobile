@@ -19,6 +19,7 @@
 		7EF68E3733C33B6898317E18 /* libPods-XpensioRn-XpensioRnTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-XpensioRn-XpensioRnTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8D2F6ED12F0E479097524F80 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 458894F5F19E42E48D67122D /* Roboto.ttf */; };
+		CDC9891E27C63A7E00C33B63 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = CDC9891D27C63A7E00C33B63 /* Config.xcconfig */; };
 		CE794531A6D04AE98F1649CE /* Roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 66AE7E9AE9A642DDBF1C6367 /* Roboto_medium.ttf */; };
 		DC2B593F96E646E5957F82C7 /* AirbnbCerealApp-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E03991AFD5B84F419A3498BD /* AirbnbCerealApp-Book.ttf */; };
 		DFFA612A8F3B420D8A42DE9F /* AirbnbCerealApp-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CAF5BEE8047348B0BF8606DA /* AirbnbCerealApp-Bold.ttf */; };
@@ -75,6 +76,7 @@
 		CD29A43E272C29D40002309C /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		CD29A43F272C29D40002309C /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		CD29A440272C29D40002309C /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		CDC9891D27C63A7E00C33B63 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		D00AAFFCFCFDA5787532823F /* Pods-XpensioRn.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XpensioRn.release.xcconfig"; path = "Target Support Files/Pods-XpensioRn/Pods-XpensioRn.release.xcconfig"; sourceTree = "<group>"; };
 		E03991AFD5B84F419A3498BD /* AirbnbCerealApp-Book.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AirbnbCerealApp-Book.ttf"; path = "../assets/fonts/AirbnbCerealApp-Book.ttf"; sourceTree = "<group>"; };
 		E79D935BDC1543F98735CD87 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				CDC9891D27C63A7E00C33B63 /* Config.xcconfig */,
 				13B07FAE1A68108700A75B9A /* XpensioRn */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* XpensioRnTests */,
@@ -329,6 +332,7 @@
 				CE794531A6D04AE98F1649CE /* Roboto_medium.ttf in Resources */,
 				8D2F6ED12F0E479097524F80 /* Roboto.ttf in Resources */,
 				715087004D4A4C6CB54E2AC4 /* rubicon-icon-font.ttf in Resources */,
+				CDC9891E27C63A7E00C33B63 /* Config.xcconfig in Resources */,
 				763024DE1C474956BEE394B8 /* AirbnbCerealApp-Black.ttf in Resources */,
 				DFFA612A8F3B420D8A42DE9F /* AirbnbCerealApp-Bold.ttf in Resources */,
 				DC2B593F96E646E5957F82C7 /* AirbnbCerealApp-Book.ttf in Resources */,
@@ -543,7 +547,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4MQX2538H9;
+				DEVELOPMENT_TEAM = S2ZQUG8QFW;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = XpensioRn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -572,7 +576,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4MQX2538H9;
+				DEVELOPMENT_TEAM = S2ZQUG8QFW;
 				INFOPLIST_FILE = XpensioRn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
