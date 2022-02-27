@@ -57,10 +57,8 @@ export const AuthContextProvider = ({ children }) => {
       signIn: async ({ token, user }) => {
         try {
           await AsyncStorage.setItem('AUTH_TOKEN', token);
-          if (user) {
-            if (user.id) {
-              await AsyncStorage.setItem('USER_ID', user.id);
-            }
+          if (user?.id) {
+            await AsyncStorage.setItem('USER_ID', user.id);
           }
 
           dispatch({
