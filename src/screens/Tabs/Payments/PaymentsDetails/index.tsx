@@ -158,12 +158,11 @@ const PaymentsDetails = () => {
     <StyleProvider style={getTheme(theme)}>
       <Container style={styles.container}>
         <DenyModal
-          isVisible={denyModalVisible}
+          visible={denyModalVisible}
           reason={denyReason}
-          handleTextChange={handleDenyReasonChange}
+          onReasonChanged={handleDenyReasonChange}
           onCancel={() => toggleDenyModal(false)}
           onSubmit={handleRejectPayment}
-          submitDisabled={!denyReason}
         />
         {details ? (
           <ParallaxContent

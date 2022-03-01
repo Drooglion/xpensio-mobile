@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Dimensions, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, TouchableOpacity, View } from 'react-native';
 import { Text, Icon } from 'native-base';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import ImageLoad from 'react-native-image-placeholder';
@@ -134,14 +134,10 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
         activeDotIndex={activeDotIndex}
         dotColor={R.colors.primary}
         inactiveDotColor={R.colors.white}
-        dotStyle={{ height: 10, width: 10, borderRadius: 10 }}
+        dotStyle={styles.dotStyle}
         inactiveDotScale={0.6}
         inactiveDotOpacity={0.8}
-        containerStyle={{
-          position: 'absolute',
-          bottom: -10,
-          alignSelf: 'center',
-        }}
+        containerStyle={styles.dotsContainer}
       />
     </View>
   );
@@ -163,6 +159,7 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
         renderForeground={() =>
           isEmpty(attachments) ? noAttachments() : hasAttachments()
         }
+        renderScrollComponent={() => <Animated.ScrollView />}
         renderFixedHeader={() => (
           <Header
             hasBack

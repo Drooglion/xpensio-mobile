@@ -26,6 +26,16 @@ const styles = StyleSheet.create({
     color: R.colors.white,
     padding: R.metrics.smallMargin,
   },
+  dotsContainer: {
+    position: 'absolute',
+    bottom: -10,
+    alignSelf: 'center',
+  },
+  dotStyle: {
+    height: 10,
+    width: 10,
+    borderRadius: 10,
+  },
 });
 
 export default styles;
