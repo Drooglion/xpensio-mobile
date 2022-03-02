@@ -11,15 +11,16 @@ import { useTranslation } from 'react-i18next';
 
 import styles from './styles';
 import { useNavigation } from '@react-navigation/native';
-import User from 'models/User';
+import Profile from 'models/Profile';
 import Team from 'models/Team';
 
 type Props = {
-  profile: User;
+  profile: Profile;
   teams: Team[];
   signOut: () => void;
 };
 const ProfileList = ({ profile, teams, signOut }: Props) => {
+  console.log('ProfileList profile: ', { profile });
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -29,15 +30,11 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
       await Linking.openURL(url);
     } catch (error) {
       console.log('error: ', error);
-      // HelperUtils.bugsnag.notify(error);
     }
   };
 
   const changePassword = () => {
-    navigation.navigate({
-      key: 'ChangePassword',
-      routeName: 'ChangePassword',
-    });
+    navigation.navigate('ChangePassword');
   };
 
   const notificationsSettings = () => {
@@ -110,7 +107,7 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
               styles.listItemRightTxt,
               { color: profile.verificationStatusColor() },
             ]}>
-            {profile.formattedVerificationStatus()}
+            {profile.formatVerificationStatus()}
           </Text>
         </ListItem>
         <ListItem style={styles.listItem} onPress={editProfile} disabled>
@@ -145,11 +142,7 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
               <Switch value={false} disabled />
             </ListItem>
           */}
-        <ListItem
-          style={styles.listItem}
-          button
-          onPress={changePassword}
-          disabled>
+        <ListItem style={styles.listItem} button onPress={changePassword}>
           <Text style={styles.listTxt}>{t('changePassword')}</Text>
           <Icon name="arrow-forward" style={styles.icon} />
         </ListItem>

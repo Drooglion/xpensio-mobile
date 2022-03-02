@@ -6,7 +6,7 @@ import styles from './styles';
 
 type LoadingModalProps = {
   visible: boolean;
-  onDismiss(): void;
+  onDismiss?: () => void;
 };
 
 const LoadingModal = ({ visible, onDismiss }: LoadingModalProps) => (
