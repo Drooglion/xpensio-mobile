@@ -93,7 +93,7 @@ export default StyleSheet.create({
     paddingBottom: hasNotch()
       ? R.metrics.doubleSection
       : R.metrics.doubleMargin,
-    paddingHorizontal: R.metrics.doubleMargin,
+    paddingHorizontal: R.metrics.baseMargin,
   },
   bottomSheetDetails: {
     justifyContent: 'center',

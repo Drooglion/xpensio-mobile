@@ -169,19 +169,21 @@ const RequestsList = ({
     let component = null;
     if (row) {
       console.log({ row });
-      const itemSectionTitle =
-        sectionBy === 'status'
-          ? sectionTitleByStatus(row[0].status)
-          : // @ts-ignore
-            row[0].createdAtFormatted;
-      const itemSection = renderSection(itemSectionTitle);
-      const itemRows = row.map((item, i) => renderItemRow(item, i));
-      component = (
-        <Fragment>
-          {itemSection}
-          {itemRows}
-        </Fragment>
-      );
+      if (row[0]) {
+        const itemSectionTitle =
+          sectionBy === 'status'
+            ? sectionTitleByStatus(row[0].status)
+            : // @ts-ignore
+              row[0].createdAtFormatted;
+        const itemSection = renderSection(itemSectionTitle);
+        const itemRows = row.map((item, i) => renderItemRow(item, i));
+        component = (
+          <Fragment>
+            {itemSection}
+            {itemRows}
+          </Fragment>
+        );
+      }
     }
     return component;
   };

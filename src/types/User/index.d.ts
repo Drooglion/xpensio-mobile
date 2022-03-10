@@ -1,7 +1,7 @@
 import { RoleStatus, UserStatus } from 'models/User';
 import { ICard, ICardRequest } from 'types/Card';
 import { IUserTeams } from 'types/Team';
-import User from 'models/User'
+import User from 'models/User';
 
 export interface IUser {
   id: string;

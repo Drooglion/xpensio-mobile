@@ -42,7 +42,7 @@ const ActivateCard = () => {
     setTimeout(() => {
       setIsSubmitting(false);
       if (code === '111111') {
-        navigation.navigate('ActivateCardSuccess');
+        navigation.navigate('ActivateCardSuccess' as never);
       }
     }, 1000);
   };
