@@ -22,17 +22,9 @@ import R from 'res/R';
 import styles from './styles';
 import { useAuth } from 'contexts/authContext';
 import { useResource } from 'contexts/resourceContext';
+import useGetProfile from 'hooks/api/private/profile/useGetProfile';
 
 /* Dummy data*/
-const profile: User = new User({
-  id: '1123123123',
-  firstName: 'Moses',
-  lastName: 'Lucas',
-  email: 'moses@xpens.io',
-  photoUrl: null,
-  status: 'verified',
-});
-
 const team1: Team = new Team({
   id: '12312312',
   name: 'Executives',
@@ -54,9 +46,8 @@ const Profile = () => {
   const role = null;
   const navigation = useNavigation();
   const [showSignOut, setShowSignOut] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Record<string, string>>({});
   const { signOut } = useAuth();
+  const { data: profile, loading, errors } = useGetProfile();
 
   const refetchProfile = () => {};
 
@@ -64,12 +55,13 @@ const Profile = () => {
     setShowSignOut(false);
     navigation.navigate('Payments');
     signOut();
-    // AuthUtils.signOut(navigation, client);
   };
 
-  if (loading) {
+  if (loading || !profile) {
     return <Loading />;
   }
+
+  console.log('Profile Root: ', { profile });
 
   return (
     <StyleProvider style={getTheme(theme)}>
@@ -110,7 +102,7 @@ const Profile = () => {
           <ProfileList
             teams={teams}
             signOut={() => setShowSignOut(true)}
-            profile={user}
+            profile={profile}
           />
         </Content>
       </Container>
