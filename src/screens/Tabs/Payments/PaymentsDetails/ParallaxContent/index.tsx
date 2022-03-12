@@ -153,13 +153,16 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
         onDelete={deleteReceipt}
       />
       <ParallaxScrollView
+        showsVerticalScrollIndicator={false}
         onChangeHeaderVisibility={setHeaderVisible}
         parallaxHeaderHeight={imageHeight}
         backgroundColor={R.colors.white}
         renderForeground={() =>
           isEmpty(attachments) ? noAttachments() : hasAttachments()
         }
-        renderScrollComponent={() => <Animated.ScrollView />}
+        renderScrollComponent={() => (
+          <Animated.ScrollView showsVerticalScrollIndicator={false} />
+        )}
         renderFixedHeader={() => (
           <Header
             hasBack

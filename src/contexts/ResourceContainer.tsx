@@ -48,10 +48,6 @@ const AccountContainer: FC = ({ children }) => {
     submit();
   }, [dispatch, authState.token]);
 
-  if (isLoading || _isNil(state.account)) {
-    return null;
-  }
-
   return <>{children}</>;
 };
 
