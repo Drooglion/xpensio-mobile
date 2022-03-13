@@ -26,16 +26,18 @@ import R from 'res/R';
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
+import useChangePassword from 'hooks/api/private/profile/useChangePassword';
 
 const ChangePassword = () => {
   const navigator = useNavigation();
-  const loading = false;
   const errors = [];
+  const { changePassword, loading, error } = useChangePassword();
   const { inputs, handleChange } = useForm({
     currentPassword: '',
     password: '',
     confirmPassword: '',
   });
+
   // const save = () => {
   //   const { navigation, changePassword } = this.props;
   //   const { formFields } = this.state;
@@ -62,6 +64,10 @@ const ChangePassword = () => {
   //       });
   //     });
   // }
+
+  const save = () => {
+    changePassword(inputs);
+  };
 
   return (
     <StyleProvider style={getTheme(theme)}>
@@ -98,7 +104,7 @@ const ChangePassword = () => {
               <Input
                 secureTextEntry
                 style={styles.input}
-                onChangeText={text => handleTextChange('confirmPassword', text)}
+                onChangeText={text => handleChange('confirmPassword', text)}
                 value={inputs.confirmPassword}
               />
             </Item>
@@ -113,7 +119,7 @@ const ChangePassword = () => {
               onPress={() => navigation.goBack()}>
               <Text style={styles.btnTxt}>{R.strings.cancel}</Text>
             </Button>
-            <Button primary style={styles.btnAction} onPress={() => {}}>
+            <Button primary style={styles.btnAction} onPress={save}>
               <Text style={styles.btnTxt}>{R.strings.save}</Text>
             </Button>
           </FooterTab>

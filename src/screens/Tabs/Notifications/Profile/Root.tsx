@@ -76,6 +76,7 @@ const Profile = () => {
 
         <Content
           contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl refreshing={false} onRefresh={refetchProfile} />
           }>
