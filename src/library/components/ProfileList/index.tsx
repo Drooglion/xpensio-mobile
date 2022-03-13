@@ -110,7 +110,7 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
             {profile.formatVerificationStatus()}
           </Text>
         </ListItem>
-        <ListItem style={styles.listItem} onPress={editProfile} disabled>
+        <ListItem style={styles.listItem} onPress={editProfile}>
           <Text style={styles.listTxt}>{t('personalDetails')}</Text>
           <Icon name="arrow-forward" style={styles.icon} />
         </ListItem>

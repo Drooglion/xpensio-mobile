@@ -153,7 +153,6 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
         onDelete={deleteReceipt}
       />
       <ParallaxScrollView
-        showsVerticalScrollIndicator={false}
         onChangeHeaderVisibility={setHeaderVisible}
         parallaxHeaderHeight={imageHeight}
         backgroundColor={R.colors.white}
