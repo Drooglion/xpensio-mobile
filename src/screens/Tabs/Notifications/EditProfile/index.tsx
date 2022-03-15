@@ -160,9 +160,11 @@ const EditProfile = () => {
           title={R.strings.personalDetails}
           onBackPress={() => navigation.goBack()}
         />
-        <Content contentContainerStyle={styles.content}>
+        <Content
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}>
           <KeyboardAvoidingView style={styles.form} enabled behavior="padding">
-            <EditProfileForm data={profile} />
+            <EditProfileForm profile={profile} errors={{}} loading={false} />
           </KeyboardAvoidingView>
         </Content>
         <Footer style={styles.footer}>

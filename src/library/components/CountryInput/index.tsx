@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Label, View } from 'native-base';
@@ -12,14 +11,16 @@ const CountryInput = props => (
     <View style={styles.wrapper}>
       <CountryPicker
         closeable
-        filterable
-        hideAlphabetFilter
-        translation="eng"
-        showCountryNameWithFlag
+        withFilter
+        withCountryNameButton
+        withEmoji={false}
+        withFlag
+        withCallingCode
+        preferredCountries={['NZ', 'AU', 'SG', 'PH']}
         styles={{
           header: {
-            marginTop: R.metrics.doubleSection
-          }
+            marginTop: R.metrics.doubleSection,
+          },
         }}
         {...props}
       />
