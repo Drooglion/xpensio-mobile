@@ -25,7 +25,11 @@ type ParamsType = {
   confirmPassword: string;
 };
 
-const useChangePassword = () => {
+type Props = {
+  callback: () => void;
+};
+
+const useChangePassword = ({ callback }: Props) => {
   const [params, setParams] = useState<ParamsType>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
@@ -40,8 +44,8 @@ const useChangePassword = () => {
           const response = await api.post('profile/change_password', {
             ...params,
           });
-          console.log('SUCCESS CHANGEPASSWORD: ', response);
           setLoading(false);
+          callback();
         } catch (err: any) {
           console.log({ err });
 
