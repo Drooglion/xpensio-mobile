@@ -3,7 +3,7 @@ import { IProfileType } from 'types/Profile';
 import { Icon, Item, Input, Label, Picker, Text, View } from 'native-base';
 import { isNil, sortBy } from 'lodash';
 import { getCode } from 'country-list';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import DatePickerField from 'library/components/DatePickerField';
 import PickerInput from 'library/components/PickerInput';
@@ -13,7 +13,6 @@ import HelperUtils from 'library/utils/HelperUtils';
 import R from 'res/R';
 import styles from './styles';
 import useForm from 'hooks/useForm';
-import dayjs from 'dayjs';
 
 type Props = {
   profile: IProfileType;
@@ -45,88 +44,37 @@ const EditProfileForm = ({ profile, errors, loading }: Props) => {
 
   return (
     <>
-      {/* <View>
-        <Item stackedLabel error={!isNil(errors.title)}>
-          <Label style={styles.label}>{R.strings.title}</Label>
-          <Query query={REFERENCES.TITLES}>
-            {({ error, loading: loadingData, data }) => {
-              let titleList = [];
-
-              if (error) {
-                HelperUtils.bugsnag.notify(error);
-                return null;
-              }
-
-              if (loadingData) return <LoadingIndicator size={3} />;
-
-              const {
-                titles: {
-                  payload: { titles },
-                },
-              } = data;
-              titleList = titles;
-
-              return (
-                <PickerInput
-                  disabled={loading}
-                  mode="dropdown"
-                  onValueChange={text => handleChange('title', text)}
-                  placeHolder={R.strings.title}
-                  placeholderIconColor={R.colors.subhead}
-                  selectedValue={inputs.title || ''}>
-                  {titleList.map(title => (
-                    <Picker.Item
-                      key={title.code}
-                      label={title.description}
-                      value={title.code}
-                    />
-                  ))}
-                </PickerInput>
-              );
-            }}
-          </Query>
-        </Item>
-        <Item stackedLabel error={!isNil(errors.nationality)}>
-          <Label style={styles.label}>{R.strings.nationality}</Label>
-          <Query query={REFERENCES.NATIONALITIES}>
-            {({ error, loading: loadingData, data }) => {
-              let nationalityList = [];
-
-              if (error) {
-                HelperUtils.bugsnag.notify(error);
-                return null;
-              }
-
-              if (loadingData) return <LoadingIndicator size={3} />;
-
-              const {
-                nationalities: {
-                  payload: { nationalities },
-                },
-              } = data;
-              nationalityList = sortBy(nationalities, 'code');
-
-              return (
-                <PickerInput
-                  disabled={loading}
-                  mode="dropdown"
-                  onValueChange={text => handleChange('nationality', text)}
-                  placeHolder={R.strings.nationality}
-                  placeholderIconColor={R.colors.subhead}
-                  selectedValue={inputs.nationality || null}>
-                  {nationalityList.map(nationality => (
-                    <Picker.Item
-                      key={nationality.code}
-                      label={nationality.code}
-                      value={nationality.code}
-                    />
-                  ))}
-                </PickerInput>
-              );
-            }}
-          </Query>
-        </Item>
-      </View> */}
+      <Item stackedLabel error={!isNil(errors?.title)}>
+        <Label style={styles.label}>{R.strings.title}</Label>
+        <PickerInput
+          disabled={loading}
+          mode="dropdown"
+          onValueChange={(text: string) => handleChange('title', text)}
+          placeHolder={R.strings.title}
+          placeholderIconColor={R.colors.subhead}
+          selectedValue={inputs.title}>
+          <Picker.Item label="Mr" value="Mr" />
+          <Picker.Item label="Ms" value="Ms" />
+        </PickerInput>
+      </Item>
+      <Item stackedLabel error={!isNil(errors?.nationality)}>
+        <Label style={styles.label}>{R.strings.nationality}</Label>
+        <PickerInput
+          disabled={loading}
+          mode="dropdown"
+          onValueChange={(text: string) => handleChange('nationality', text)}
+          placeHolder={R.strings.nationality}
+          placeholderIconColor={R.colors.subhead}
+          selectedValue={inputs.nationality}>
+          {R.nationalities.map((nationality: Record<string, string>) => (
+            <Picker.Item
+              key={nationality.nationality}
+              label={nationality.nationality}
+              value={nationality.nationality}
+            />
+          ))}
+        </PickerInput>
+      </Item>
       <Item
         stackedLabel
         error={!isNil(errors?.birthday)}

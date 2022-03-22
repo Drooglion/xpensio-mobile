@@ -163,7 +163,7 @@ const EditProfile = () => {
         <Content
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}>
-          <KeyboardAvoidingView style={styles.form} enabled behavior="padding">
+          <KeyboardAvoidingView enabled behavior="padding">
             <EditProfileForm profile={profile} errors={{}} loading={false} />
           </KeyboardAvoidingView>
         </Content>
