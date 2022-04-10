@@ -12,6 +12,7 @@ import REFERENCES from 'library/api/References';
 import HelperUtils from 'library/utils/HelperUtils';
 import R from 'res/R';
 import styles from './styles';
+import { Country } from 'react-native-country-picker-modal';
 
 type Props = {
   inputs: Record<string, any>;
@@ -206,10 +207,11 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
         </Item>
         <Item stackedlabel error={!isNil(errors?.country)}>
           <CountryInput
-            onChange={(country: Record<string, string>) =>
-              handleChange('country', country.name)
-            }
-            // cca2={getCode(inputs.country)}
+            onSelect={(country: Country) => {
+              handleChange('country', country.name);
+              handleChange('cca2', country.cca2);
+            }}
+            countryCode={getCode(inputs.country)}
           />
         </Item>
         <Item stackedLabel error={!isNil(errors?.state)}>

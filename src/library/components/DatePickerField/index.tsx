@@ -43,6 +43,7 @@ const customStyles = StyleSheet.create({
     left: 8,
     bottom: 4,
     width: R.metrics.windowWidth,
+    color: 'black',
   },
   dateInput: {
     borderColor: 'transparent',

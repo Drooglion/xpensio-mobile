@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Label, View } from 'native-base';
-import CountryPicker from 'react-native-country-picker-modal';
+import CountryPicker, {
+  Country,
+  CountryCode,
+} from 'react-native-country-picker-modal';
 import R from 'res/R';
 import styles from './styles';
 
 type Props = {
-  onChange: () => void;
+  onSelect: (country: Country) => void;
+  countryCode: CountryCode;
 };
-const CountryInput = ({ onChange }: Props) => (
+
+const CountryInput = ({ onSelect, countryCode }: Props) => (
   <View style={{ alignItems: 'flex-start' }}>
     <Label style={styles.label}>{R.strings.country}</Label>
     <View style={styles.wrapper}>
@@ -24,7 +29,8 @@ const CountryInput = ({ onChange }: Props) => (
             marginTop: R.metrics.doubleSection,
           },
         }}
-        onChange={onChange}
+        onSelect={onSelect}
+        countryCode={countryCode}
       />
     </View>
   </View>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import Profile from 'models/Profile';
 import { useResource } from 'contexts/resourceContext';
 import useApi from 'hooks/useApi';
 import _capitalize from 'lodash/capitalize';
@@ -53,8 +54,10 @@ const useUpdateProfile = () => {
   ): Promise<TupleResult | undefined> => {
     setLoading(true);
     try {
-      await api.put('profile', params);
+      const res = await api.put('profile', params);
+      const profile = new Profile(res.data.payload);
       setLoading(false);
+      dispatch({ type: 'SET_PROFILE', profile });
       return ['Profile Updated', true];
     } catch (err: any) {
       const message = err!.response.data.messages[0] as string;
