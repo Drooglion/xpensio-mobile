@@ -38,7 +38,6 @@ const customStyles = StyleSheet.create({
     color: R.colors.primary,
   },
   dateText: {
-    color: 'white',
     fontSize: 17,
     position: 'absolute',
     left: 8,

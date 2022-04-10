@@ -26,8 +26,6 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
 
   const titles: string[] = ['Mr', 'Mrs', 'Miss', 'Dr', 'Madam'];
 
-  console.log({ inputs });
-
   /* Virtualized List issue triggered when opening picker is pending at github  - https://github.com/GeekyAnts/NativeBase/issues/3433  */
 
   return (
@@ -71,7 +69,8 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
         style={styles.itemLeft}>
         <Label style={styles.label}>{R.strings.birthday}</Label>
         <DatePickerField
-          onChangeText={(text: string) => console.log('birthday', text)}
+          date={inputs.birthday || ''}
+          onDateChange={(date: string) => handleChange('birthday', date)}
         />
       </Item>
       <Item stackedLabel error={!isNil(errors?.gender)}>
