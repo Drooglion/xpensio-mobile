@@ -49,10 +49,10 @@ export default function Tabs() {
     //@ts-ignore
     <Tab.Navigator screenOptions={screenOptions}>
       {/* Move Notifications at the end */}
-      <Tab.Screen name="Notifications" component={NotificationsStack} />
       <Tab.Screen name="Payments" component={PaymentsStack} />
       <Tab.Screen name="Requests" component={RequestsStack} />
       <Tab.Screen name="My cards" component={CardsStack} />
+      <Tab.Screen name="Notifications" component={NotificationsStack} />
     </Tab.Navigator>
   );
 }
