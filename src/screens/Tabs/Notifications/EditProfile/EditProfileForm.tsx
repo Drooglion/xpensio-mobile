@@ -12,35 +12,23 @@ import REFERENCES from 'library/api/References';
 import HelperUtils from 'library/utils/HelperUtils';
 import R from 'res/R';
 import styles from './styles';
-import useForm from 'hooks/useForm';
 
 type Props = {
-  profile: IProfileType;
+  inputs: Record<string, any>;
+  handleChange: (name: string, value: any) => void;
   errors: Record<string, string>;
   loading: boolean;
 };
 
-const EditProfileForm = ({ profile, errors, loading }: Props) => {
-  const mobileNumberVerified = profile.mobileNumberVerified;
-  const emailVerified = profile.emailVerified;
-  const { inputs, handleChange } = useForm({
-    title: profile.title || '',
-    firstName: profile.firstName || '',
-    middleName: profile.middleName || '',
-    lastName: profile.lastName || '',
-    email: profile.email || '',
-    mobileNumber: profile.mobileNumber || '',
-    birthday: (profile && dayjs(profile.birthday).format('YYYY-MM-DD')) || '',
-    nationality: profile.nationality || '',
-    gender: profile.gender || 0,
-    addressLine1: profile.addressLine1 || '',
-    addressLine2: profile.addressLine2 || '',
-    city: profile.city || '',
-    country: profile.country || '',
-    state: profile.state || '',
-    zipCode: profile.zipCode || '',
-  });
-  console.log({ profile });
+const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
+  const mobileNumberVerified = inputs.mobileNumberVerified;
+  const emailVerified = inputs.emailVerified;
+
+  const titles: string[] = ['Mr', 'Mrs', 'Miss', 'Dr', 'Madam'];
+
+  console.log({ inputs });
+
+  /* Virtualized List issue triggered when opening picker is pending at github  - https://github.com/GeekyAnts/NativeBase/issues/3433  */
 
   return (
     <>
@@ -53,10 +41,12 @@ const EditProfileForm = ({ profile, errors, loading }: Props) => {
           placeHolder={R.strings.title}
           placeholderIconColor={R.colors.subhead}
           selectedValue={inputs.title}>
-          <Picker.Item label="Mr" value="Mr" />
-          <Picker.Item label="Ms" value="Ms" />
+          {titles.map(title => (
+            <Picker.Item label={title} value={title} key={title} />
+          ))}
         </PickerInput>
       </Item>
+
       <Item stackedLabel error={!isNil(errors?.nationality)}>
         <Label style={styles.label}>{R.strings.nationality}</Label>
         <PickerInput
@@ -65,7 +55,7 @@ const EditProfileForm = ({ profile, errors, loading }: Props) => {
           onValueChange={(text: string) => handleChange('nationality', text)}
           placeHolder={R.strings.nationality}
           placeholderIconColor={R.colors.subhead}
-          selectedValue={inputs.nationality}>
+          selectedValue={inputs?.nationality || ''}>
           {R.nationalities.map((nationality: Record<string, string>) => (
             <Picker.Item
               key={nationality.nationality}
@@ -80,7 +70,9 @@ const EditProfileForm = ({ profile, errors, loading }: Props) => {
         error={!isNil(errors?.birthday)}
         style={styles.itemLeft}>
         <Label style={styles.label}>{R.strings.birthday}</Label>
-        <DatePickerField />
+        <DatePickerField
+          onChangeText={(text: string) => console.log('birthday', text)}
+        />
       </Item>
       <Item stackedLabel error={!isNil(errors?.gender)}>
         <Label style={styles.label}>{R.strings.gender}</Label>
@@ -90,7 +82,7 @@ const EditProfileForm = ({ profile, errors, loading }: Props) => {
           onValueChange={(text: string) => handleChange('gender', text)}
           placeHolder={R.strings.gender}
           placeholderIconColor={R.colors.subhead}
-          selectedValue={inputs.gender.toString() || '0'}>
+          selectedValue={inputs?.gender?.toString() || '0'}>
           <Picker.Item label={R.strings.female} value="0" key={0} />
           <Picker.Item label={R.strings.male} value="1" key={1} />
         </PickerInput>
@@ -215,9 +207,10 @@ const EditProfileForm = ({ profile, errors, loading }: Props) => {
         </Item>
         <Item stackedlabel error={!isNil(errors?.country)}>
           <CountryInput
-          // disabled={loading}
-          // onChange={country => handleChange('country', country.name)}
-          // cca2={getCode(inputs.country)}
+            onChange={(country: Record<string, string>) =>
+              handleChange('country', country.name)
+            }
+            // cca2={getCode(inputs.country)}
           />
         </Item>
         <Item stackedLabel error={!isNil(errors?.state)}>

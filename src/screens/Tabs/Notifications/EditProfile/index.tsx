@@ -1,34 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import dayjs from 'dayjs';
-import { KeyboardAvoidingView } from 'react-native';
-import {
-  Button,
-  Container,
-  Content,
-  Footer,
-  FooterTab,
-  Text,
-  StyleProvider,
-} from 'native-base';
-import DeviceInfo from 'react-native-device-info';
-import { getName } from 'country-list';
-import { capitalize, isEmpty } from 'lodash';
+import React from 'react';
 import Loading from 'library/components/Loading';
 
-import Header from 'library/components/Header';
-import LoadingIndicator from 'library/components/LoadingIndicator';
-
-import ApiUtils from 'library/utils/ApiUtils';
-import { useNavigation } from '@react-navigation/native';
-
-import R from 'res/R';
-import getTheme from 'native-base-theme/components';
-import theme from 'native-base-theme/variables/theme';
-import EditProfileForm from './EditProfileForm';
-import styles from './styles';
-import { useTranslation } from 'react-i18next';
-import useForm from 'hooks/useForm';
 import useGetProfile from 'hooks/api/private/profile/useGetProfile';
+
+import Root from './Root';
 
 // const EditProfile = ({ updateProfile, showDialogModal }) => {
 //   const { t } = useTranslation();
@@ -142,8 +117,6 @@ import useGetProfile from 'hooks/api/private/profile/useGetProfile';
 // };
 
 const EditProfile = () => {
-  const { t } = useTranslation();
-  const navigation = useNavigation();
   const { data, loading } = useGetProfile();
 
   if (loading || !data) {
@@ -152,45 +125,7 @@ const EditProfile = () => {
 
   const profile = data.profile;
 
-  return (
-    <StyleProvider style={getTheme(theme)}>
-      <Container>
-        <Header
-          hasBack
-          title={R.strings.personalDetails}
-          onBackPress={() => navigation.goBack()}
-        />
-        <Content
-          contentContainerStyle={styles.content}
-          showsVerticalScrollIndicator={false}>
-          <KeyboardAvoidingView enabled behavior="padding">
-            <EditProfileForm profile={profile} errors={{}} loading={false} />
-          </KeyboardAvoidingView>
-        </Content>
-        <Footer style={styles.footer}>
-          <FooterTab style={styles.footerTab}>
-            <Button
-              danger
-              disabled={loading}
-              style={styles.btnCancel}
-              onPress={() => navigation.goBack()}>
-              <Text style={styles.btnTxt}>{R.strings.cancel}</Text>
-            </Button>
-            <Button
-              disabled={loading}
-              style={styles.btnSave}
-              onPress={() => {}}>
-              {loading ? (
-                <LoadingIndicator color={R.colors.white} size={5} />
-              ) : (
-                <Text style={styles.btnTxt}>{R.strings.save}</Text>
-              )}
-            </Button>
-          </FooterTab>
-        </Footer>
-      </Container>
-    </StyleProvider>
-  );
+  return <Root loading={loading} profile={profile} />;
 };
 
 export default EditProfile;

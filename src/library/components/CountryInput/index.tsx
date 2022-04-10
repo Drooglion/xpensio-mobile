@@ -5,12 +5,14 @@ import CountryPicker from 'react-native-country-picker-modal';
 import R from 'res/R';
 import styles from './styles';
 
-const CountryInput = props => (
+type Props = {
+  onChange: () => void;
+};
+const CountryInput = ({ onChange }: Props) => (
   <View style={{ alignItems: 'flex-start' }}>
     <Label style={styles.label}>{R.strings.country}</Label>
     <View style={styles.wrapper}>
       <CountryPicker
-        closeable
         withFilter
         withCountryNameButton
         withEmoji={false}
@@ -22,7 +24,7 @@ const CountryInput = props => (
             marginTop: R.metrics.doubleSection,
           },
         }}
-        {...props}
+        onChange={onChange}
       />
     </View>
   </View>
