@@ -10,103 +10,14 @@ import HelperUtils from 'library/utils/HelperUtils';
 import getTheme from 'native-base-theme/components';
 import ListLoader from 'library/components/ListLoader';
 import theme from 'native-base-theme/variables/theme';
+import useFetchNotifications from 'hooks/api/private/notification/useFetchNotifications';
 
 import styles from './styles';
 
 const Notifications = () => {
   const { t } = useTranslation();
   const navigator = useNavigation();
-  const [notifications, setNotifications] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    setNotifications([
-      {
-        timestamp: 1642458000000,
-        image:
-          'https://res.cloudinary.com/crunchbase-production/image/upload/c_thumb,h_256,w_256,f_auto,g_faces,z_0.7,q_auto:eco,dpr_1/ckhdg6rldsa3hakgsx1r',
-        user: {
-          firstName: 'Vanessa',
-          lastName: 'Liwanag',
-        },
-        message:
-          'Vanessa Liwanag has approved your request - Philippine Airlines Tickets.',
-        read: false,
-      },
-      {
-        timestamp: 1642445640000,
-        image: 'https://avatars.githubusercontent.com/u/2374569?v=4',
-        user: {
-          firstName: 'Dominick',
-          lastName: 'Danao',
-        },
-        message:
-          'Dominick Danao has approved your request - Postman Pro License.',
-        read: false,
-      },
-      {
-        timestamp: 1642384920000,
-        image:
-          'https://res.cloudinary.com/crunchbase-production/image/upload/c_thumb,h_256,w_256,f_auto,g_faces,z_0.7,q_auto:eco,dpr_1/ckhdg6rldsa3hakgsx1r',
-        user: {
-          firstName: 'Vanessa',
-          lastName: 'Liwanag',
-        },
-        message: 'Vanessa Liwanag has approved your request - Macbook Pro.',
-        read: true,
-      },
-      {
-        timestamp: 1642102140000,
-        image:
-          'https://pbs.twimg.com/profile_images/2490713091/zte33n566zeyyipyss63.jpeg',
-        user: {
-          firstName: 'Niño',
-          lastName: 'Galpo',
-        },
-        message: 'Niño Galpo has requested a plastic card.',
-        read: true,
-      },
-      {
-        timestamp: 1642132920000,
-        image: null,
-        user: {
-          firstName: 'Mark',
-          lastName: 'Ronquillo',
-        },
-        message:
-          'Mark Ronquillo has requested a budget for 16" Samsung Monitor.',
-        read: true,
-      },
-      {
-        timestamp: 1641864780000,
-        image: null,
-        user: {
-          firstName: 'Mark',
-          lastName: 'Ronquillo',
-        },
-        message:
-          'Mark Ronquillo has requested a budget for Mechanical keyboard.',
-        read: true,
-      },
-      {
-        timestamp: 1641802620000,
-        image: 'https://avatars.githubusercontent.com/u/2374569?v=4',
-        user: {
-          firstName: 'Dominick',
-          lastName: 'Danao',
-        },
-        message: 'Dominick Danao has approved your request for plastic card.',
-        read: true,
-      },
-    ]);
-  }, []);
-
-  const refetch = async () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 800);
-  };
+  const { data: notifications, isLoading, refetch } = useFetchNotifications();
 
   const markAsRead = async (id: string) => {};
 
@@ -139,12 +50,12 @@ const Notifications = () => {
       <Container>
         <Header title={t('notifications')} linkToProfile />
         <View style={styles.content}>
-          {loading ? (
+          {isLoading ? (
             <ListLoader />
           ) : notifications.length > 0 ? (
             <NotificationsList
               data={notifications}
-              isRefreshing={loading}
+              isRefreshing={isLoading}
               onRefresh={refetch}
               onItemClick={itemClickHandler}
             />
