@@ -83,8 +83,8 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
           placeHolder={R.strings.gender}
           placeholderIconColor={R.colors.subhead}
           selectedValue={inputs?.gender?.toString() || '0'}>
-          <Picker.Item label={R.strings.female} value="0" key={0} />
-          <Picker.Item label={R.strings.male} value="1" key={1} />
+          <Picker.Item label={R.strings.female} value="1" key={1} />
+          <Picker.Item label={R.strings.male} value="2" key={2} />
         </PickerInput>
       </Item>
       <Item error={!isNil(errors?.mobileNumber)}>
