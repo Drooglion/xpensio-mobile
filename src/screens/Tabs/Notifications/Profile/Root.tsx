@@ -47,7 +47,7 @@ const Profile = () => {
   const navigation = useNavigation();
   const [showSignOut, setShowSignOut] = useState<boolean>(false);
   const { signOut } = useAuth();
-  const { data: profile, loading, errors } = useGetProfile();
+  const { data: profile, isLoading } = useGetProfile();
 
   const refetchProfile = () => {};
 
@@ -57,11 +57,9 @@ const Profile = () => {
     signOut();
   };
 
-  if (loading || !profile) {
+  if (isLoading || !profile) {
     return <Loading />;
   }
-
-  console.log('Profile Root: ', { profile });
 
   return (
     <StyleProvider style={getTheme(theme)}>

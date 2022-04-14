@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from 'react-query';
 
 import Profile from 'models/Profile';
-import { useResource } from 'contexts/resourceContext';
 import useApi from 'hooks/useApi';
 
 /*
@@ -16,39 +15,19 @@ import useApi from 'hooks/useApi';
  */
 
 const useGetProfile = () => {
-  const [data, setData] = useState<Profile>();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>();
-  const { dispatch } = useResource();
   const { api } = useApi();
 
   const fetchProfile = async () => {
-    setLoading(true);
     try {
       const res = await api.get('profile');
       const profile = new Profile(res.data.payload);
-      dispatch({ type: 'SET_PROFILE', profile });
-      setData(profile);
-      setLoading(false);
+      return profile;
     } catch (err: any) {
-      console.log({ err });
-      /* Because api returns a firebase related error message, set a friendly message instead. */
-      setError(err!.response.data.payload.messages[0] as string);
-      setLoading(false);
+      throw new Error(err);
     }
   };
 
-  useEffect(() => {
-    fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
-
-  return {
-    data,
-    refresh: fetchProfile,
-    loading,
-    error,
-  };
+  return useQuery('profile', fetchProfile);
 };
 
 export default useGetProfile;

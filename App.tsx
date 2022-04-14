@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 // import Config from 'react-native-config';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleProvider } from 'native-base';
@@ -19,14 +20,18 @@ const App = () => {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
+  /* client for react-query provider */
+  const queryClient = new QueryClient();
 
   return (
     <StyleProvider style={getTheme(platform)}>
-      <AuthContextProvider>
-        <ResourceProvider>
-          <RootNavigator />
-        </ResourceProvider>
-      </AuthContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthContextProvider>
+          <ResourceProvider>
+            <RootNavigator />
+          </ResourceProvider>
+        </AuthContextProvider>
+      </QueryClientProvider>
     </StyleProvider>
   );
 };
