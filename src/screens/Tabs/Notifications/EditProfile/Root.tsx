@@ -55,7 +55,11 @@ const Root = ({ loading, profile }: Props) => {
     zipCode: profile?.zipCode || '',
   });
 
-  const { updateProfile, loading: updating } = useUpdateProfile();
+  const { mutate: updateProfile, isLoading: updating } = useUpdateProfile();
+
+  const goBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
 
   const submit = useCallback(async () => {
     /* Include first some required fields that isn't
@@ -70,11 +74,20 @@ const Root = ({ loading, profile }: Props) => {
       birthPlace: profile.birthPlace,
       civilStatus: profile.civilStatus,
     } as ParamsType;
-    const [message, ok] = await updateProfile(payload);
 
-    Toast.show({
-      type: ok ? 'success' : 'error',
-      text1: message,
+    updateProfile(payload, {
+      onSuccess: data => {
+        Toast.show({
+          type: 'success',
+          text1: 'Profile Updated',
+        });
+      },
+      onError: (err: any) => {
+        Toast.show({
+          type: 'error',
+          text1: err.message,
+        });
+      },
     });
   }, [inputs, updateProfile, profile]);
 
@@ -84,7 +97,7 @@ const Root = ({ loading, profile }: Props) => {
         <Header
           hasBack
           title={R.strings.personalDetails}
-          onBackPress={() => navigation.goBack()}
+          onBackPress={goBack}
         />
         <Toast />
         <Content
@@ -105,7 +118,7 @@ const Root = ({ loading, profile }: Props) => {
               danger
               disabled={loading || updating}
               style={styles.btnCancel}
-              onPress={() => navigation.goBack()}>
+              onPress={goBack}>
               <Text style={styles.btnTxt}>{R.strings.cancel}</Text>
             </Button>
             <Button

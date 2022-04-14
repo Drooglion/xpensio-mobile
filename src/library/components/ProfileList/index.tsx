@@ -20,7 +20,6 @@ type Props = {
   signOut: () => void;
 };
 const ProfileList = ({ profile, teams, signOut }: Props) => {
-  console.log('ProfileList profile: ', { profile });
   const { t } = useTranslation();
   const navigation = useNavigation();
 

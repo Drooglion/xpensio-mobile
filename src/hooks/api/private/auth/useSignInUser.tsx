@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQueryClient } from 'react-query';
 
 import isEmpty from 'lodash/isEmpty';
 import User from 'models/User';
@@ -33,6 +34,7 @@ const useSigninUser = () => {
   const { dispatch } = useResource();
   const { signIn } = useAuth();
   const { api } = useApi();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const submit = async () => {
@@ -46,6 +48,10 @@ const useSigninUser = () => {
           });
 
           const user = new User(response.data.payload);
+          queryClient.setQueryData('user', user);
+          /* Remove this SET_USER in the future
+           * since it's we now use react-query
+           */
           dispatch({ type: 'SET_USER', user });
           if (user.token) {
             const acctRes = await api.get('account/me/', {
@@ -54,8 +60,7 @@ const useSigninUser = () => {
               },
             });
             const account = new Account(acctRes.data.payload);
-            console.log('account', account);
-            dispatch({ type: 'SET_ACCOUNT', account });
+            queryClient.setQueryData('account', account);
             signIn({ token: user.token, user: account });
           } else {
             signIn({ token: user.token, user: null });

@@ -3,9 +3,7 @@ import User from 'models/User';
 import Card from 'models/Card';
 import Payment from 'models/Payment';
 import { UserWalletBalance } from 'models/Wallet';
-import Account from 'models/Account';
 import Request from 'models/Request';
-import Profile from 'models/Profile';
 
 const reducer = (prevState: StateType, action: any) => {
   switch (action.type) {
@@ -13,11 +11,6 @@ const reducer = (prevState: StateType, action: any) => {
       return {
         ...prevState,
         user: action.user,
-      };
-    case 'SET_ACCOUNT':
-      return {
-        ...prevState,
-        account: action.account,
       };
     case 'SET_USER_BALANCE':
       return {
@@ -39,32 +32,23 @@ const reducer = (prevState: StateType, action: any) => {
         ...prevState,
         requests: action.requests,
       };
-    case 'SET_PROFILE':
-      return {
-        ...prevState,
-        profile: action.profile,
-      };
   }
 };
 
 type StateType = {
   user: User | undefined;
-  account: Account | undefined;
   balance: UserWalletBalance | undefined;
   card: Card | undefined;
   payments: Payment[];
   requests: Request[];
-  profile: Profile | undefined;
 };
 
 const initialState: StateType = {
   user: undefined,
-  account: undefined,
   balance: undefined,
   card: undefined,
   payments: [],
   requests: [],
-  profile: undefined,
 };
 
 type ResourceContextType = {
