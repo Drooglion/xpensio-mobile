@@ -4,12 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { has } from 'lodash';
 
-import NotificationUtils from 'library/utils/NotificationUtils';
-import NotificationsList from 'library/components/NotificationsList';
-import NOTIFICATIONS from 'library/api/Notifications';
 import Header from 'library/components/Header';
+import NotificationsList from 'library/components/NotificationsList';
 import HelperUtils from 'library/utils/HelperUtils';
-import R from 'res/R';
 import getTheme from 'native-base-theme/components';
 import ListLoader from 'library/components/ListLoader';
 import theme from 'native-base-theme/variables/theme';

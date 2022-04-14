@@ -7,6 +7,7 @@ export interface IUser {
   id: string;
   firstName: string;
   lastName: string;
+  middleName: string | null;
   email: string;
   photoUrl: string | null;
   status: UserStatus;

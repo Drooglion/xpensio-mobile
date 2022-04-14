@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PixelRatio, RefreshControl } from 'react-native';
 import { Container, Content, StyleProvider, Text, View } from 'native-base';
 import { useTranslation } from 'react-i18next';
@@ -43,6 +43,7 @@ const Profile = () => {
   const navigation = useNavigation();
   const [showSignOut, setShowSignOut] = useState<boolean>(false);
   const { signOut } = useAuth();
+
   const {
     data: profile,
     isLoading: profileLoading,
@@ -54,13 +55,14 @@ const Profile = () => {
     refetch: refetchAccount,
   } = useFetchAccount();
 
+  const refetch = useCallback(() => {
+    refetchAccount();
+    refetchProfile();
+  }, [refetchAccount, refetchProfile]);
+
   useEffect(() => {
-    if (isFocused) {
-      refetchAccount();
-      refetchProfile();
-      console.log('refetched!');
-    }
-  }, [isFocused, refetchAccount, refetchProfile]);
+    isFocused && refetch();
+  }, [isFocused, refetch]);
 
   const onSignOut = () => {
     setShowSignOut(false);
@@ -89,7 +91,7 @@ const Profile = () => {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl refreshing={false} onRefresh={refetchProfile} />
+            <RefreshControl refreshing={false} onRefresh={refetch} />
           }>
           <SignOutModal
             isVisible={showSignOut}

@@ -6,6 +6,7 @@ class User {
   readonly id: string;
   readonly firstName: string;
   readonly lastName: string;
+  readonly middleName: string | null;
   readonly email: string;
   readonly photoUrl: string | null;
   readonly status: UserStatus;
@@ -20,6 +21,7 @@ class User {
     id,
     firstName,
     lastName,
+    middleName,
     email,
     photoUrl,
     status,
@@ -33,6 +35,7 @@ class User {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
+    this.middleName = middleName;
     this.email = email;
     this.status = status;
     /* Defaults to our profile photo if user has no photo */
