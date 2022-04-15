@@ -11,7 +11,8 @@ class Notification {
   readonly notificationObjectId: string;
   readonly orderTimestamp: number;
   readonly read: boolean;
-  readonly systemNotification: boolean; readonly timestamp: number;
+  readonly systemNotification: boolean;
+  readonly timestamp: number;
   readonly user: User;
   readonly userId: string;
   readonly notificationId: string;
