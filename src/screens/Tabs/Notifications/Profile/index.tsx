@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { PixelRatio, RefreshControl } from 'react-native';
+
 import { Container, Content, StyleProvider, Text, View } from 'native-base';
 import { useTranslation } from 'react-i18next';
 
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 
-import User from 'models/User';
 import Team from 'models/Team';
 import Header from 'library/components/Header';
 import Loading from 'library/components/Loading';
@@ -20,7 +20,6 @@ import R from 'res/R';
 import styles from './styles';
 import { useAuth } from 'contexts/authContext';
 import useGetProfile from 'hooks/api/private/profile/useGetProfile';
-import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
 
 /* Dummy data*/
 const team1: Team = new Team({
@@ -49,16 +48,10 @@ const Profile = () => {
     isLoading: profileLoading,
     refetch: refetchProfile,
   } = useGetProfile();
-  const {
-    data: account,
-    isLoading: accountLoading,
-    refetch: refetchAccount,
-  } = useFetchAccount();
 
   const refetch = useCallback(() => {
-    refetchAccount();
     refetchProfile();
-  }, [refetchAccount, refetchProfile]);
+  }, [refetchProfile]);
 
   useEffect(() => {
     isFocused && refetch();
@@ -70,11 +63,9 @@ const Profile = () => {
     signOut();
   };
 
-  if (profileLoading || accountLoading || !profile) {
+  if (profileLoading || !profile) {
     return <Loading />;
   }
-
-  const user = new User(account!.user);
 
   return (
     <StyleProvider style={getTheme(theme)}>
@@ -99,17 +90,10 @@ const Profile = () => {
             onCancel={() => setShowSignOut(false)}
           />
           <View>
-            <ProfileImg
-              user={user}
-              size={PixelRatio.get() < 3 ? 100 : 110}
-              showUploadBtn
-            />
+            <ProfileImg size={PixelRatio.get() < 3 ? 100 : 110} showUploadBtn />
             <View style={styles.namePosition}>
-              <Text style={styles.name}>{user.fullName()}</Text>
-              <Text style={styles.position}>
-                {/* capitalize(StringUtils.roles(role)) */}
-                {user.email}
-              </Text>
+              <Text style={styles.name}>{profile.fullName()}</Text>
+              <Text style={styles.position}>{profile.profile.email}</Text>
             </View>
           </View>
           <ProfileAnalytics amount={17} receiptsMatch={90} />

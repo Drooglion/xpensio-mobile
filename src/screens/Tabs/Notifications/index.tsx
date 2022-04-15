@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Container, StyleProvider, View } from 'native-base';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
-import { has } from 'lodash';
+import { has, isEmpty } from 'lodash';
+import _isEmpty from 'lodash/isEmpty';
 
 import Header from 'library/components/Header';
 import NotificationsList from 'library/components/NotificationsList';
@@ -50,16 +51,16 @@ const Notifications = () => {
       <Container>
         <Header title={t('notifications')} linkToProfile />
         <View style={styles.content}>
-          {isLoading ? (
+          {isLoading || !notifications ? (
             <ListLoader />
-          ) : notifications.length > 0 ? (
+          ) : (
             <NotificationsList
               data={notifications}
               isRefreshing={isLoading}
               onRefresh={refetch}
               onItemClick={itemClickHandler}
             />
-          ) : null}
+          )}
         </View>
       </Container>
     </StyleProvider>

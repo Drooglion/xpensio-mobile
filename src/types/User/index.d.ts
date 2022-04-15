@@ -1,7 +1,6 @@
 import { RoleStatus, UserStatus } from 'models/User';
 import { ICard, ICardRequest } from 'types/Card';
 import { IUserTeams } from 'types/Team';
-import User from 'models/User';
 
 export interface IUser {
   id: string;
@@ -57,7 +56,7 @@ export interface IUserAccount {
   id: string;
   companyId: string;
   company: IUserCompany;
-  user: User;
+  user: IUser;
   roleName: string;
   role: number;
   root: boolean;

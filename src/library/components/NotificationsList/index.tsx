@@ -9,10 +9,10 @@ import StringUtils from 'library/utils/StringUtils';
 import DateUtils from 'library/utils/DateUtils';
 import R from 'res/R';
 import styles from './styles';
-import { NotificationType } from 'library/types/Notifications';
+import Notification from 'models/Notification';
 
 export interface NotificationsListProps {
-  data: NotificationType[];
+  data: Notification[];
   isRefreshing: boolean;
   onRefresh(): void;
   onItemClick(item: any): void;
@@ -28,12 +28,13 @@ const NotificationsList = ({
 
   useEffect(() => {
     if (data) {
+      console.log('Noticiations List: ', { data });
       formatData(data);
     }
   }, [data]);
 
-  const formatData = (d: NotificationType[]) => {
-    const myNotifications = d.map(item => ({
+  const formatData = (d: Notification[]) => {
+    const myNotifications = d.map((item: Notification) => ({
       ...item,
       date: DateUtils.formatNotificationDate(item.timestamp, 4),
     }));

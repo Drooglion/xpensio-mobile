@@ -49,10 +49,6 @@ const useSigninUser = () => {
 
           const user = new User(response.data.payload);
           queryClient.setQueryData('user', user);
-          /* Remove this SET_USER in the future
-           * since it's we now use react-query
-           */
-          dispatch({ type: 'SET_USER', user });
           if (user.token) {
             const acctRes = await api.get('account/me/', {
               headers: {

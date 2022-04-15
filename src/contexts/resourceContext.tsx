@@ -1,5 +1,4 @@
 import React, { FC, useReducer } from 'react';
-import User from 'models/User';
 import Card from 'models/Card';
 import Payment from 'models/Payment';
 import { UserWalletBalance } from 'models/Wallet';
@@ -7,11 +6,6 @@ import Request from 'models/Request';
 
 const reducer = (prevState: StateType, action: any) => {
   switch (action.type) {
-    case 'SET_USER':
-      return {
-        ...prevState,
-        user: action.user,
-      };
     case 'SET_USER_BALANCE':
       return {
         ...prevState,
@@ -36,7 +30,6 @@ const reducer = (prevState: StateType, action: any) => {
 };
 
 type StateType = {
-  user: User | undefined;
   balance: UserWalletBalance | undefined;
   card: Card | undefined;
   payments: Payment[];
@@ -44,7 +37,6 @@ type StateType = {
 };
 
 const initialState: StateType = {
-  user: undefined,
   balance: undefined,
   card: undefined,
   payments: [],

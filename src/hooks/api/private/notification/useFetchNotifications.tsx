@@ -15,7 +15,7 @@ const useFetchNotifications = () => {
     }
   };
 
-  return useQuery('account', fetch);
+  return useQuery('notifications', fetch);
 };
 
 export default useFetchNotifications;

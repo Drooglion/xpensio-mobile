@@ -78,6 +78,10 @@ class Profile {
     return list[this.profile.verificationStatus];
   };
 
+  fullName() {
+    const profile = this.profile;
+    return `${profile.firstName} ${profile.lastName}`;
+  };
 
 }
 
