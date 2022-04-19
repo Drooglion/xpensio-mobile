@@ -1,4 +1,9 @@
-import { IPayment, IPaymentCard, IPaymentUser } from 'types/Payment';
+import {
+  IPayment,
+  IPaymentCard,
+  IPaymentUser,
+  IPaymentAttachment,
+} from 'types/Payment';
 import StringUtils from 'library/utils/StringUtils';
 import NumberUtils from 'library/utils/NumberUtils';
 
@@ -28,7 +33,7 @@ class Payment {
   readonly category: string | null;
   readonly project: string | null;
   readonly card: IPaymentCard;
-  readonly attachments: any[];
+  readonly attachments: IPaymentAttachment[] | null;
   readonly user: IPaymentUser;
 
   constructor({

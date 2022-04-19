@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useCallback } from 'react';
 import { Animated, Dimensions, TouchableOpacity, View } from 'react-native';
 import { Text, Icon } from 'native-base';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
@@ -8,9 +8,8 @@ import { has, isEmpty } from 'lodash';
 
 import Header from 'library/components/Header';
 import ReceiptsView from 'library/components/ReceiptsView';
-import HelperUtils from 'library/utils/HelperUtils';
+import useDeleteReceipt from 'hooks/api/private/payments/useDeleteReceipt';
 
-import PAYMENTS from 'library/api/Payments';
 import R from 'res/R';
 import styles from './styles';
 
@@ -39,6 +38,7 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
   const [viewImage, setViewImage] = useState(false);
   const [viewImageIndex, setViewImageIndex] = useState(0);
   const [headerVisible, setHeaderVisible] = useState(true);
+  const { mutate: deleteReceiptMutate } = useDeleteReceipt();
 
   const addMoreReceipt = () => {
     navigation.navigate({
@@ -55,21 +55,23 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
     });
   };
 
-  const deleteReceipt = async () => {
-    // try {
-    //   const variables = {
-    //     paymentId: payment.id,
-    //     attachmentId: attachments[viewImageIndex].id,
-    //   };
-    //   await deleteAttachment({ variables });
-    //   refetch();
-    //   setViewImage(false);
-    //   setViewImageIndex(0);
-    // } catch (error) {
-    //   console.log('error: ', { error });
-    //   HelperUtils.bugsnag.notify(error);
-    // }
-  };
+  const deleteReceipt = useCallback(() => {
+    const payload = {
+      id: payment.id,
+      attachmentId: attachments![viewImageIndex].id,
+    };
+    deleteReceiptMutate(payload);
+    // refetch();
+    setViewImage(false);
+    setViewImageIndex(0);
+  }, [
+    deleteReceiptMutate,
+    setViewImage,
+    setViewImageIndex,
+    payment.id,
+    attachments,
+    viewImageIndex,
+  ]);
 
   const noAttachments = () => (
     <ImageLoad
@@ -86,6 +88,7 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
     index: number;
   }) => {
     let component = null;
+    console.log({ item, index });
     if (has(item, 'url')) {
       component = (
         <TouchableOpacity

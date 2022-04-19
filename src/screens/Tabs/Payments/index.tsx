@@ -25,7 +25,7 @@ import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
 import { useResource } from 'contexts/resourceContext';
-import useGetMyPayments from 'hooks/api/private/payments/useGetMyPayments';
+import useFetchMyPayments from 'hooks/api/private/payments/useFetchMyPayments';
 import { IPayment } from 'types/Payment';
 import ListLoader from 'library/components/ListLoader';
 import useGetWalletBalance from 'hooks/api/private/account/useGetWalletBalance';
@@ -35,12 +35,7 @@ const Payments = () => {
   const tab = useRef<any>(null);
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const {
-    data,
-    refresh,
-    loading: paymentsLoading,
-    error: paymentsError,
-  } = useGetMyPayments();
+  const { data, isLoading: paymentsLoading } = useFetchMyPayments();
   const {
     balance,
     getBalance,

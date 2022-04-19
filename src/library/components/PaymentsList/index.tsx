@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
-// import { graphql } from 'react-apollo';
 import {
   ListItem,
   Text,
@@ -87,14 +86,6 @@ const PaymentsList = ({ onItemClick, data }: Props) => {
       </Text>
     );
   };
-
-  // renderItem = item => {
-  //   if (item.isSection) {
-  //     this.renderDateHeader(item);
-  //   }
-
-  //   this.renderItemRow(item);
-  // };
 
   const renderSection = (title: string) => (
     <ListItem itemHeader noBorder noIndent style={styles.listItem}>

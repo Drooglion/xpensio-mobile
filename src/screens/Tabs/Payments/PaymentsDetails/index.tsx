@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-// import { Query, compose, graphql } from 'react-apollo';
 import {
   Container,
   Tabs,
@@ -18,7 +17,6 @@ import UserAvatar from 'react-native-user-avatar';
 import EmptyList from 'library/components/EmptyList';
 import DenyModal from 'library/components/DenyModal';
 import Header from 'library/components/Header';
-import Loading from 'library/components/Loading';
 
 import HelperUtils from 'library/utils/HelperUtils';
 import StringUtils from 'library/utils/StringUtils';
@@ -233,14 +231,5 @@ const PaymentsDetails = () => {
     </StyleProvider>
   );
 };
-
-// export default compose(
-//   graphql(STORE_QUERIES.privilege, { name: 'privilege' }),
-//   graphql(STORE_QUERIES.companyConfiguration, { name: 'companyConfiguration' }),
-//   graphql(PAYMENTS.REJECT_PAYMENT, { name: 'rejectPayment' }),
-//   graphql(PAYMENTS.UPDATE_PAYMENT, { name: 'updatePayment' }),
-//   graphql(STORE_MUTATIONS.updateLoadingModal, { name: 'updateLoadingModal' }),
-//   graphql(STORE_MUTATIONS.showDialogModal, { name: 'showDialogModal' }),
-// )(PaymentsDetails);
 
 export default PaymentsDetails;
