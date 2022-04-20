@@ -16,7 +16,7 @@ const useUploadReceipt = () => {
     try {
       const url = `payments/${id}/attachments`;
       const res = await api.post(url, payload);
-      console.log('success upload receipt', { res });
+      return res;
     } catch (err: any) {
       const message = _capitalize(err!.response.data.messages[0]);
       throw new Error(message, { cause: err });

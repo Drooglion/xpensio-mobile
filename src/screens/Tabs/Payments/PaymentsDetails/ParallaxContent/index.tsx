@@ -9,6 +9,8 @@ import { has, isEmpty } from 'lodash';
 import Header from 'library/components/Header';
 import ReceiptsView from 'library/components/ReceiptsView';
 import useDeleteReceipt from 'hooks/api/private/payments/useDeleteReceipt';
+import useGetSignedUrl from 'hooks/api/private/payments/useGetSignedUrl';
+import ApiUtils from 'library/utils/ApiUtils';
 
 import R from 'res/R';
 import styles from './styles';
@@ -33,6 +35,7 @@ type Props = {
 const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
   const navigation = useNavigation();
   const { mutate: uploadReceipt } = useUploadReceipt();
+  const { mutate: getSignedUrl } = useGetSignedUrl();
   const { t } = useTranslation();
   const [attachments, setAttachments] = useState<IPaymentAttachment[]>(
     payment.attachments || [],
@@ -48,14 +51,39 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
     try {
       const options = { mediaType: 'photo' } as CameraOptions;
       const { assets } = await launchCamera(options);
-      const asset = assets && assets[0];
-      const payload = { id: payment.id, payload: { key: asset!.uri } };
-      uploadReceipt(payload);
-      console.log('launchCamera', { asset });
+      await getSignedUrl(
+        { id: payment.id },
+        {
+          onSuccess: async res => {
+            const asset = assets && assets[0];
+            const { key, url } = res.data.payload;
+            console.log({ key, url });
+            await ApiUtils.uploadImageToSignedUrl({
+              image: asset?.uri,
+              url,
+            });
+            const payload = { id: payment.id, payload: { key } };
+            uploadReceipt(payload, {
+              onSuccess: () => onSuccessUploadReceipt(asset!),
+            });
+          },
+        },
+      );
     } catch (err) {
       console.log('launchCamera', { err });
     }
   };
+
+  const onSuccessUploadReceipt = useCallback(
+    (asset: Record<string, any>) => {
+      const newAsset = {
+        paymentId: payment.id,
+        url: asset.uri,
+      } as IPaymentAttachment;
+      setAttachments(attachments.concat(newAsset));
+    },
+    [setAttachments, attachments, payment],
+  );
 
   const deleteReceipt = useCallback(() => {
     const payload = {
