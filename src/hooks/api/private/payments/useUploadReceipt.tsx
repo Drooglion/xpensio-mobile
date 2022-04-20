@@ -5,31 +5,29 @@ import _capitalize from 'lodash/capitalize';
 
 export type ParamsType = {
   id: string;
-  attachmentId: string;
+  payload: Record<string, any>;
 };
 
-const useDeleteReceipt = () => {
+const useUploadReceipt = () => {
   const { api } = useApi();
   const queryClient = useQueryClient();
 
-  const deleteReceipt = async ({ id, attachmentId }: ParamsType) => {
+  const uploadReceipt = async ({ id, payload }: ParamsType) => {
     try {
-      const url = `payments/${id}/attachments/${attachmentId}`;
-      const res = await api.delete(url);
-      console.log('success delete receipt', { res });
+      const url = `payments/${id}/attachments`;
+      const res = await api.post(url, payload);
+      console.log('success upload receipt', { res });
     } catch (err: any) {
       const message = _capitalize(err!.response.data.messages[0]);
       throw new Error(message, { cause: err });
     }
   };
 
-  return useMutation('deleteReceipt', deleteReceipt, {
+  return useMutation('uploadReceipt', uploadReceipt, {
     onSuccess: () => {
-      console.log('Done deleting receipt');
-      /* Refetch */
       queryClient.invalidateQueries('myPayments');
     },
   });
 };
 
-export default useDeleteReceipt;
+export default useUploadReceipt;

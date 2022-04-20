@@ -33,7 +33,7 @@ class Payment {
   readonly category: string | null;
   readonly project: string | null;
   readonly card: IPaymentCard;
-  readonly attachments: IPaymentAttachment[] | null;
+  readonly attachments: IPaymentAttachment[];
   readonly user: IPaymentUser;
 
   constructor({

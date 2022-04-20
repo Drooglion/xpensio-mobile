@@ -42,7 +42,7 @@
     "react-native-datepicker": "1.7.2",
     "react-native-device-info": "^8.4.8",
     "react-native-gesture-handler": "^1.10.3",
-    "react-native-image-picker": "^4.7.1",
+    "react-native-image-picker": "^4.7.3",
     "react-native-image-placeholder": "^1.0.14",
     "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-indicators": "^0.17.0",

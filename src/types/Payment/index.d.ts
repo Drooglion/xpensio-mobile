@@ -33,7 +33,7 @@ export interface IPayment {
   category: string | null;
   project: string | null;
   card: IPaymentCard;
-  attachments: IPaymentAttachment[] | null;
+  attachments: IPaymentAttachment[];
   user: IPaymentUser;
 }
 

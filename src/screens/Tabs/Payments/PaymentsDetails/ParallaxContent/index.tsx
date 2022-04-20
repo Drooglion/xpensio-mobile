@@ -18,9 +18,11 @@ const { width, height } = Dimensions.get('window');
 const imageHeight = height * 0.3;
 const stickyHeaderHeight = 60;
 
-import { IPayment } from 'types/Payment';
+import { IPayment, IPaymentAttachment } from 'types/Payment';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { launchCamera, CameraOptions } from 'react-native-image-picker';
+import useUploadReceipt from 'hooks/api/private/payments/useUploadReceipt';
 
 type Props = {
   payment: IPayment;
@@ -30,9 +32,11 @@ type Props = {
 
 const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
   const navigation = useNavigation();
+  const { mutate: uploadReceipt } = useUploadReceipt();
   const { t } = useTranslation();
-
-  const { attachments } = payment;
+  const [attachments, setAttachments] = useState<IPaymentAttachment[]>(
+    payment.attachments || [],
+  );
 
   const [activeDotIndex, setActiveDotIndex] = useState(0);
   const [viewImage, setViewImage] = useState(false);
@@ -40,19 +44,17 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
   const [headerVisible, setHeaderVisible] = useState(true);
   const { mutate: deleteReceiptMutate } = useDeleteReceipt();
 
-  const addMoreReceipt = () => {
-    navigation.navigate({
-      routeName: 'Camera',
-      key: 'Camera',
-      params: {
-        item: payment,
-        refetch,
-        callback: () => {
-          refetch();
-          navigation.pop();
-        },
-      },
-    });
+  const addMoreReceipt = async () => {
+    try {
+      const options = { mediaType: 'photo' } as CameraOptions;
+      const { assets } = await launchCamera(options);
+      const asset = assets && assets[0];
+      const payload = { id: payment.id, payload: { key: asset!.uri } };
+      uploadReceipt(payload);
+      console.log('launchCamera', { asset });
+    } catch (err) {
+      console.log('launchCamera', { err });
+    }
   };
 
   const deleteReceipt = useCallback(() => {
@@ -61,7 +63,6 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
       attachmentId: attachments![viewImageIndex].id,
     };
     deleteReceiptMutate(payload);
-    // refetch();
     setViewImage(false);
     setViewImageIndex(0);
   }, [
@@ -74,10 +75,17 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
   ]);
 
   const noAttachments = () => (
-    <ImageLoad
-      style={[styles.img, { height: imageHeight }]}
-      source={R.images.noimage}
-    />
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={addMoreReceipt}
+      style={[styles.addReceipt, { height: imageHeight }]}>
+      <Icon style={styles.cameraIcon} name="camera" />
+      <Text style={styles.addReceiptTxt}>{t('addReceipt')}</Text>
+    </TouchableOpacity>
+    // <ImageLoad
+    //   style={[styles.img, { height: imageHeight }]}
+    //   source={R.images.noimage}
+    // />
   );
 
   const renderCarouselItem = ({
@@ -87,44 +95,34 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
     item: any;
     index: number;
   }) => {
-    let component = null;
-    console.log({ item, index });
-    if (has(item, 'url')) {
-      component = (
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => {
-            setViewImageIndex(index);
-            setViewImage(true);
-          }}>
-          <ImageLoad
-            style={[styles.img, { height: imageHeight }]}
-            placeholderStyle={{ width: '100%', height: imageHeight }}
-            placeholderSource={R.images.noimage}
-            loadingStyle={{ size: 'small', color: R.colors.white }}
-            source={{ uri: item.url }}
-          />
-        </TouchableOpacity>
-      );
-    } else {
-      component =
-        index < 5 ? (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={addMoreReceipt}
-            style={[styles.addReceipt, { height: imageHeight }]}>
-            <Icon style={styles.cameraIcon} name="camera" />
-            <Text style={styles.addReceiptTxt}>{t('addReceipt')}</Text>
-          </TouchableOpacity>
-        ) : null;
+    const tail = index + 1 === attachments.length + 1;
+
+    if (tail) {
+      return noAttachments();
     }
-    return component;
+
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => {
+          setViewImageIndex(index);
+          setViewImage(true);
+        }}>
+        <ImageLoad
+          style={[styles.img, { height: imageHeight }]}
+          placeholderStyle={{ width: '100%', height: imageHeight }}
+          placeholderSource={R.images.noimage}
+          loadingStyle={{ size: 'small', color: R.colors.white }}
+          source={{ uri: item.url }}
+        />
+      </TouchableOpacity>
+    );
   };
 
   const hasAttachments = () => (
     <View style={{ width }}>
       <Carousel
-        data={attachments}
+        data={attachments.concat({})}
         onSnapToItem={setActiveDotIndex}
         renderItem={renderCarouselItem}
         sliderWidth={width}
@@ -133,7 +131,7 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
         lockScrollWhileSnapping
       />
       <Pagination
-        dotsLength={attachments.length}
+        dotsLength={attachments!.length}
         activeDotIndex={activeDotIndex}
         dotColor={R.colors.primary}
         inactiveDotColor={R.colors.white}
@@ -149,7 +147,7 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
     <>
       <ReceiptsView
         visible={viewImage}
-        imageUrls={attachments.filter(attachment => has(attachment, 'url'))}
+        imageUrls={attachments!.filter(attachment => has(attachment, 'url'))}
         index={viewImageIndex}
         onClose={() => setViewImage(false)}
         onChange={setViewImageIndex}

@@ -36,11 +36,11 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs to access your device camera for scanning and taking photos.</string>
+	<string>Enables Xpensio to use your camera for scanning QR code to add Xpensio physical card and capturing photos</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string />
+	<string>Allow Xpensio to always use location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs to access your photos.</string>
+	<string>Enables Xpensio to access your photos for uploading Receipts, Porfile Photo &amp; ID for Identification</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto_medium.ttf</string>
