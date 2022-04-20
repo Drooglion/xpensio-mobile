@@ -6,6 +6,11 @@ import Request from 'models/Request';
 
 const reducer = (prevState: StateType, action: any) => {
   switch (action.type) {
+    case 'SET_ACT_AS_ADMIN':
+      return {
+        ...prevState,
+        actAsAdmin: action.actAsAdmin,
+      };
     case 'SET_USER_BALANCE':
       return {
         ...prevState,
@@ -30,6 +35,7 @@ const reducer = (prevState: StateType, action: any) => {
 };
 
 type StateType = {
+  actAsAdmin: boolean;
   balance: UserWalletBalance | undefined;
   card: Card | undefined;
   payments: Payment[];
@@ -37,6 +43,7 @@ type StateType = {
 };
 
 const initialState: StateType = {
+  actAsAdmin: false,
   balance: undefined,
   card: undefined,
   payments: [],

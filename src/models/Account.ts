@@ -1,3 +1,5 @@
+import _isEmpty from 'lodash/isEmpty'
+
 import {
   IUser,
   ICompanyConfiguration,
@@ -52,6 +54,12 @@ class Account {
 
   getCurrency() {
     return this.companyConfiguration.currency;
+  }
+
+  getActAsAdmin() {
+    const teamsActingAsAdmin = this.teams.filter(team => team.role !== 0);
+    const actAsAdmin = this.role !== 0 || !_isEmpty(teamsActingAsAdmin);
+    return actAsAdmin;
   }
 }
 

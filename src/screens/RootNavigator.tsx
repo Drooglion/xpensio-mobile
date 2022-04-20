@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import isNil from 'lodash/isNil';
 
@@ -15,6 +15,7 @@ import { useAuth } from 'contexts/authContext';
 import Splash from './Auth/Splash';
 import Login from './Auth/Login';
 import ForgotPassword from './Auth/ForgotPassword';
+import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
 // import Register from './Auth/Register';
 // import CompleteRegister from './Auth/CompleteRegister';
 // import Splash from './Auth/Splash';
@@ -25,10 +26,11 @@ const Stack = createStackNavigator();
 
 const RootNavigator = () => {
   const { state, dispatch } = useAuth();
+  useFetchAccount({});
 
   console.log({ state, dispatch });
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let token;
