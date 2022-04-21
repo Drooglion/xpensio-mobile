@@ -6,7 +6,7 @@ import { useResource } from 'contexts/resourceContext';
 
 type Props = {
   onSuccess?: (account: Account) => void;
-  onError?: () => void;
+  onError?: (err: any) => void;
 };
 
 const useFetchAccount = ({ onSuccess, onError }: Partial<Props>) => {
@@ -31,7 +31,7 @@ const useFetchAccount = ({ onSuccess, onError }: Partial<Props>) => {
       defaultOnSuccess(account.getActAsAdmin());
       return account;
     } catch (err: any) {
-      onError && onError();
+      onError && onError(err);
       throw new Error(err);
     }
   };

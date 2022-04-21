@@ -35,25 +35,20 @@ const Payments = () => {
   const tab = useRef<any>(null);
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const { data, isLoading: paymentsLoading } = useFetchMyPayments();
-  const {
-    balance,
-    getBalance,
-    loading: balanceLoading,
-    error: balanceError,
-  } = useGetWalletBalance();
-  const { state, dispatch } = useResource();
-
-  const [userId, setUserId] = useState<string>();
   const [payments, setPayments] = useState<IPayment[]>([]);
+  const { isLoading: paymentsLoading } = useFetchMyPayments({
+    onSuccess: data => setPayments(data.items),
+  });
+  const [userId, setUserId] = useState<string>();
+  const { data: balance, error: balanceError } = useGetWalletBalance(userId);
+  const { state } = useResource();
+  const { actAsAdmin } = state;
 
-  const actAsAdmin: boolean = false;
   const tabs = !actAsAdmin ? [t('myPayments')] : [t('myPayments'), t('team')];
 
   useEffect(() => {
     const getUserId = async () => {
       const id = await AsyncStorage.getItem('USER_ID');
-      console.log('userId', id);
       if (id) {
         setUserId(id);
       }
@@ -61,32 +56,6 @@ const Payments = () => {
 
     getUserId();
   }, []);
-
-  useEffect(() => {
-    console.log('state', state);
-  }, [state]);
-
-  useEffect(() => {
-    if (userId) {
-      getBalance({ userId });
-    }
-  }, [userId]);
-
-  useEffect(() => {
-    if (balance) {
-      console.log('wallet balance', balance);
-    }
-    if (balanceError) {
-      console.log('error', balanceError);
-    }
-  }, [balance, balanceError]);
-
-  useEffect(() => {
-    if (data) {
-      console.log('payments', data.items);
-      setPayments(data.items);
-    }
-  }, [data]);
 
   const goToTabPage = (page: any) => {
     console.log('page', page);

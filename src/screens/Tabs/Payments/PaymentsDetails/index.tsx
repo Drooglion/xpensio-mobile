@@ -34,11 +34,13 @@ import styles from './styles';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { IPayment } from 'types/Payment';
+import { useResource } from 'contexts/resourceContext';
 
 const PaymentsDetails = () => {
   const tab = useRef<any>(null);
   const currency = 'php';
-  const actAsAdmin = false;
+  const { state } = useResource();
+  const actAsAdmin = state.actAsAdmin;
 
   const { t } = useTranslation();
   const navigation = useNavigation();
