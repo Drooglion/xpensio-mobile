@@ -238,7 +238,7 @@ const PaymentsDetails = () => {
                     currency={currency}
                     handleSave={handleSave}
                     toggleDenyModal={toggleDenyModal}
-                    actAsAdmin={true}
+                    actAsAdmin={actAsAdmin}
                     payment={details}
                     paymentTab={activeTab}
                     setEditing={setEditing}

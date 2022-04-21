@@ -46,7 +46,7 @@ const SummaryTab = ({
   const footerActionButton = () => {
     const paymentStatus = StringUtils.paymentStatus(payment.status);
     const showAction =
-      actAsAdmin && paymentTab === 1 && paymentStatus === 'APPROVED';
+      actAsAdmin && paymentTab === 0 && paymentStatus === 'APPROVED';
     return showAction ? (
       <Button
         block
