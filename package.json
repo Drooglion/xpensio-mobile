@@ -1,6 +1,6 @@
 {
   "name": "xpensiorn",
-  "version": "0.3.21",
+  "version": "0.3.22",
   "private": true,
   "scripts": {
     "postversion": "react-native-version",
