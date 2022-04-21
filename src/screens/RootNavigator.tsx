@@ -16,6 +16,7 @@ import Splash from './Auth/Splash';
 import Login from './Auth/Login';
 import ForgotPassword from './Auth/ForgotPassword';
 import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
+import LoadingModal from 'library/components/LoadingModal';
 // import Register from './Auth/Register';
 // import CompleteRegister from './Auth/CompleteRegister';
 // import Splash from './Auth/Splash';
@@ -64,7 +65,14 @@ const RootNavigator = () => {
             </>
           ) : (
             <>
-              <Stack.Screen name="Tabs">{() => <Tabs />}</Stack.Screen>
+              <Stack.Screen name="Tabs">
+                {() => (
+                  <>
+                    <LoadingModal />
+                    <Tabs />
+                  </>
+                )}
+              </Stack.Screen>
             </>
           )}
         </Stack.Navigator>

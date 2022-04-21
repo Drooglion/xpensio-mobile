@@ -1,26 +1,22 @@
 import React from 'react';
 import { Modal, View } from 'react-native';
+import { useResource } from 'contexts/resourceContext';
 
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import styles from './styles';
 
-type LoadingModalProps = {
-  visible: boolean;
-  onDismiss?: () => void;
-};
+const LoadingModal = () => {
+  const { state } = useResource();
 
-const LoadingModal = ({ visible, onDismiss }: LoadingModalProps) => (
-  <Modal
-    visible={visible}
-    onRequestClose={onDismiss}
-    onDismiss={onDismiss}
-    transparent>
-    <View style={styles.modalBackground}>
-      <View style={styles.activityIndicatorWrapper}>
-        <LoadingIndicator />
+  return (
+    <Modal visible={state.loadingModal} transparent>
+      <View style={styles.modalBackground}>
+        <View style={styles.activityIndicatorWrapper}>
+          <LoadingIndicator />
+        </View>
       </View>
-    </View>
-  </Modal>
-);
+    </Modal>
+  );
+};
 
 export default LoadingModal;

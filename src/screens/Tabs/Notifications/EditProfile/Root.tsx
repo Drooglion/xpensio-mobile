@@ -28,6 +28,7 @@ import useForm from 'hooks/useForm';
 import useUpdateProfile, {
   ParamsType,
 } from 'hooks/api/private/profile/useUpdateProfile';
+import { useResource } from 'contexts/resourceContext';
 
 type Props = {
   loading: boolean;
@@ -54,6 +55,7 @@ const Root = ({ loading, profile }: Props) => {
     state: profile?.state || '',
     zipCode: profile?.zipCode || '',
   });
+  const { dispatch } = useResource();
 
   const { mutate: updateProfile, isLoading: updating } = useUpdateProfile();
 
@@ -75,6 +77,8 @@ const Root = ({ loading, profile }: Props) => {
       civilStatus: profile.civilStatus,
     } as ParamsType;
 
+    dispatch({ type: 'SET_LOADING_MODAL', loadingModal: true });
+
     updateProfile(payload, {
       onSuccess: data => {
         Toast.show({
@@ -88,8 +92,11 @@ const Root = ({ loading, profile }: Props) => {
           text1: err.message,
         });
       },
+      onSettled: () => {
+        dispatch({ type: 'SET_LOADING_MODAL', loadingModal: false });
+      },
     });
-  }, [inputs, updateProfile, profile]);
+  }, [inputs, updateProfile, profile, dispatch]);
 
   return (
     <StyleProvider style={getTheme(theme)}>

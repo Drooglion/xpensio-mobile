@@ -1,4 +1,4 @@
-import React, { FC, useReducer } from 'react';
+import React, { FC, useReducer, useCallback } from 'react';
 import Card from 'models/Card';
 import Payment from 'models/Payment';
 import Request from 'models/Request';
@@ -25,6 +25,11 @@ const reducer = (prevState: StateType, action: any) => {
         ...prevState,
         requests: action.requests,
       };
+    case 'SET_LOADING_MODAL':
+      return {
+        ...prevState,
+        loadingModal: action.loadingModal,
+      };
   }
 };
 
@@ -33,6 +38,7 @@ type StateType = {
   card: Card | undefined;
   payments: Payment[];
   requests: Request[];
+  loadingModal: boolean;
 };
 
 const initialState: StateType = {
@@ -40,6 +46,7 @@ const initialState: StateType = {
   card: undefined,
   payments: [],
   requests: [],
+  loadingModal: false,
 };
 
 type ResourceContextType = {
@@ -61,7 +68,6 @@ export const useResource = () => {
 
 export const ResourceProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
   const value = React.useMemo(() => ({ state, dispatch }), [state]);
 
   return (

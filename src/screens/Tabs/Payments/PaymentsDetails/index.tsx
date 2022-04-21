@@ -40,7 +40,7 @@ import { useResource } from 'contexts/resourceContext';
 const PaymentsDetails = () => {
   const tab = useRef<any>(null);
   const currency = 'php';
-  const { state } = useResource();
+  const { state, dispatch } = useResource();
   const actAsAdmin = state.actAsAdmin;
 
   const { t } = useTranslation();
@@ -75,10 +75,10 @@ const PaymentsDetails = () => {
   };
 
   const handleSave = async (inputs: Record<string, string>) => {
+    dispatch({ type: 'SET_LOADING_MODAL', loadingModal: true });
     const params = { id: payment.id, payload: { ...inputs } };
     await updatePayment(params, {
       onSuccess: () => {
-        setIsEditing(false);
         // setTimeout(() => {
         //   showDialogModal({
         //     variables: {
@@ -88,6 +88,10 @@ const PaymentsDetails = () => {
         //     },
         //   });
         // }, 500);
+      },
+      onSettled: () => {
+        setIsEditing(false);
+        dispatch({ type: 'SET_LOADING_MODAL', loadingModal: false });
       },
     });
   };
