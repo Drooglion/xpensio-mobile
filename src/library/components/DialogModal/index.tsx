@@ -1,29 +1,37 @@
 import React from 'react';
+import _isNil from 'lodash/isNil';
 import { Button, Icon, Text, View } from 'native-base';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 import { useTranslation } from 'react-i18next';
 
+import { useResource } from 'contexts/resourceContext';
 import R from 'res/R';
 import styles from './styles';
 
-type DialogModalProps = {
-  visible: boolean;
-  title: string;
-  description: string;
-  icon?: string;
-  onClose(): void;
-};
-
-const DialogModal = ({
-  visible,
-  title,
-  description,
-  icon,
-  onClose,
-}: DialogModalProps) => {
+const DialogModal = () => {
   const { t } = useTranslation();
   const AnimIcon = Animatable.createAnimatableComponent(Icon);
+  const { state, dispatch } = useResource();
+  console.log('in dialog modal', { state });
+  const dialogModal = state.dialogModal;
+
+  if (_isNil(dialogModal) || _isNil(state)) {
+    return null;
+  }
+
+  const { visible, title, description, icon, onClose } = dialogModal;
+  const handleClose = () => {
+    onClose
+      ? onClose()
+      : dispatch({
+          type: 'SET_DIALOG_MODAL',
+          dialogModal: {
+            ...dialogModal,
+            visible: false,
+          },
+        });
+  };
 
   const renderIcon = () => {
     let iconStatus = null;
@@ -60,7 +68,7 @@ const DialogModal = ({
         <Text style={styles.title}>{title}</Text>
         {renderIcon()}
         <Text style={styles.body}>{description}</Text>
-        <Button onPress={onClose} style={styles.btnGroup} transparent>
+        <Button onPress={handleClose} style={styles.btnGroup} transparent>
           <Text style={styles.txtOk}>{t('ok')}</Text>
         </Button>
       </View>

@@ -75,19 +75,19 @@ const PaymentsDetails = () => {
   };
 
   const handleSave = async (inputs: Record<string, string>) => {
-    dispatch({ type: 'SET_LOADING_MODAL', loadingModal: true });
+    // dispatch({ type: 'SET_LOADING_MODAL', loadingModal: true });
     const params = { id: payment.id, payload: { ...inputs } };
     await updatePayment(params, {
       onSuccess: () => {
-        // setTimeout(() => {
-        //   showDialogModal({
-        //     variables: {
-        //       title: t('success'),
-        //       icon: 'success',
-        //       description: 'Payment details updated',
-        //     },
-        //   });
-        // }, 500);
+        dispatch({
+          type: 'SET_DIALOG_MODAL',
+          dialogModal: {
+            visible: true,
+            title: t('message.updated'),
+            icon: 'congratulations',
+            description: t('paymentDetailsUpdated'),
+          },
+        });
       },
       onSettled: () => {
         setIsEditing(false);

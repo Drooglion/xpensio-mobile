@@ -17,6 +17,7 @@ import Login from './Auth/Login';
 import ForgotPassword from './Auth/ForgotPassword';
 import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
 import LoadingModal from 'library/components/LoadingModal';
+import DialogModal from 'library/components/DialogModal';
 // import Register from './Auth/Register';
 // import CompleteRegister from './Auth/CompleteRegister';
 // import Splash from './Auth/Splash';
@@ -69,6 +70,7 @@ const RootNavigator = () => {
                 {() => (
                   <>
                     <LoadingModal />
+                    <DialogModal />
                     <Tabs />
                   </>
                 )}

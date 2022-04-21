@@ -194,6 +194,7 @@ export default {
     pairRequest: 'Pair a request',
     password: 'Password',
     payments: 'Payments',
+    paymentDetailsUpdated: 'Payment details updated',
     paymentUnavailable: 'Payment Unavailable',
     paymentMethod: 'Payment method',
     perPurchaseLimit: 'Per purchase limit',
@@ -322,5 +323,9 @@ export default {
     yes: 'Yes',
 
     zipCode: 'ZIP code',
+
+    message: {
+      updated: 'Updated',
+    },
   },
 };

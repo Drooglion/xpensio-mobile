@@ -1,4 +1,4 @@
-import React, { FC, useReducer, useCallback } from 'react';
+import React, { FC, useReducer } from 'react';
 import Card from 'models/Card';
 import Payment from 'models/Payment';
 import Request from 'models/Request';
@@ -30,7 +30,20 @@ const reducer = (prevState: StateType, action: any) => {
         ...prevState,
         loadingModal: action.loadingModal,
       };
+    case 'SET_DIALOG_MODAL':
+      return {
+        ...prevState,
+        dialogModal: { ...prevState.dialogModal, ...action.dialogModal },
+      };
   }
+};
+
+type DialogModal = {
+  visible: boolean;
+  title: string;
+  description: string;
+  icon?: 'success' | 'congratulations' | 'email';
+  onClose?: () => void;
 };
 
 type StateType = {
@@ -39,6 +52,7 @@ type StateType = {
   payments: Payment[];
   requests: Request[];
   loadingModal: boolean;
+  dialogModal: DialogModal;
 };
 
 const initialState: StateType = {
@@ -47,6 +61,12 @@ const initialState: StateType = {
   payments: [],
   requests: [],
   loadingModal: false,
+  dialogModal: {
+    visible: false,
+    title: '',
+    description: '',
+    icon: 'success',
+  },
 };
 
 type ResourceContextType = {
