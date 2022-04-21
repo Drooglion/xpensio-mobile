@@ -36,6 +36,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { IPayment } from 'types/Payment';
 import { useResource } from 'contexts/resourceContext';
+import useRejectPayment from 'hooks/api/private/payments/useRejectPayment';
 
 const PaymentsDetails = () => {
   const tab = useRef<any>(null);
@@ -48,6 +49,8 @@ const PaymentsDetails = () => {
   const route = useRoute();
   const { mutate: updatePayment, isLoading: updatingPayment } =
     useUpdatePayment();
+  const { mutate: rejectPayment, isLoading: rejectingPayment } =
+    useRejectPayment();
   const { payment, paymentTab } = route.params;
 
   /* hooks */
@@ -67,16 +70,28 @@ const PaymentsDetails = () => {
   }, [route]);
 
   const goToTabPage = (page: number) => {
-    console.log('page', page);
     if (tab.current) {
       setActiveTab(page);
       tab.current.goToPage(page);
     }
   };
 
+  const setEditing = () => {
+    setIsEditing(true);
+  };
+
+  const toggleDenyModal = (toggle: boolean) => {
+    setDenyModalVisible(toggle);
+    setDenyReason('');
+  };
+
+  const handleDenyReasonChange = (value: string) => {
+    setDenyReason(value);
+  };
   const handleSave = async (inputs: Record<string, string>) => {
-    // dispatch({ type: 'SET_LOADING_MODAL', loadingModal: true });
+    dispatch({ type: 'SET_LOADING_MODAL', loadingModal: true });
     const params = { id: payment.id, payload: { ...inputs } };
+
     await updatePayment(params, {
       onSuccess: () => {
         dispatch({
@@ -96,53 +111,56 @@ const PaymentsDetails = () => {
     });
   };
 
-  const handleRejectPayment = async () => {
-    const variables = { id, input: { reason: denyReason } };
-    try {
-      const res = await rejectPayment({ variables });
-      const {
-        data: {
-          payments: {
-            payload: { messages },
-          },
-        },
-      } = res;
-      refetchPayments();
-      toggleDenyModal(false);
-      setTimeout(() => {
-        showDialogModal({
-          variables: {
-            icon: 'success',
-            title: t('success'),
-            description: messages[0],
-          },
-        });
-      }, 500);
-    } catch (error) {
-      HelperUtils.bugsnag.notify(error);
-      toggleDenyModal(false);
-      setTimeout(() => {
-        showDialogModal({
-          variables: {
-            title: 'Unable to Deny',
-            description: 'Something went wrong',
-          },
-        });
-      }, 500);
-    }
-  };
-
-  const setEditing = () => {
-    setIsEditing(true);
-  };
-
-  const toggleDenyModal = (toggle: boolean) => {
-    setDenyModalVisible(toggle);
-    setDenyReason('');
-  };
-
-  const handleDenyReasonChange = (value: string) => {
-    setDenyReason(value);
+  const handleRejectPayment = () => {
+    setDenyModalVisible(false);
+    const params = { id: payment.id, payload: { reason: denyReason } };
+    rejectPayment(params, {
+      onSuccess: (message: string) => {
+        setTimeout(() => {
+          dispatch({
+            type: 'SET_DIALOG_MODAL',
+            dialogModal: {
+              visible: true,
+              title: t('message.updated'),
+              icon: 'congratulations',
+              description: message,
+            },
+          });
+        }, 500);
+      },
+    });
+    // try {
+    //   const res = await rejectPayment({ variables });
+    //   const {
+    //     data: {
+    //       payments: {
+    //         payload: { messages },
+    //       },
+    //     },
+    //   } = res;
+    //   refetchPayments();
+    //   toggledenymodal(false);
+    //   setTimeout(() => {
+    //     showDialogModal({
+    //       variables: {
+    //         icon: 'success',
+    //         title: t('success'),
+    //         description: messages[0],
+    //       },
+    //     });
+    //   }, 500);
+    // } catch (error) {
+    //   HelperUtils.bugsnag.notify(error);
+    //   toggleDenyModal(false);
+    //   setTimeout(() => {
+    //     showDialogModal({
+    //       variables: {
+    //         title: 'Unable to Deny',
+    //         description: 'Something went wrong',
+    //       },
+    //     });
+    //   }, 500);
+    // }
   };
 
   const paymentUnavailable = () => (
@@ -159,6 +177,7 @@ const PaymentsDetails = () => {
     <StyleProvider style={getTheme(theme)}>
       <Container style={styles.container}>
         <DenyModal
+          loading={rejectingPayment}
           visible={denyModalVisible}
           reason={denyReason}
           onReasonChanged={handleDenyReasonChange}
@@ -219,7 +238,7 @@ const PaymentsDetails = () => {
                     currency={currency}
                     handleSave={handleSave}
                     toggleDenyModal={toggleDenyModal}
-                    actAsAdmin={actAsAdmin}
+                    actAsAdmin={true}
                     payment={details}
                     paymentTab={activeTab}
                     setEditing={setEditing}

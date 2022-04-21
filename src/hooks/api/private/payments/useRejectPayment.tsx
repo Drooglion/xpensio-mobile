@@ -1,34 +1,36 @@
 import { useMutation, useQueryClient } from 'react-query';
 
-import Payment from 'models/Payment';
 import useApi from 'hooks/useApi';
 import _capitalize from 'lodash/capitalize';
 
 export type ParamsType = {
   id: string;
-  payload: Record<string, string | number>;
+  payload: {
+    reason: string;
+  };
 };
 
-const useUpdatePayment = () => {
+const useRejectPayment = () => {
   const { api } = useApi();
   const queryClient = useQueryClient();
 
-  const updatePayment = async ({ id, payload }: ParamsType) => {
+  const rejectPayment = async ({ id, payload }: ParamsType) => {
     try {
-      const res = await api.put(`payments/${id}`, payload);
-      const payment = new Payment(res.data.payload);
-      return payment;
+      const res = await api.put(`payments/${id}/disapprove`, payload);
+      const message = res.data.payload.messages[0] as string;
+      /* payload: { messages: ['Successfully disapproved payment'] } */
+      return message;
     } catch (err: any) {
       const message = _capitalize(err!.response.data.messages[0]);
       throw new Error(message, { cause: err });
     }
   };
 
-  return useMutation('updatePayment', updatePayment, {
+  return useMutation('useRejectPayment', rejectPayment, {
     onSuccess: () => {
       queryClient.invalidateQueries('myPayments');
     },
   });
 };
 
-export default useUpdatePayment;
+export default useRejectPayment;

@@ -3,6 +3,7 @@ import { KeyboardAvoidingView } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button, Item, Input, Text, View } from 'native-base';
 import R from 'res/R';
+import LoadingIndicator from 'library/components/LoadingIndicator';
 
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ type DenyModalProps = {
   onReasonChanged(text: string): void;
   onCancel(): void;
   onSubmit(): void;
+  loading: boolean;
 };
 
 const DenyModal = ({
@@ -23,6 +25,7 @@ const DenyModal = ({
   onReasonChanged,
   onCancel,
   onSubmit,
+  loading,
 }: DenyModalProps) => {
   const { t } = useTranslation();
   return (
@@ -47,8 +50,15 @@ const DenyModal = ({
             style={{ marginRight: R.metrics.baseMargin }}>
             <Text style={styles.noTxt}>{t('cancel')}</Text>
           </Button>
-          <Button disabled={!reason} primary onPress={onSubmit}>
-            <Text uppercase>{t('done')}</Text>
+          <Button
+            disabled={!reason || loading}
+            primary={!!reason || loading}
+            onPress={onSubmit}>
+            {loading ? (
+              <LoadingIndicator size={5} color={R.colors.white} />
+            ) : (
+              <Text uppercase>{t('done')}</Text>
+            )}
           </Button>
         </View>
       </View>
