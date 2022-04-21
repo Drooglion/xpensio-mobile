@@ -3,6 +3,7 @@ import { Dimensions, Keyboard } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { Button, Item, Text, View } from 'native-base';
 import { useTranslation } from 'react-i18next';
+import _isEmpty from 'lodash/isEmpty';
 
 import StringUtils from 'library/utils/StringUtils';
 import BottomSheet from 'library/components/BottomSheet';
@@ -13,6 +14,8 @@ import styles from './styles';
 import OtpConfirmModal from '../OtpConfirmModal';
 import { ICard, ICardUser } from 'types/Card';
 import { IUserCompany } from 'types/User';
+import useLockCard from 'hooks/api/private/card/useLockCard';
+import useUnlockCard from 'hooks/api/private/card/useUnlockCard';
 
 const { width } = Dimensions.get('window');
 
@@ -38,6 +41,16 @@ const VirtualCards = ({
 }: VirtualCardsProps) => {
   const { t } = useTranslation();
   const carouselRef = useRef<any>(null);
+  const {
+    mutate: lockCard,
+    isLoading: lockingCard,
+    error: lockCardError,
+  } = useLockCard();
+  const {
+    mutate: unlockCard,
+    isLoading: unlockingCard,
+    error: unlockCardError,
+  } = useUnlockCard();
 
   const [cards, setCards] = useState<CarouselItemType[]>([]);
   const [selectedCard, setSelectedCard] = useState<number>();
@@ -50,16 +63,14 @@ const VirtualCards = ({
   const [pinError, setPinError] = useState<string>();
 
   useEffect(() => {
-    if (cards.length === 0) {
-      console.log('setting cards data');
+    if (_isEmpty(cards)) {
       const items: CarouselItemType[] = [];
       virtualCards.forEach(i => {
         items.push({ data: i, isAdd: false });
       });
       items.push({ data: undefined, isAdd: true });
-      console.log('virtual', items);
       setCards(items);
-      if (items.length > 0) {
+      if (!_isEmpty(items)) {
         setSelectedCard(0);
       }
     }
@@ -78,7 +89,6 @@ const VirtualCards = ({
         setCards([...arr]);
         setTimeout(() => {
           setCardDetailsVisible(false);
-          console.log('details should be hidden now');
         }, 500);
       }
     }
@@ -114,7 +124,6 @@ const VirtualCards = ({
 
         setTimeout(() => {
           setCardDetailsVisible(true);
-          console.log('details should be visible now');
         }, 500);
       }
     }
@@ -145,14 +154,38 @@ const VirtualCards = ({
     } */
   };
 
-  const toggleLock = async () => {
+  const toggleLock = async (pin: string) => {
     if (selectedCard !== undefined) {
       const card = cards[selectedCard].data;
       if (card) {
         if (StringUtils.cardStatus(card.status) === 'LOCKED') {
-          card.status = 1;
+          unlockCard(
+            { id: card.id, payload: { pin } },
+            {
+              onSuccess: () => {
+                card.status = 1;
+                setPinError('');
+                setConfirmPinVisible(false);
+              },
+              onError: err => {
+                setPinError(err.message);
+              },
+            },
+          );
         } else if (StringUtils.cardStatus(card.status) === 'UNLOCKED') {
-          card.status = 0;
+          lockCard(
+            { id: card.id, payload: { pin } },
+            {
+              onSuccess: () => {
+                card.status = 0;
+                setPinError('');
+                setConfirmPinVisible(false);
+              },
+              onError: err => {
+                setPinError(err.message);
+              },
+            },
+          );
         }
 
         const arr = [...cards];
@@ -197,18 +230,10 @@ const VirtualCards = ({
   const pinSubmitHandler = async (pin: string) => {
     // confirm pin if correct then call next action
     Keyboard.dismiss();
-    setLoading(true);
-    if (pin === '111111') {
-      setLoading(false);
-      setConfirmPinVisible(false);
-      if (action === 'view_details') {
-        viewDetails();
-      } else if (action === 'lock_unlock_card') {
-        toggleLock();
-      }
-    } else {
-      setLoading(false);
-      setPinError('Wrong PIN');
+    if (action === 'view_details') {
+      viewDetails();
+    } else if (action === 'lock_unlock_card') {
+      toggleLock(pin);
     }
   };
 

@@ -12,6 +12,7 @@ import R from 'res/R';
 
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import styles from './styles';
+import useRequestOtpPassword from 'hooks/api/private/account/useRequestOtpPassword';
 
 export interface OtpConfirmModalProps {
   visible: boolean;
@@ -32,6 +33,8 @@ const OtpConfirmModal = ({
   const { t } = useTranslation();
   const [pin, setPin] = useState<string>();
   const [codeSent, setCodeSent] = useState(false);
+  const { mutate: requestOtpPassword, isLoading: requestingOtpPassword } =
+    useRequestOtpPassword();
 
   useEffect(() => {
     if (visible) {
@@ -46,12 +49,7 @@ const OtpConfirmModal = ({
 
   const request = async () => {
     setCodeSent(true);
-    /* try {
-      await requestOtpPassword({ variables: { input: {} } });
-      setCodeSent(true);
-    } catch (error) {
-      HelperUtils.bugsnag.notify(error);
-    } */
+    requestOtpPassword();
   };
 
   const onSubmitPin = (
@@ -70,6 +68,8 @@ const OtpConfirmModal = ({
     setCodeSent(false);
     onCancel();
   };
+
+  const canSubmit = !requestingOtpPassword && !loading && pin?.length === 6;
 
   return (
     <Modal isVisible={visible} onDismiss={onCancel} useNativeDriver>
@@ -96,7 +96,7 @@ const OtpConfirmModal = ({
         <View style={styles.actionWrapper}>
           <Button
             info
-            disabled={codeSent}
+            disabled={codeSent || requestingOtpPassword}
             onPress={request}
             style={styles.actionBtn}>
             <Text style={styles.actionBtnText}>
@@ -112,14 +112,13 @@ const OtpConfirmModal = ({
                 <Text style={styles.noTxt}>{t('cancel')}</Text>
               </Button>
             )}
-            <Button
-              disabled={loading || !pin || pin.length < 6}
-              transparent
-              onPress={submit}>
+            <Button disabled={!canSubmit} transparent onPress={submit}>
               {loading ? (
                 <LoadingIndicator size={5} />
               ) : (
-                <Text uppercase style={styles.txtConfirm}>
+                <Text
+                  uppercase
+                  style={canSubmit ? styles.txtConfirm : styles.noTxt}>
                   {t('ok')}
                 </Text>
               )}

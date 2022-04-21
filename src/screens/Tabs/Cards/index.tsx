@@ -115,24 +115,24 @@ const MyCards = () => {
               tabContainerStyle={styles.tabContainer}
               tabBarUnderlineStyle={styles.tabUnderline}>
               <Tab heading={<TabHeading />}>
-                {virtualCards.length > 0 ? (
+                {!_isEmpty(virtualCards) ? (
                   <VirtualCards
                     user={user}
                     company={company}
                     virtualCards={virtualCards}
-                    hasPendingRequest={pendingVirtualCardRequests.length > 0}
+                    hasPendingRequest={!_isEmpty(pendingVirtualCardRequests)}
                     onRequestCard={onRequestVirtualCard}
                   />
                 ) : (
                   <EmptyVirtualCard
-                    disabled={pendingVirtualCardRequests.length > 0}
-                    requested={pendingVirtualCardRequests.length > 0}
+                    disabled={!_isEmpty(pendingVirtualCardRequests)}
+                    requested={!_isEmpty(pendingVirtualCardRequests)}
                     onRequestCard={onRequestVirtualCard}
                   />
                 )}
               </Tab>
               <Tab heading={<TabHeading />}>
-                {plasticCards.length > 0 ? (
+                {!_isEmpty(plasticCards) ? (
                   <PlasticCards
                     user={user}
                     company={company}
@@ -141,8 +141,8 @@ const MyCards = () => {
                   />
                 ) : (
                   <EmptyPlasticCard
-                    disabled={pendingPlasticCardRequests.length > 0}
-                    requested={pendingPlasticCardRequests.length > 0}
+                    disabled={!_isEmpty(pendingPlasticCardRequests)}
+                    requested={!_isEmpty(pendingPlasticCardRequests)}
                     onRequestCard={onRequestPlasticCard}
                   />
                 )}

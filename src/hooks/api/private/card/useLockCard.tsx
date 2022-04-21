@@ -1,65 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 
-import { useResource } from 'contexts/resourceContext';
 import useApi from 'hooks/useApi';
+import _capitalize from 'lodash/capitalize';
 
-/*
- * Lock Card
- *
- * Parameters
- * cardId: string
- * pin: string
- *
-
- * Returns
- * lock: setParams that triggers to lock
- * loading: boolean
- * errors: string[]
- *
- */
-
-type ParamsType = {
-  cardId: string;
-  pin: string;
+export type Params = {
+  id: string;
+  payload: { pin: string };
 };
 
 const useLockCard = () => {
-  const [params, setParams] = useState<ParamsType>();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>();
-  const { dispatch } = useResource();
   const { api } = useApi();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const lock = async () => {
-      if (params) {
-        setLoading(true);
-        try {
-          const response = await api.put(`cards/${params.cardId}/lock`, {
-            pin: params.pin,
-          });
-          console.log('lock response', response.data.payload);
-          //const card = new Card(response.data.payload);
-          //dispatch({ type: 'SET_CARD', card });
-          setLoading(false);
-        } catch (err: any) {
-          console.log({ err });
-
-          setError(err!.response.data.payload.messages[0] as string);
-          setLoading(false);
-        }
-      }
-    };
-
-    lock();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params, dispatch]);
-
-  return {
-    lock: setParams,
-    loading,
-    error,
+  const lockCard = async ({ id, payload }: Params) => {
+    try {
+      const res = await api.put(`cards/${id}/lock`, payload);
+      return res;
+    } catch (err: any) {
+      const message = _capitalize(err!.response.data.payload.messages[0]);
+      throw new Error(message, { cause: err });
+    }
   };
+
+  return useMutation('lockCard', lockCard, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('myCards');
+    },
+  });
 };
 
 export default useLockCard;
