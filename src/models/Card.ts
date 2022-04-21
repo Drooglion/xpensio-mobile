@@ -47,6 +47,14 @@ class Card {
     this.teams = teams;
     this.userTasks = userTasks;
   }
+
+  getVirtualCards() {
+    return this.cards.filter(c => c.cardType === 'virtual');
+  }
+
+  getPhysicalCards() {
+    return this.cards.filter(c => c.cardType === 'physical');
+  }
 }
 
 export default Card;

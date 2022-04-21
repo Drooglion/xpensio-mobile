@@ -9,6 +9,7 @@ import {
   Text,
 } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
+import _isEmpty from 'lodash/isEmpty';
 
 import Header from 'library/components/Header';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +33,13 @@ const MyCards = () => {
   const { t } = useTranslation();
   const tab = useRef<any>(null);
   const tabs = [t('virtual'), t('plastic')];
-  const { data, refresh, loading, error } = useGetMyCards();
+  const {
+    data,
+    refetch,
+    isRefetching,
+    isLoading: loading,
+    error,
+  } = useGetMyCards({});
   const [user, setUser] = useState<ICardUser>();
   const [company, setCompany] = useState<IUserCompany>();
   const [virtualCards, setVirtualCards] = useState<ICard[]>([]);
@@ -43,14 +50,13 @@ const MyCards = () => {
   const [pendingPlasticCardRequests, setPendingPlasticCardRequests] = useState<
     ICardRequest[]
   >([]);
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
     if (data) {
       const { cards } = data;
-      if (cards.length > 0) {
-        setVirtualCards(cards.filter(c => c.cardType === 'virtual'));
-        setPlasticCards(cards.filter(c => c.cardType === 'physical'));
+      if (!_isEmpty(cards)) {
+        setVirtualCards(data.getVirtualCards());
+        setPlasticCards(data.getPhysicalCards());
       }
 
       setUser(data.user);
@@ -65,10 +71,6 @@ const MyCards = () => {
     };
   }, [data]);
 
-  useEffect(() => {
-    setIsRefreshing(loading);
-  }, [loading]);
-
   const onItemClick = item => {};
 
   const goToTabPage = (page: any) => {
@@ -76,10 +78,6 @@ const MyCards = () => {
     if (tab.current) {
       tab.current.goToPage(page);
     }
-  };
-
-  const onRefreshData = async () => {
-    await refresh();
   };
 
   const onRequestVirtualCard = () => {};
@@ -108,10 +106,7 @@ const MyCards = () => {
           <ScrollView
             contentContainerStyle={styles.tabsContainer}
             refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                onRefresh={onRefreshData}
-              />
+              <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
             }>
             <Tabs
               initialPage={0}
