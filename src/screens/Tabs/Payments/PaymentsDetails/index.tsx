@@ -30,6 +30,7 @@ import TabSelection from './TabSelection';
 import SummaryTab from './SummaryTab';
 import ReceiptTab from './ReceiptTab';
 import styles from './styles';
+import useUpdatePayment from 'hooks/api/private/payments/useUpdatePayment';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -45,7 +46,9 @@ const PaymentsDetails = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const route = useRoute();
-  //const { payment, paymentTab } = route.params;
+  const { mutate: updatePayment, isLoading: updatingPayment } =
+    useUpdatePayment();
+  const { payment, paymentTab } = route.params;
 
   /* hooks */
   const [details, setDetails] = useState<IPayment>();
@@ -71,28 +74,22 @@ const PaymentsDetails = () => {
     }
   };
 
-  const handleSave = async inputs => {
-    const variables = { input: { ...inputs }, paymentId: id };
-    try {
-      updateLoadingModal({ variables: { loadingModal: true } });
-      await updatePayment({ variables });
-      refetchPayments();
-      setIsEditing(false);
-      updateLoadingModal({ variables: { loadingModal: false } });
-      setTimeout(() => {
-        showDialogModal({
-          variables: {
-            title: t('success'),
-            icon: 'success',
-            description: 'Payment details updated',
-          },
-        });
-      }, 500);
-    } catch (error) {
-      HelperUtils.bugsnag.notify(error);
-      setIsEditing(false);
-      updateLoadingModal({ variables: { loadingModal: false } });
-    }
+  const handleSave = async (inputs: Record<string, string>) => {
+    const params = { id: payment.id, payload: { ...inputs } };
+    await updatePayment(params, {
+      onSuccess: () => {
+        setIsEditing(false);
+        // setTimeout(() => {
+        //   showDialogModal({
+        //     variables: {
+        //       title: t('success'),
+        //       icon: 'success',
+        //       description: 'Payment details updated',
+        //     },
+        //   });
+        // }, 500);
+      },
+    });
   };
 
   const handleRejectPayment = async () => {
@@ -223,6 +220,7 @@ const PaymentsDetails = () => {
                     paymentTab={activeTab}
                     setEditing={setEditing}
                     isEditing={isEditing}
+                    isUpdating={updatingPayment}
                   />
                 </Tab>
               </Tabs>

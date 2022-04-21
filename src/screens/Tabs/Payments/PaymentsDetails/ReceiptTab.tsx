@@ -7,6 +7,7 @@ import hooks from 'library/hooks';
 import NumberUtils from 'library/utils/NumberUtils';
 import StringUtils from 'library/utils/StringUtils';
 import R from 'res/R';
+import LoadingIndicator from 'library/components/LoadingIndicator';
 
 import styles from './styles';
 import { IPayment } from 'types/Payment';
@@ -20,6 +21,7 @@ export interface ReceiptTabProps {
   handleSave(inputs: any): void;
   toggleDenyModal(toggle: boolean): void;
   setEditing(): void;
+  isUpdating: boolean;
 }
 
 const ReceiptTab = ({
@@ -31,6 +33,7 @@ const ReceiptTab = ({
   handleSave,
   toggleDenyModal,
   setEditing,
+  isUpdating,
 }: ReceiptTabProps) => {
   const { t } = useTranslation();
 
@@ -42,18 +45,31 @@ const ReceiptTab = ({
   const footerActionButton = () => {
     const paymentStatus = StringUtils.paymentStatus(payment.status);
     let component = null;
+    console.log({ paymentTab });
 
-    if (paymentTab === 0 && isEditing) {
+    if (paymentTab === 1 && isEditing) {
       component = (
-        <Button block onPress={() => handleSave(inputs)}>
-          <Text uppercase={false}>{t('save')}</Text>
+        <Button block onPress={() => handleSave(inputs)} disabled={isUpdating}>
+          {isUpdating ? (
+            <LoadingIndicator size={5} color={R.colors.white} />
+          ) : (
+            <Text uppercase={false}>{t('save')}</Text>
+          )}
         </Button>
       );
     } else {
       component =
         actAsAdmin && paymentTab === 1 && paymentStatus === 'APPROVED' ? (
-          <Button block danger onPress={() => toggleDenyModal(true)}>
-            <Text uppercase={false}>{t('disapprovePayment')}</Text>
+          <Button
+            block
+            danger
+            onPress={() => toggleDenyModal(true)}
+            disabled={isUpdating}>
+            {isUpdating ? (
+              <LoadingIndicator size={5} color={R.colors.white} />
+            ) : (
+              <Text uppercase={false}>{t('disapprovePayment')}</Text>
+            )}
           </Button>
         ) : null;
     }
@@ -78,25 +94,33 @@ const ReceiptTab = ({
       <View style={styles.tabContent}>
         <Item stackedLabel style={styles.item}>
           <Label style={styles.label}>{R.strings.addOrReferenceNoLabel}</Label>
-          <Input
-            disabled={paymentTab === 1}
-            style={styles.receiptInput}
-            placeholder={t('addOrReferenceNo')}
-            onFocus={setEditing}
-            onChangeText={text => handleChange('orNumber', text)}
-            value={inputs.orNumber}
-          />
+          {actAsAdmin ? (
+            <Text style={styles.text}>{payment.orNumber || '--'}</Text>
+          ) : (
+            <Input
+              disabled={actAsAdmin}
+              style={styles.receiptInput}
+              placeholder={t('addOrReferenceNo')}
+              onFocus={setEditing}
+              onChangeText={text => handleChange('orNumber', text)}
+              value={inputs.orNumber}
+            />
+          )}
         </Item>
         <Item stackedLabel style={styles.item}>
           <Label style={styles.label}>{t('tinNumber')}</Label>
-          <Input
-            disabled={paymentTab === 1}
-            style={styles.receiptInput}
-            placeholder={t('addTinNumber')}
-            onFocus={setEditing}
-            onChangeText={text => handleChange('merchantTin', text)}
-            value={inputs.merchantTin}
-          />
+          {actAsAdmin ? (
+            <Text style={styles.text}>{payment.merchantTin || '--'}</Text>
+          ) : (
+            <Input
+              disabled={actAsAdmin}
+              style={styles.receiptInput}
+              placeholder={t('addTinNumber')}
+              onFocus={setEditing}
+              onChangeText={text => handleChange('merchantTin', text)}
+              value={inputs.merchantTin}
+            />
+          )}
         </Item>
         <Item stackedLabel style={styles.item}>
           <Label style={styles.label}>{t('merchant')}</Label>
