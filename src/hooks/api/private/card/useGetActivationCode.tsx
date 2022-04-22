@@ -43,7 +43,6 @@ const useGetActivationCode = () => {
           );
           console.log('code response', response.data.payload);
           //const card = new Card(response.data.payload);
-          //dispatch({ type: 'SET_CARD', card });
           setLoading(false);
         } catch (err: any) {
           console.log({ err });

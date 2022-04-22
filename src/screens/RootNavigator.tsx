@@ -4,7 +4,6 @@ import isNil from 'lodash/isNil';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import ResourceContainer from 'contexts/ResourceContainer';
 
 /* Navigators */
 import Tabs from './Tabs';
@@ -53,32 +52,30 @@ const RootNavigator = () => {
 
   return (
     <NavigationContainer>
-      <ResourceContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen name="Tabs">{() => <Tabs />}</Stack.Screen>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {/* <Stack.Screen name="Tabs">{() => <Tabs />}</Stack.Screen>
         <Stack.Screen name="Request Details" component={RequestDetails} /> */}
-          {state.isLoading ? (
-            <Stack.Screen name="Splash" component={Splash} />
-          ) : state.isSignout || isNil(state.token) ? (
-            <>
-              <Stack.Screen name="Login" component={Login} />
-              <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="Tabs">
-                {() => (
-                  <>
-                    <LoadingModal />
-                    <DialogModal />
-                    <Tabs />
-                  </>
-                )}
-              </Stack.Screen>
-            </>
-          )}
-        </Stack.Navigator>
-      </ResourceContainer>
+        {state.isLoading ? (
+          <Stack.Screen name="Splash" component={Splash} />
+        ) : state.isSignout || isNil(state.token) ? (
+          <>
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Tabs">
+              {() => (
+                <>
+                  <LoadingModal />
+                  <DialogModal />
+                  <Tabs />
+                </>
+              )}
+            </Stack.Screen>
+          </>
+        )}
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

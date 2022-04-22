@@ -1,6 +1,4 @@
 import React, { FC, useReducer } from 'react';
-import Card from 'models/Card';
-import Payment from 'models/Payment';
 import Request from 'models/Request';
 
 const reducer = (prevState: StateType, action: any) => {
@@ -9,16 +7,6 @@ const reducer = (prevState: StateType, action: any) => {
       return {
         ...prevState,
         actAsAdmin: action.actAsAdmin,
-      };
-    case 'SET_CARD':
-      return {
-        ...prevState,
-        card: action.card,
-      };
-    case 'SET_PAYMENTS':
-      return {
-        ...prevState,
-        payments: action.payments,
       };
     case 'SET_REQUESTS':
       return {
@@ -48,8 +36,6 @@ type DialogModal = {
 
 type StateType = {
   actAsAdmin: boolean;
-  card: Card | undefined;
-  payments: Payment[];
   requests: Request[];
   loadingModal: boolean;
   dialogModal: DialogModal;
@@ -57,8 +43,6 @@ type StateType = {
 
 const initialState: StateType = {
   actAsAdmin: false,
-  card: undefined,
-  payments: [],
   requests: [],
   loadingModal: false,
   dialogModal: {
