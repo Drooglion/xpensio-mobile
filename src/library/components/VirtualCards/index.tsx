@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Dimensions, Keyboard } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { Button, Item, Text, View } from 'native-base';
@@ -12,10 +12,13 @@ import VirtualCard from './VirtualCard';
 
 import styles from './styles';
 import OtpConfirmModal from '../OtpConfirmModal';
-import { ICard, ICardUser } from 'types/Card';
+import { CardType, ICard, ICardUser } from 'types/Card';
 import { IUserCompany } from 'types/User';
 import useLockCard from 'hooks/api/private/card/useLockCard';
 import useUnlockCard from 'hooks/api/private/card/useUnlockCard';
+import useGetCardDetails from 'hooks/api/private/card/useGetCardDetails';
+import useRequestCard from 'hooks/api/private/card/useRequestCard';
+import { useResource } from 'contexts/resourceContext';
 
 const { width } = Dimensions.get('window');
 
@@ -29,7 +32,6 @@ export interface VirtualCardsProps {
   company?: IUserCompany;
   virtualCards: ICard[];
   hasPendingRequest: boolean;
-  onRequestCard(): void;
 }
 
 const VirtualCards = ({
@@ -37,30 +39,23 @@ const VirtualCards = ({
   company,
   virtualCards,
   hasPendingRequest,
-  onRequestCard,
 }: VirtualCardsProps) => {
   const { t } = useTranslation();
   const carouselRef = useRef<any>(null);
-  const {
-    mutate: lockCard,
-    isLoading: lockingCard,
-    error: lockCardError,
-  } = useLockCard();
-  const {
-    mutate: unlockCard,
-    isLoading: unlockingCard,
-    error: unlockCardError,
-  } = useUnlockCard();
+  const { mutate: lockCard } = useLockCard();
+  const { mutate: unlockCard } = useUnlockCard();
+  const { mutate: getCardDetails } = useGetCardDetails();
+  const { mutate: requestCard } = useRequestCard();
 
   const [cards, setCards] = useState<CarouselItemType[]>([]);
   const [selectedCard, setSelectedCard] = useState<number>();
   const [cvv, setCvv] = useState<string>();
-  const [action, setAction] = useState<string>();
+  const [action, setAction] = useState<string>('');
   const [confirmPinVisible, setConfirmPinVisible] = useState<boolean>(false);
   const [cardDetailsVisible, setCardDetailsVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  //const [error, setError] = useState<string>();
   const [pinError, setPinError] = useState<string>();
+  const { dispatch } = useResource();
 
   useEffect(() => {
     if (_isEmpty(cards)) {
@@ -95,172 +90,172 @@ const VirtualCards = ({
     setCardDetailsVisible(false);
   };
 
-  const confirmViewDetails = () => {
-    if (selectedCard !== undefined) {
-      setAction('view_details');
-      setConfirmPinVisible(true);
-    }
-  };
-
-  const confirmLockUnlock = () => {
-    if (selectedCard !== undefined) {
-      setAction('lock_unlock_card');
-      setConfirmPinVisible(true);
-    }
-  };
-
-  const viewDetails = async () => {
-    if (selectedCard !== undefined) {
-      const card = cards[selectedCard].data;
-      if (card) {
-        card.cardNumber = '4242424242424242';
-        card.cvv = '123';
-        setCvv('123');
-        console.log('card details', card);
-
-        const arr = [...cards];
-        arr[selectedCard].data = card;
-        setCards(arr);
-
-        setTimeout(() => {
-          setCardDetailsVisible(true);
-        }, 500);
+  const confirmActionOpenOtp = useCallback(
+    (actionType: string) => {
+      if (selectedCard !== undefined) {
+        setAction(actionType);
+        setConfirmPinVisible(true);
       }
-    }
+    },
+    [selectedCard, setAction, setConfirmPinVisible],
+  );
 
-    /* const { getCardDetails, setViewedCardNumber } = this.props;
-    const { cardDetails, pin, confirmCard } = this.state;
-    try {
-      const variables = { id: confirmCard.id, input: { pin } };
-      this.setState({ pinModalInProgress: true });
-      const res = await getCardDetails({ variables });
-      const { data: { getCardDetails: { payload } } } = res;
+  const viewDetails = useCallback(
+    async (pin: string) => {
+      if (selectedCard !== undefined) {
+        const card = cards[selectedCard].data;
+        if (card) {
+          const params = { id: card.id, payload: { pin } };
+          getCardDetails(params, {
+            onSuccess: res => {
+              /* Card Details here */
+              card.cardNumber = '4242424242424242';
+              card.cvv = '123';
+              setCvv('123');
+              console.log('card details', card);
 
-      await setViewedCardNumber({ variables: { viewedCardNumber: payload.cardNumber } });
+              const arr = [...cards];
+              arr[selectedCard].data = card;
+              setCards(arr);
 
-      this.setState({ cardDetails: { ...cardDetails, cvv: payload.cvv, } });
-      this.closeConfirmPin();
-      setTimeout(() => {
-        this.setState({ showCardDetails: true });
-      }, 500);
-    } catch (error) {
-      const { networkError: { result } } = error;
-      const { messages } = has(result, 'payload') ? result.payload : result;
-      this.setState({
-        pinError: true,
-        pinModalInProgress: false,
-        errorText: messages[0]
-      });
-    } */
-  };
-
-  const toggleLock = async (pin: string) => {
-    if (selectedCard !== undefined) {
-      const card = cards[selectedCard].data;
-      if (card) {
-        if (StringUtils.cardStatus(card.status) === 'LOCKED') {
-          unlockCard(
-            { id: card.id, payload: { pin } },
-            {
-              onSuccess: () => {
-                card.status = 1;
-                setPinError('');
-                setConfirmPinVisible(false);
-              },
-              onError: err => {
-                setPinError(err.message);
-              },
+              setTimeout(() => {
+                setCardDetailsVisible(true);
+              }, 500);
             },
-          );
-        } else if (StringUtils.cardStatus(card.status) === 'UNLOCKED') {
-          lockCard(
-            { id: card.id, payload: { pin } },
-            {
-              onSuccess: () => {
-                card.status = 0;
-                setPinError('');
-                setConfirmPinVisible(false);
-              },
-              onError: err => {
-                setPinError(err.message);
-              },
+            onError: err => {
+              const errMsg = err.message;
+              setPinError(errMsg);
             },
-          );
+          });
         }
-
-        const arr = [...cards];
-        arr[selectedCard].data = card;
-        setCards([...arr]);
       }
-    }
-    /* try {
-      this.setState({ pinModalInProgress: true });
-      const { lockCard, unlockCard } = this.props;
-      const { pin, confirmCard } = this.state;
-      const status = StringUtils.cardStatus(confirmCard.status);
-      const variables = {
-        id: confirmCard.id,
-        input: { pin }
-      };
-      if (status === 'LOCKED') {
-        await unlockCard({ variables });
-      } else if (status === 'UNLOCKED') {
-        await lockCard({ variables });
+    },
+    [selectedCard, cards, setCards, getCardDetails],
+  );
+
+  const toggleLock = useCallback(
+    async (pin: string) => {
+      if (selectedCard !== undefined) {
+        const card = cards[selectedCard].data;
+        if (card) {
+          if (StringUtils.cardStatus(card.status) === 'LOCKED') {
+            unlockCard(
+              { id: card.id, payload: { pin } },
+              {
+                onSuccess: () => {
+                  card.status = 1;
+                  setPinError('');
+                  setConfirmPinVisible(false);
+                },
+                onError: err => {
+                  setPinError(err.message);
+                },
+              },
+            );
+          } else if (StringUtils.cardStatus(card.status) === 'UNLOCKED') {
+            lockCard(
+              { id: card.id, payload: { pin } },
+              {
+                onSuccess: () => {
+                  card.status = 0;
+                  setPinError('');
+                  setConfirmPinVisible(false);
+                },
+                onError: err => {
+                  setPinError(err.message);
+                },
+              },
+            );
+          }
+
+          const arr = [...cards];
+          arr[selectedCard].data = card;
+          setCards([...arr]);
+        }
       }
-      this.closeConfirmPin();
-    } catch (error) {
-      const { networkError: { result } } = error;
-      const { messages } = has(result, 'payload') ? result.payload : result;
-      this.setState({
-        pinError: true,
-        pinModalInProgress: false,
-        errorText: messages[0]
-      });
-    } */
-  };
+    },
+    [
+      selectedCard,
+      unlockCard,
+      lockCard,
+      setConfirmPinVisible,
+      setPinError,
+      cards,
+    ],
+  );
 
-  const onCarouselSnap = (index: number) => {
-    setSelectedCard(index);
-  };
+  const onCarouselSnap = useCallback(
+    (index: number) => {
+      setSelectedCard(index);
+    },
+    [setSelectedCard],
+  );
 
-  const requestCardHandler = () => {
-    onRequestCard();
-  };
+  const pinSubmitHandler = useCallback(
+    async (pin: string) => {
+      Keyboard.dismiss();
+      switch (action) {
+        case 'view_details':
+          viewDetails(pin);
+          break;
+        case 'lock_unlock_card':
+          toggleLock(pin);
+          break;
+        case 'request_card':
+          requestCardHandler(pin);
+          break;
+      }
+    },
+    [viewDetails, toggleLock, action, requestCardHandler],
+  );
 
-  const pinSubmitHandler = async (pin: string) => {
-    // confirm pin if correct then call next action
-    Keyboard.dismiss();
-    if (action === 'view_details') {
-      viewDetails();
-    } else if (action === 'lock_unlock_card') {
-      toggleLock(pin);
-    }
-  };
-
-  const pinCloseHandler = () => {
+  const pinCloseHandler = useCallback(() => {
     setLoading(false);
     setPinError(undefined);
     setConfirmPinVisible(false);
-  };
+  }, [setLoading, setPinError, setConfirmPinVisible]);
+
+  const requestCardHandler = useCallback(
+    (pin: string) => {
+      const params = { cardType: 'virtual' as CardType, pin };
+      requestCard(params, {
+        onSuccess: () => {
+          pinCloseHandler();
+          setTimeout(() => {
+            dispatch({
+              type: 'SET_DIALOG_MODAL',
+              dialogModal: {
+                visible: true,
+                title: t('cardRequested'),
+                icon: 'congratulations',
+                description: t('virtualCardRequestSuccess'),
+              },
+            });
+          }, 500);
+        },
+        onError: err => {
+          setPinError(err.message);
+        },
+      });
+    },
+    [dispatch, pinCloseHandler, requestCard, t],
+  );
 
   const renderCard = (item: CarouselItemType, index: number) => {
     let renderedItem = null;
-    //console.log('card', item);
 
     if (item.isAdd) {
-      console.log('added empty');
       renderedItem = (
         <EmptyVirtualCard
           key={index}
-          disabled={hasPendingRequest}
+          isDisabled={hasPendingRequest}
           requested={hasPendingRequest}
-          onRequestCard={requestCardHandler}
+          onRequestCard={() => confirmActionOpenOtp('request_card')}
         />
       );
     } else {
       if (item.data) {
         const card = item.data;
-        console.log('card', card);
         renderedItem = (
           <View>
             <VirtualCard
@@ -283,7 +278,7 @@ const VirtualCards = ({
                     bordered
                     info
                     style={styles.btn}
-                    onPress={() => confirmViewDetails()}>
+                    onPress={() => confirmActionOpenOtp('view_details')}>
                     <Text style={styles.btnTxtAction}>{t('viewDetails')}</Text>
                   </Button>
                 ) : null}
@@ -301,7 +296,7 @@ const VirtualCards = ({
                       : false
                   }
                   style={styles.btn}
-                  onPress={() => confirmLockUnlock()}>
+                  onPress={() => confirmActionOpenOtp('lock_unlock_card')}>
                   <Text style={styles.btnTxtAction}>
                     {selectedCard !== undefined
                       ? StringUtils.cardStatus(card.status) === 'LOCKED'

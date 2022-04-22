@@ -18,7 +18,6 @@ import EmptyList from 'library/components/EmptyList';
 import DenyModal from 'library/components/DenyModal';
 import Header from 'library/components/Header';
 
-import HelperUtils from 'library/utils/HelperUtils';
 import StringUtils from 'library/utils/StringUtils';
 import NumberUtils from 'library/utils/NumberUtils';
 import DateUtils from 'library/utils/DateUtils';
@@ -37,6 +36,7 @@ import { useTranslation } from 'react-i18next';
 import { IPayment } from 'types/Payment';
 import { useResource } from 'contexts/resourceContext';
 import useRejectPayment from 'hooks/api/private/payments/useRejectPayment';
+import { PaymentStatus } from 'models/Payment';
 
 const PaymentsDetails = () => {
   const tab = useRef<any>(null);
@@ -126,6 +126,7 @@ const PaymentsDetails = () => {
               description: message,
             },
           });
+          console.log(details);
         }, 500);
       },
     });

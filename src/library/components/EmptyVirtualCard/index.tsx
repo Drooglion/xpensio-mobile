@@ -2,23 +2,25 @@ import React from 'react';
 
 import EmptyCard from 'library/components/EmptyCard';
 import R from 'res/R';
+import { useResource } from 'contexts/resourceContext';
 
 export interface EmptyVirtualCardProps {
-  disabled: boolean;
-  isAdmin?: boolean;
+  isDisabled: boolean;
   requested?: boolean;
   onRequestCard(): void;
 }
 
 const EmptyVirtualCard = ({
-  disabled,
-  isAdmin = false,
+  isDisabled,
   requested = false,
   onRequestCard,
 }: EmptyVirtualCardProps) => {
-  const defaultButtonText = !isAdmin
-    ? R.strings.requestCard
-    : R.strings.addCard;
+  const {
+    state: { actAsAdmin },
+  } = useResource();
+  const defaultButtonText = actAsAdmin
+    ? R.strings.addCard
+    : R.strings.requestCard;
 
   return (
     <EmptyCard
@@ -26,7 +28,7 @@ const EmptyVirtualCard = ({
       description={R.strings.emptyVirtualCardDesc}
       btnText={requested ? R.strings.requested : defaultButtonText}
       onPress={onRequestCard}
-      disabled={disabled}
+      disabled={isDisabled}
     />
   );
 };

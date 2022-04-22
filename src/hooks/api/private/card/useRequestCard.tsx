@@ -1,63 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 
-import { useResource } from 'contexts/resourceContext';
 import useApi from 'hooks/useApi';
+import _capitalize from 'lodash/capitalize';
+import { CardType } from 'types/Card';
 
-/*
- * Request Card
- *
- * Parameters
- * cardType: string
- * pin: string
- *
-
- * Returns
- * lock: setParams that triggers to lock
- * loading: boolean
- * errors: string[]
- *
- */
-
-type ParamsType = {
-  cardType: 'virtual' | 'physical';
+export type Params = {
+  cardType: CardType;
   pin: string;
 };
 
 const useRequestCard = () => {
-  const [params, setParams] = useState<ParamsType>();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>();
-  const { dispatch } = useResource();
   const { api } = useApi();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const request = async () => {
-      if (params) {
-        setLoading(true);
-        try {
-          const response = await api.post('cards/requests', params);
-          console.log('request response', response.data.payload);
-          //const card = new Card(response.data.payload);
-          //dispatch({ type: 'SET_CARD', card });
-          setLoading(false);
-        } catch (err: any) {
-          console.log({ err });
-
-          setError(err!.response.data.payload.messages[0] as string);
-          setLoading(false);
-        }
-      }
-    };
-
-    request();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params, dispatch]);
-
-  return {
-    request: setParams,
-    loading,
-    error,
+  const requestCard = async (params: Params) => {
+    try {
+      const res = await api.post('cards/requests', params);
+      return res;
+    } catch (err: any) {
+      const message = _capitalize(err!.response.data.payload.messages[0]);
+      throw new Error(message, { cause: err });
+    }
   };
+
+  return useMutation('requestCard', requestCard, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('myCards');
+    },
+  });
 };
 
 export default useRequestCard;

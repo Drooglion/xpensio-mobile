@@ -29,7 +29,7 @@ export interface ICardUser {
 export interface ICard {
   id: string;
   brand: string;
-  cardType: string;
+  cardType: CardType;
   currency: string;
   cardNumber?: string;
   last4: string;
@@ -50,3 +50,5 @@ export interface ICardRequest {
   updatedAt: string;
   companyId: string;
 }
+
+export type CardType = 'physical' | 'virtual';

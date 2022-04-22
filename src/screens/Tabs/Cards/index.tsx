@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Container,
   Tabs,
@@ -57,6 +57,8 @@ const MyCards = () => {
       if (!_isEmpty(cards)) {
         setVirtualCards(data.getVirtualCards());
         setPlasticCards(data.getPhysicalCards());
+        setPendingVirtualCardRequests(data.getPendingVirtualCards());
+        setPendingPlasticCardRequests(data.getPendingPhysicalCards());
       }
 
       setUser(data.user);
@@ -79,8 +81,6 @@ const MyCards = () => {
       tab.current.goToPage(page);
     }
   };
-
-  const onRequestVirtualCard = () => {};
 
   const onRequestPlasticCard = () => {};
 
@@ -121,13 +121,11 @@ const MyCards = () => {
                     company={company}
                     virtualCards={virtualCards}
                     hasPendingRequest={!_isEmpty(pendingVirtualCardRequests)}
-                    onRequestCard={onRequestVirtualCard}
                   />
                 ) : (
                   <EmptyVirtualCard
                     disabled={!_isEmpty(pendingVirtualCardRequests)}
                     requested={!_isEmpty(pendingVirtualCardRequests)}
-                    onRequestCard={onRequestVirtualCard}
                   />
                 )}
               </Tab>
