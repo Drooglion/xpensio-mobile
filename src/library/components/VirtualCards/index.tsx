@@ -191,24 +191,6 @@ const VirtualCards = ({
     [setSelectedCard],
   );
 
-  const pinSubmitHandler = useCallback(
-    async (pin: string) => {
-      Keyboard.dismiss();
-      switch (action) {
-        case 'view_details':
-          viewDetails(pin);
-          break;
-        case 'lock_unlock_card':
-          toggleLock(pin);
-          break;
-        case 'request_card':
-          requestCardHandler(pin);
-          break;
-      }
-    },
-    [viewDetails, toggleLock, action, requestCardHandler],
-  );
-
   const pinCloseHandler = useCallback(() => {
     setLoading(false);
     setPinError(undefined);
@@ -239,6 +221,24 @@ const VirtualCards = ({
       });
     },
     [dispatch, pinCloseHandler, requestCard, t],
+  );
+
+  const pinSubmitHandler = useCallback(
+    async (pin: string) => {
+      Keyboard.dismiss();
+      switch (action) {
+        case 'view_details':
+          viewDetails(pin);
+          break;
+        case 'lock_unlock_card':
+          toggleLock(pin);
+          break;
+        case 'request_card':
+          requestCardHandler(pin);
+          break;
+      }
+    },
+    [viewDetails, toggleLock, action, requestCardHandler],
   );
 
   const renderCard = (item: CarouselItemType, index: number) => {

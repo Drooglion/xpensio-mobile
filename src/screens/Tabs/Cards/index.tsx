@@ -124,7 +124,7 @@ const MyCards = () => {
                   />
                 ) : (
                   <EmptyVirtualCard
-                    disabled={!_isEmpty(pendingVirtualCardRequests)}
+                    isDisabled={!_isEmpty(pendingVirtualCardRequests)}
                     requested={!_isEmpty(pendingVirtualCardRequests)}
                   />
                 )}
