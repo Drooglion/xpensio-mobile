@@ -65,6 +65,5 @@ export default StyleSheet.create({
     ...R.sharedStyles.btnAction,
     width: '70%',
     marginVertical: 50,
-    backgroundColor: R.colors.primary,
   },
 });

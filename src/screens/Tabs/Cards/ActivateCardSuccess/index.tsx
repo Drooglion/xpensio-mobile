@@ -1,3 +1,4 @@
+import React, { useCallback } from 'react';
 import {
   Button,
   Container,
@@ -6,7 +7,6 @@ import {
   Text,
   Thumbnail,
 } from 'native-base';
-import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -19,11 +19,9 @@ const ActivateCardSuccess = () => {
   const navigation = useNavigation();
   const { t } = useTranslation();
 
-  const onContinue = () => {
-    navigation.navigate('Tabs', {
-      screen: 'My cards',
-    });
-  };
+  const onContinue = useCallback(() => {
+    navigation.pop(2);
+  }, [navigation]);
 
   return (
     <StyleProvider style={getTheme(theme)}>

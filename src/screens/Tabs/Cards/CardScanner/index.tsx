@@ -10,6 +10,7 @@ import {
 } from 'native-base';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import Toast from 'react-native-toast-message';
 
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
@@ -18,6 +19,7 @@ import Header from 'library/components/Header';
 import Scanner from 'library/components/Scanner';
 import { qrCodeValid } from 'library/utils/HelperUtils';
 import { useResource } from 'contexts/resourceContext';
+import useGetActivationCode from 'hooks/api/private/card/useGetActivationCode';
 
 const CardScanner = ({}) => {
   const navigation = useNavigation();
@@ -25,17 +27,32 @@ const CardScanner = ({}) => {
   const { card } = route.params;
   const { t } = useTranslation();
   const { dispatch } = useResource();
+  const { mutate: getActivationCode } = useGetActivationCode();
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     navigation.navigate('ActivateCard');
-  //   }, 2500);
-  // }, [navigation]);
+  const sendCode = useCallback(
+    async (sideEffects: Record<string, (value: any) => void>) => {
+      const payload = { cardId: card.last4 };
+      await getActivationCode(payload, sideEffects || {});
+    },
+    [getActivationCode, card],
+  );
 
   const readHandler = async (data: string) => {
     const valid = qrCodeValid(data);
     if (valid) {
-      navigation.navigate('ActivateCard');
+      const sideEffects = {
+        onSuccess: () => {
+          navigation.navigate('ActivateCard', { sendCode, card });
+        },
+        onError: err => {
+          Toast.show({
+            type: 'error',
+            text1: err.message,
+          });
+        },
+      };
+
+      sendCode(sideEffects);
     } else {
       dispatch({
         type: 'SET_DIALOG_MODAL',
@@ -47,30 +64,6 @@ const CardScanner = ({}) => {
         },
       });
     }
-    // const {
-    //   state: { params },
-    // } = navigation;
-    // if (data === R.strings.qrcodeValue) {
-    //   try {
-    //     const variables = { input: { id: params.id, last4: params.last4 } };
-    //     await getActivationCard({ variables });
-    //     navigation.navigate({
-    //       key: 'ActivatePhysicalCard',
-    //       routeName: 'ActivatePhysicalCard',
-    //       params,
-    //     });
-    //   } catch (error) {
-    //     HelperUtils.bugsnag.notify(error);
-    //     console.log('Error getting activation card: ', { error });
-    //   }
-    // } else {
-    //   showDialogModal({
-    //     variables: {
-    //       description: R.strings.invalidQrDesc,
-    //       title: R.strings.invalidQr,
-    //     },
-    //   });
-    // }
   };
 
   const onCancel = useCallback(() => {
@@ -81,6 +74,7 @@ const CardScanner = ({}) => {
     <StyleProvider style={getTheme(theme)}>
       <Container style={R.sharedStyles.container}>
         <Header title={R.strings.pairCard} hasBack onBackPress={onCancel} />
+        <Toast />
         <Content scrollEnabled={false}>
           <Scanner onRead={readHandler} />
         </Content>
