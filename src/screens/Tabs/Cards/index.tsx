@@ -141,7 +141,6 @@ const MyCards = () => {
                   <EmptyPlasticCard
                     disabled={!_isEmpty(pendingPlasticCardRequests)}
                     requested={!_isEmpty(pendingPlasticCardRequests)}
-                    onRequestCard={onRequestPlasticCard}
                   />
                 )}
               </Tab>
