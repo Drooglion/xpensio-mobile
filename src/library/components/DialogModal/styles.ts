@@ -53,6 +53,10 @@ const styles = StyleSheet.create({
     fontSize: 80,
     color: R.colors.success,
   },
+  iconError: {
+    fontSize: 80,
+    color: R.colors.error,
+  },
   txtOk: {
     color: R.colors.primary,
   },

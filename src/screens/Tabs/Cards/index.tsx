@@ -85,7 +85,6 @@ const MyCards = () => {
   const onRequestPlasticCard = () => {};
 
   const openScannerHandler = (card: ICard) => {
-    console.log('scan', card);
     if (navigation) {
       navigation.navigate('Scanner', { card });
     }

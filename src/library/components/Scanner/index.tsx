@@ -11,6 +11,9 @@ export interface ScannerProps {
   onRead(data: string): void;
 }
 
+/* 2 seconds until the QR Scanner can scan again */
+const REACTIVATE_TIME_OUT = 2000;
+
 const Scanner = ({ onRead }: ScannerProps) => {
   const { t } = useTranslation();
 
@@ -23,6 +26,8 @@ const Scanner = ({ onRead }: ScannerProps) => {
         fadeIn
         onRead={e => onRead(e.data)}
         showMarker
+        reactivate
+        reactivateTimeout={REACTIVATE_TIME_OUT}
       />
       <View style={styles.infoContainer}>
         <Text style={styles.txtTitle}>{t('scanning')}</Text>

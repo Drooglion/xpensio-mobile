@@ -47,12 +47,10 @@ const DialogModal = () => {
         );
       } else if (icon === 'success') {
         iconStatus = (
-          <AnimIcon
-            animation="bounceIn"
-            name="checkmark-circle"
-            style={styles.iconSuccess}
-          />
+          <Icon name="checkmark-circle" style={styles.iconSuccess} />
         );
+      } else if (icon === 'error') {
+        iconStatus = <Icon name="alert-circle" style={styles.iconError} />;
       }
     }
     return iconStatus;

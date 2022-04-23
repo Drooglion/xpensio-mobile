@@ -36,7 +36,6 @@ import { useTranslation } from 'react-i18next';
 import { IPayment } from 'types/Payment';
 import { useResource } from 'contexts/resourceContext';
 import useRejectPayment from 'hooks/api/private/payments/useRejectPayment';
-import { PaymentStatus } from 'models/Payment';
 
 const PaymentsDetails = () => {
   const tab = useRef<any>(null);

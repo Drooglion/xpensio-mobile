@@ -30,7 +30,7 @@ type DialogModal = {
   visible: boolean;
   title: string;
   description: string;
-  icon?: 'success' | 'congratulations' | 'email';
+  icon?: 'success' | 'congratulations' | 'email' | 'error';
   onClose?: () => void;
 };
 
