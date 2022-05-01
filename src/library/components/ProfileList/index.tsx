@@ -1,6 +1,7 @@
 import React from 'react';
 import { Linking } from 'react-native';
 import { List, ListItem, Icon, Switch, Text, View } from 'native-base';
+import _isEmpty from 'lodash/isEmpty';
 import R from 'res/R';
 
 import LoadingIndicator from 'library/components/LoadingIndicator';
@@ -65,34 +66,38 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
 
   return (
     <>
-      <List style={styles.list}>
-        <ListItem itemDivider style={styles.listItemDivider}>
-          <Text uppercase style={styles.listItemDividerTxt}>
-            {t('teams')}
-          </Text>
-        </ListItem>
-        {teams.map(team => (
-          <ListItem
-            style={styles.listItem}
-            onPress={() => onItemClick(team)}
-            disabled
-            key={team.id}>
-            <Text style={styles.listTxt}>{team.name}</Text>
-            <View style={styles.listItemRight}>
-              <Text
-                style={[
-                  styles.listItemRightTxt,
-                  {
-                    marginRight: 20,
-                  },
-                ]}>
-                {t('memberCount', { count: team.memberCount })}
+      {!_isEmpty(teams) && (
+        <>
+          <List style={styles.list}>
+            <ListItem itemDivider style={styles.listItemDivider}>
+              <Text uppercase style={styles.listItemDividerTxt}>
+                {t('teams')}
               </Text>
-              <Icon name="arrow-forward" style={styles.icon} />
-            </View>
-          </ListItem>
-        ))}
-      </List>
+            </ListItem>
+            {teams.map(team => (
+              <ListItem
+                style={styles.listItem}
+                onPress={() => onItemClick(team)}
+                disabled
+                key={team.id}>
+                <Text style={styles.listTxt}>{team.name}</Text>
+                <View style={styles.listItemRight}>
+                  <Text
+                    style={[
+                      styles.listItemRightTxt,
+                      {
+                        marginRight: 20,
+                      },
+                    ]}>
+                    {t('memberCount', { count: team.memberCount })}
+                  </Text>
+                  <Icon name="arrow-forward" style={styles.icon} />
+                </View>
+              </ListItem>
+            ))}
+          </List>
+        </>
+      )}
       <List style={styles.list}>
         <ListItem itemDivider style={styles.listItemDivider}>
           <Text uppercase style={styles.listItemDividerTxt}>

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { PixelRatio, RefreshControl } from 'react-native';
+import _map from 'lodash/map';
 
 import { Container, Content, StyleProvider, Text, View } from 'native-base';
 import { useTranslation } from 'react-i18next';
 
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 
-import Team from 'models/Team';
 import Header from 'library/components/Header';
 import Loading from 'library/components/Loading';
 import SignOutModal from 'library/components/SignOutModal';
@@ -20,25 +20,11 @@ import R from 'res/R';
 import styles from './styles';
 import { useAuth } from 'contexts/authContext';
 import useGetProfile from 'hooks/api/private/profile/useGetProfile';
-
-/* Dummy data*/
-const team1: Team = new Team({
-  id: '12312312',
-  name: 'Executives',
-  memberCount: 3,
-});
-const team2: Team = new Team({
-  id: '12312311',
-  name: 'Marketing',
-  memberCount: 10,
-});
-
-const teams: Team[] = [team1, team2];
+import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
 
 const Profile = () => {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
-  const role = null;
   const navigation = useNavigation();
   const [showSignOut, setShowSignOut] = useState<boolean>(false);
   const { signOut } = useAuth();
@@ -48,10 +34,16 @@ const Profile = () => {
     isLoading: profileLoading,
     refetch: refetchProfile,
   } = useGetProfile();
+  const {
+    data: account,
+    isLoading: accountIsLoading,
+    refetch: refetchAccount,
+  } = useFetchAccount({});
 
   const refetch = useCallback(() => {
     refetchProfile();
-  }, [refetchProfile]);
+    refetchAccount();
+  }, [refetchProfile, refetchAccount]);
 
   useEffect(() => {
     isFocused && refetch();
@@ -63,9 +55,11 @@ const Profile = () => {
     signOut();
   };
 
-  if (profileLoading || !profile) {
+  if (profileLoading || !profile || accountIsLoading || !account) {
     return <Loading />;
   }
+
+  const teams = _map(account.teams, 'team');
 
   return (
     <StyleProvider style={getTheme(theme)}>

@@ -7,7 +7,7 @@ import {
   IUserTask,
   IUserAccount,
 } from 'types/User';
-import { IUserTeams } from 'types/Team';
+import UserTeam from 'models/UserTeam';
 import { ICard, ICardRequest } from 'types/Card';
 
 class Account {
@@ -21,7 +21,7 @@ class Account {
   readonly cards: ICard[];
   readonly cardRequests: ICardRequest[];
   readonly companyConfiguration: ICompanyConfiguration;
-  readonly teams: IUserTeams[];
+  readonly teams: UserTeam[];
   readonly userTasks: IUserTask[];
 
   constructor({

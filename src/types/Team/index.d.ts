@@ -1,3 +1,4 @@
+import Team from 'models/Team'
 export interface ITeam {
   id: string;
   name: string;
@@ -18,7 +19,7 @@ export interface IUserTeams {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-  team: ITeam;
+  team: Team;
 }
 
 export enum TeamRole {
