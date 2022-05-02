@@ -7,7 +7,4 @@ const generateCollectionName = name => pluralize(name);
 
 const getCollection = name => database.collection(generateCollectionName(name));
 
-export {
-  generateCollectionName,
-  getCollection,
-};
+export { generateCollectionName, getCollection };

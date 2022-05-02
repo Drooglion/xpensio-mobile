@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
+import capitalize from 'lodash/capitalize';
 // import AsyncStorage from '@react-native-community/async-storage';
 // import firebase from 'react-native-firebase';
 import {
@@ -21,7 +22,7 @@ import {
 // import capitalize from 'lodash/capitalize';
 
 import ForgotPasswordButton from 'library/components/ForgotPasswordButton';
-// import LoadingIndicator from 'library/components/LoadingIndicator';
+import LoadingIndicator from 'library/components/LoadingIndicator';
 // import STORE_MUTATIONS from 'library/store/mutations';
 // import ACCOUNT from 'library/api/Account';
 import SignInWithGoogleButton from 'library/components/SignInWithGoogleButton';
@@ -31,14 +32,16 @@ import R from 'res/R';
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
-import { useAuth } from 'library/contexts/authContext';
+import useForm from 'hooks/useForm';
+import useSigninUser from 'hooks/api/private/auth/useSignInUser';
 
 const Login = () => {
-  const { signIn } = useAuth();
+  const { submit, isSubmitting, error } = useSigninUser();
+  const { inputs, handleChange } = useForm({ email: '', password: '' });
 
   const login = async () => {
     try {
-      signIn({ token: '123', user: { id: '123' } });
+      submit(inputs);
     } catch (err) {
       console.log({ err });
     }
@@ -65,8 +68,8 @@ const Login = () => {
                 autoCapitalize="none"
                 autoCorrect={false}
                 selectionColor={R.colors.cursor}
-                onChangeText={() => {}}
-                value=""
+                onChangeText={(text: string) => handleChange('email', text)}
+                value={inputs.email}
               />
             </Item>
             <Item error={false} style={styles.item} underline>
@@ -78,22 +81,22 @@ const Login = () => {
                 autoCorrect={false}
                 secureTextEntry
                 selectionColor={R.colors.cursor}
-                onChangeText={() => {}}
                 onSubmitEditing={() => {}}
-                value=""
+                onChangeText={(text: string) => handleChange('password', text)}
+                value={inputs.password}
               />
             </Item>
-            {/* <Text style={styles.txtErrorLogin}>
-              {capitalize(inputs.errorMessage)}
-            </Text> */}
+            <Text style={styles.txtErrorLogin}>{capitalize(error)}</Text>
             <ForgotPasswordButton onPress={() => {}} />
-            <Button style={styles.signIn} onPress={login} disabled={false}>
-              <Text>{R.strings.signIn}</Text>
-              {/* {inputs.signinInProgress ? (
+            <Button
+              style={styles.signIn}
+              onPress={login}
+              disabled={isSubmitting}>
+              {isSubmitting ? (
                 <LoadingIndicator size={5} color={R.colors.white} />
               ) : (
                 <Text>{R.strings.signIn}</Text>
-              )} */}
+              )}
             </Button>
             {/* <Hr
               lineColor={R.colors.divider}
@@ -102,7 +105,7 @@ const Login = () => {
               textPadding={10}
               hrStyles={styles.hr}
             /> */}
-            <SignInWithGoogleButton disabled={false} onPress={login} />
+            <SignInWithGoogleButton disabled={isSubmitting} onPress={login} />
           </Form>
         </Content>
       </Container>

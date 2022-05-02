@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Container,
   Tabs,
@@ -8,6 +8,8 @@ import {
   View,
 } from 'native-base';
 import { isEmpty } from 'lodash';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from 'react-native-config';
 
 import Header from 'library/components/Header';
 // import BalanceHeader from 'library/components/BalanceHeader';
@@ -22,18 +24,44 @@ import { useNavigation } from '@react-navigation/native';
 import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import styles from './styles';
+import { useResource } from 'contexts/resourceContext';
+import useFetchMyPayments from 'hooks/api/private/payments/useFetchMyPayments';
+import { IPayment } from 'types/Payment';
+import ListLoader from 'library/components/ListLoader';
+import useGetWalletBalance from 'hooks/api/private/account/useGetWalletBalance';
+import NumberUtils from 'library/utils/NumberUtils';
 
 const Payments = () => {
-  let tab: {} | undefined | null = {};
-
+  const tab = useRef<any>(null);
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const [payments, setPayments] = useState<IPayment[]>([]);
+  const { isLoading: paymentsLoading } = useFetchMyPayments({
+    onSuccess: data => setPayments(data.items),
+  });
+  const [userId, setUserId] = useState<string>();
+  const { data: balance, error: balanceError } = useGetWalletBalance(userId);
+  const { state } = useResource();
+  const { actAsAdmin } = state;
 
-  const actAsAdmin: boolean = false;
   const tabs = !actAsAdmin ? [t('myPayments')] : [t('myPayments'), t('team')];
 
-  const goToTabPage = page => {
-    tab.goToPage(page);
+  useEffect(() => {
+    const getUserId = async () => {
+      const id = await AsyncStorage.getItem('USER_ID');
+      if (id) {
+        setUserId(id);
+      }
+    };
+
+    getUserId();
+  }, []);
+
+  const goToTabPage = (page: any) => {
+    console.log('page', page);
+    if (tab.current) {
+      tab.current.goToPage(page);
+    }
   };
 
   const onMyPaymentPress = (item, refetch) => {
@@ -85,20 +113,31 @@ const Payments = () => {
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container>
-        <Header title="$ 1,500.00" subtitle={t('availableFunds')} />
+        <Header
+          title={
+            balanceError
+              ? t('notAvailable')
+              : balance
+              ? NumberUtils.formatCurrency(balance.currency, balance.value)
+              : t('notAvailable')
+          }
+          subtitle={t('availableFunds')}
+        />
         {/* <BalanceHeader /> */}
-        <View style={{ flexGrow: 1 }}>
+        <View style={styles.tabsContainer}>
           <TabSelection tabs={tabs} onChange={goToTabPage} />
           <Tabs
             initialPage={0}
-            ref={e => {
-              tab = e;
-            }}
+            ref={tab}
             locked
             tabContainerStyle={styles.tabContainer}
             tabBarUnderlineStyle={styles.tabUnderline}>
             <Tab heading={<TabHeading />}>
-              <MyPayments />
+              {paymentsLoading ? (
+                <ListLoader style={styles.listLoader} />
+              ) : (
+                <MyPayments data={payments} />
+              )}
             </Tab>
             {/* {!actAsAdmin ? null : (
               <Tab heading={<TabHeading />}>

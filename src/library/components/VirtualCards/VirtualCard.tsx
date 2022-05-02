@@ -36,7 +36,6 @@ const VirtualCard = ({
             status !== 1 ? 'bg_virtual_card_disabled' : 'bg_virtual_card'
           ]
         }
-        //@ts-ignore
         style={styles.img}
       />
       <View style={styles.cardDetails}>

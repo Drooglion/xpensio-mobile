@@ -5,6 +5,7 @@ import metrics from './metrics';
 import strings from './strings';
 import theme from './theme';
 import sharedStyles from './sharedStyles';
+import nationalities from './nationalityList.json'
 
 const R = {
   colors,
@@ -14,6 +15,7 @@ const R = {
   strings,
   theme,
   sharedStyles,
+  nationalities,
 };
 
 export default R;

@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Thumbnail } from 'native-base';
 
 import PaymentsStack from './Payments/Navigator';
-import RequestsStack from './Requests';
+import RequestsStack from './Requests/Navigator';
 import CardsStack from './Cards/Navigator';
 import NotificationsStack from './Notifications/Navigator';
 import R from 'res/R';
@@ -48,6 +48,7 @@ export default function Tabs() {
   return (
     //@ts-ignore
     <Tab.Navigator screenOptions={screenOptions}>
+      {/* Move Notifications at the end */}
       <Tab.Screen name="Payments" component={PaymentsStack} />
       <Tab.Screen name="Requests" component={RequestsStack} />
       <Tab.Screen name="My cards" component={CardsStack} />

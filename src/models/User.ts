@@ -1,26 +1,59 @@
-import { IUser } from 'types/User';
+import { IUser, ICompanyConfiguration } from 'types/User';
+import { IUserTeams } from 'types/Team';
 import R from 'res/R';
 
 class User {
   readonly id: string;
   readonly firstName: string;
   readonly lastName: string;
+  readonly middleName: string | null;
   readonly email: string;
   readonly photoUrl: string | null;
   readonly status: UserStatus;
+  readonly role: RoleStatus;
+  readonly createdAt: string;
+  readonly companyConfiguration: ICompanyConfiguration;
+  readonly teams: IUserTeams[];
+  readonly token: string;
+  readonly firebaseToken: string;
 
-  constructor({ id, firstName, lastName, email, photoUrl, status }: IUser) {
+  constructor({
+    id,
+    firstName,
+    lastName,
+    middleName,
+    email,
+    photoUrl,
+    status,
+    role,
+    createdAt,
+    companyConfiguration,
+    teams,
+    token,
+    firebaseToken,
+  }: IUser) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
+    this.middleName = middleName;
     this.email = email;
     this.status = status;
     /* Defaults to our profile photo if user has no photo */
     this.photoUrl = photoUrl || R.images.profile_photo;
+    this.role = role;
+    this.createdAt = createdAt;
+    this.companyConfiguration = companyConfiguration;
+    this.teams = teams;
+    this.token = token;
+    this.firebaseToken = firebaseToken;
   }
 
   fullName() {
     return `${this.firstName} ${this.lastName}`;
+  }
+
+  isAdmin() {
+    return RoleStatus[this.role] === 'ADMIN';
   }
 
   verificationStatusColor() {
@@ -46,7 +79,7 @@ class User {
     };
 
     return list[this.status];
-  };
+  }
 }
 export default User;
 
@@ -55,3 +88,9 @@ export type UserStatus =
   | 'request_for_verification'
   | 'in_progress'
   | 'verified';
+
+export enum RoleStatus {
+  'USER' = 0,
+  'ADMIN' = 1,
+  'BOOKKEEPER' = 2,
+}

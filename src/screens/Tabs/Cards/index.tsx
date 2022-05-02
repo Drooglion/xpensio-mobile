@@ -1,6 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Container, Tabs, Tab, TabHeading, StyleProvider } from 'native-base';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  Container,
+  Tabs,
+  Tab,
+  TabHeading,
+  StyleProvider,
+  View,
+  Text,
+} from 'native-base';
 import { useNavigation } from '@react-navigation/native';
+import _isEmpty from 'lodash/isEmpty';
 
 import Header from 'library/components/Header';
 import { useTranslation } from 'react-i18next';
@@ -13,67 +22,56 @@ import EmptyVirtualCard from 'library/components/EmptyVirtualCard';
 import Loading from 'library/components/Loading';
 import { RefreshControl, ScrollView } from 'react-native';
 import EmptyPlasticCard from 'library/components/EmptyPlasticCard';
-import { PlasticCardType, VirtualCardType } from 'library/types/Cards';
 import VirtualCards from 'library/components/VirtualCards';
-import { CompanyType } from 'library/types/User';
 import PlasticCards from 'library/components/PlasticCards';
-
-const dummyVirtualCards: VirtualCardType[] = [
-  {
-    last4: '4242',
-    expiryMonth: '11',
-    expiryYear: '2024',
-    cardholder: 'John Appleseed',
-    status: 1,
-  },
-  {
-    last4: '5551',
-    expiryMonth: '6',
-    expiryYear: '2024',
-    cardholder: 'John Appleseed',
-    status: 0,
-  },
-];
-
-const dummyPlasticCards: PlasticCardType[] = [
-  {
-    last4: '5079',
-    cardholder: 'John Appleseed',
-    status: -1,
-  },
-];
+import useGetMyCards from 'hooks/api/private/card/useGetMyCards';
+import { ICard, ICardRequest, ICardUser } from 'types/Card';
+import { IUserCompany } from 'types/User';
 
 const MyCards = () => {
   const navigation = useNavigation();
   const { t } = useTranslation();
   const tab = useRef<any>(null);
   const tabs = [t('virtual'), t('plastic')];
-  const [company, setCompany] = useState<CompanyType>();
-  const [virtualCards, setVirtualCards] = useState<VirtualCardType[]>([]);
-  const [plasticCards, setPlasticCards] = useState<PlasticCardType[]>([]);
+  const {
+    data,
+    refetch,
+    isRefetching,
+    isLoading: loading,
+    error,
+  } = useGetMyCards({});
+  const [user, setUser] = useState<ICardUser>();
+  const [company, setCompany] = useState<IUserCompany>();
+  const [virtualCards, setVirtualCards] = useState<ICard[]>([]);
+  const [plasticCards, setPlasticCards] = useState<ICard[]>([]);
   const [pendingVirtualCardRequests, setPendingVirtualCardRequests] = useState<
-    any[]
+    ICardRequest[]
   >([]);
   const [pendingPlasticCardRequests, setPendingPlasticCardRequests] = useState<
-    any[]
+    ICardRequest[]
   >([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
-    setCompany({
-      companyName: 'Xpensio Corp',
-      companyAddress: '19F Marco Polo Sapphire Rd Ortigas Ctr Pasig City',
-    });
-    setVirtualCards(dummyVirtualCards);
-    setPlasticCards(dummyPlasticCards);
-    setLoading(false);
+    if (data) {
+      const { cards } = data;
+      if (!_isEmpty(cards)) {
+        setVirtualCards(data.getVirtualCards());
+        setPlasticCards(data.getPhysicalCards());
+        setPendingVirtualCardRequests(data.getPendingVirtualCards());
+        setPendingPlasticCardRequests(data.getPendingPhysicalCards());
+      }
+
+      setUser(data.user);
+      setCompany(data.company);
+    }
 
     return () => {
       setVirtualCards([]);
+      setPlasticCards([]);
       setPendingVirtualCardRequests([]);
+      setPendingPlasticCardRequests([]);
     };
-  }, []);
+  }, [data]);
 
   const onItemClick = item => {};
 
@@ -84,14 +82,9 @@ const MyCards = () => {
     }
   };
 
-  const onRefreshData = () => {};
-
-  const onRequestVirtualCard = () => {};
-
   const onRequestPlasticCard = () => {};
 
-  const openScannerHandler = (card: PlasticCardType) => {
-    console.log('scan', card);
+  const openScannerHandler = (card: ICard) => {
     if (navigation) {
       navigation.navigate('Scanner', { card });
     }
@@ -104,14 +97,15 @@ const MyCards = () => {
         <TabSelection tabs={tabs} onChange={goToTabPage} />
         {loading ? (
           <Loading />
+        ) : error ? (
+          <View>
+            <Text>{error}</Text>
+          </View>
         ) : (
           <ScrollView
             contentContainerStyle={styles.tabsContainer}
             refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                onRefresh={onRefreshData}
-              />
+              <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
             }>
             <Tabs
               initialPage={0}
@@ -120,33 +114,32 @@ const MyCards = () => {
               tabContainerStyle={styles.tabContainer}
               tabBarUnderlineStyle={styles.tabUnderline}>
               <Tab heading={<TabHeading />}>
-                {virtualCards.length > 0 ? (
+                {!_isEmpty(virtualCards) ? (
                   <VirtualCards
+                    user={user}
                     company={company}
                     virtualCards={virtualCards}
-                    hasPendingRequest={pendingVirtualCardRequests.length > 0}
-                    onRequestCard={onRequestVirtualCard}
+                    hasPendingRequest={!_isEmpty(pendingVirtualCardRequests)}
                   />
                 ) : (
                   <EmptyVirtualCard
-                    disabled={pendingVirtualCardRequests.length > 0}
-                    requested={pendingVirtualCardRequests.length > 0}
-                    onRequestCard={onRequestVirtualCard}
+                    isDisabled={!_isEmpty(pendingVirtualCardRequests)}
+                    requested={!_isEmpty(pendingVirtualCardRequests)}
                   />
                 )}
               </Tab>
               <Tab heading={<TabHeading />}>
-                {plasticCards.length > 0 ? (
+                {!_isEmpty(plasticCards) ? (
                   <PlasticCards
-                    plasticCards={plasticCards}
+                    user={user}
                     company={company}
+                    plasticCards={plasticCards}
                     onOpenScanner={openScannerHandler}
                   />
                 ) : (
                   <EmptyPlasticCard
-                    disabled={pendingPlasticCardRequests.length > 0}
-                    requested={pendingPlasticCardRequests.length > 0}
-                    onRequestCard={onRequestPlasticCard}
+                    disabled={!_isEmpty(pendingPlasticCardRequests)}
+                    requested={!_isEmpty(pendingPlasticCardRequests)}
                   />
                 )}
               </Tab>

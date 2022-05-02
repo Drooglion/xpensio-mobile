@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import isNil from 'lodash/isNil';
 
@@ -7,14 +7,16 @@ import { NavigationContainer } from '@react-navigation/native';
 
 /* Navigators */
 import Tabs from './Tabs';
-import RequestDetails from './Tabs/Requests/RequestDetails';
-import { useAuth } from 'library/contexts/authContext';
+import { useAuth } from 'contexts/authContext';
 
 /* Auth */
 // import Auth from './Auth/Root';
 import Splash from './Auth/Splash';
 import Login from './Auth/Login';
 import ForgotPassword from './Auth/ForgotPassword';
+import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
+import LoadingModal from 'library/components/LoadingModal';
+import DialogModal from 'library/components/DialogModal';
 // import Register from './Auth/Register';
 // import CompleteRegister from './Auth/CompleteRegister';
 // import Splash from './Auth/Splash';
@@ -25,24 +27,22 @@ const Stack = createStackNavigator();
 
 const RootNavigator = () => {
   const { state, dispatch } = useAuth();
+  useFetchAccount({});
 
   console.log({ state, dispatch });
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let token;
-      let userId;
-      let completeRegistration;
 
       try {
         token = await AsyncStorage.getItem('AUTH_TOKEN');
-        userId = await AsyncStorage.getItem('AUTH_USER_ID');
       } catch (e) {
         console.log(e);
       }
 
-      dispatch({ type: 'RESTORE_TOKEN', token, userId });
+      dispatch({ type: 'RESTORE_TOKEN', token });
     };
 
     bootstrapAsync();
@@ -64,8 +64,15 @@ const RootNavigator = () => {
           </>
         ) : (
           <>
-            <Stack.Screen name="Tabs">{() => <Tabs />}</Stack.Screen>
-            <Stack.Screen name="Request Details" component={RequestDetails} />
+            <Stack.Screen name="Tabs">
+              {() => (
+                <>
+                  <LoadingModal />
+                  <DialogModal />
+                  <Tabs />
+                </>
+              )}
+            </Stack.Screen>
           </>
         )}
       </Stack.Navigator>

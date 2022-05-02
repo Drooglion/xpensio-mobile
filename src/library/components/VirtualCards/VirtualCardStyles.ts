@@ -63,7 +63,6 @@ export default StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },
-  //@ts-ignore
   cardTxtMute: {
     ...R.fonts.AirbnbCerealAppBook,
     color: R.colors.grey,
@@ -71,7 +70,6 @@ export default StyleSheet.create({
     fontSize: 10,
     marginRight: 4,
   },
-  //@ts-ignore
   cardTxtExp: {
     ...R.fonts.AirbnbCerealAppMedium,
     // fontSize: PixelRatio.get() < 3 ? 15 : 18,

@@ -7,6 +7,7 @@ export default StyleSheet.create({
     paddingRight: R.metrics.doubleMargin,
     backgroundColor: R.colors.white,
     marginBottom: 30,
+    zIndex: 30,
   },
   body: {
     flex: 1,
@@ -29,7 +30,6 @@ export default StyleSheet.create({
     textAlign: 'left',
     paddingLeft: 0,
   },
-  //@ts-ignore
   subtitle: {
     ...R.theme.subhead,
     fontSize: 12,

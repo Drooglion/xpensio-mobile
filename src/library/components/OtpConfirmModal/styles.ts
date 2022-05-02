@@ -10,13 +10,11 @@ export default StyleSheet.create({
     borderRadius: 5,
     padding: 20,
   },
-  //@ts-ignore
   title: {
     ...R.fonts.AirbnbCerealAppMedium,
     fontSize: 25,
     lineHeight: 30,
   },
-  //@ts-ignore
   subtitle: {
     ...R.theme.subhead,
     fontSize: 14,
@@ -30,7 +28,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'flex-end',
   },
-  //@ts-ignore
   noTxt: {
     ...R.fonts.AirbnbCerealAppMedium,
     fontSize: 15,
@@ -57,12 +54,10 @@ export default StyleSheet.create({
   actionBtn: {
     height: 40,
   },
-  //@ts-ignore
   actionBtnText: {
     ...R.fonts.AirbnbCerealAppMedium,
     fontSize: 13,
   },
-  //@ts-ignore
   txtConfirm: {
     ...R.fonts.AirbnbCerealAppMedium,
     fontSize: 15,

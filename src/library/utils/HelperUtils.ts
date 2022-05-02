@@ -36,8 +36,18 @@ const verificationStatusColor = (status: string) => {
 // const bugsnag = new Client(Config.BUGSNAG_API);
 const bugsnag = undefined;
 
+export const qrCodeValid = (value: string) => {
+  return [
+    'http:/xpens.io',
+    'http://xpens.io/',
+    'https://xpens.io',
+    'https://xpens.io/',
+  ].includes(value);
+};
+
 export default {
   statusColor,
   verificationStatusColor,
   bugsnag,
+  qrCodeValid,
 };

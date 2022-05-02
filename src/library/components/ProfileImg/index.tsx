@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
-import User from 'models/User';
+import { IUser } from 'types/User';
 import * as Animatable from 'react-native-animatable';
 import { Button, Text, Icon, View } from 'native-base';
+import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
+import Account from 'models/Account';
 
-// import ApiUtils from 'library/utils/ApiUtils';
-// import HelperUtils from 'library/utils/HelperUtils';
 import R from 'res/R';
 import styles from './styles';
 
@@ -16,16 +15,15 @@ type Props = {
   onPressText?: () => void;
   showUploadBtn: Boolean;
   size: number;
-  user: User;
 };
-const ProfileImg = ({
-  user,
-  text,
-  onPressText,
-  showUploadBtn,
-  size = 70,
-}: Props) => {
-  const [uri, setUri] = useState<string | null>(user.photoUrl);
+const ProfileImg = ({ text, onPressText, showUploadBtn, size = 70 }: Props) => {
+  const [uri, setUri] = useState<string | null>(R.images.profile_photo);
+  const { data, isLoading } = useFetchAccount({
+    onSuccess: (account: Account) => {
+      setUri(account.user.photoUrl);
+    },
+    onError: onError,
+  });
 
   const onError = () => {
     setUri(R.images.profile_photo);
@@ -86,7 +84,7 @@ const ProfileImg = ({
           duration={500}
           loadingIndicatorSource={R.images.profile_photo}
           source={uri}
-          onError={this.onError}
+          onError={onError}
           style={[
             StyleSheet.flatten(styles.img),
             {
@@ -115,38 +113,5 @@ const ProfileImg = ({
     </View>
   );
 };
-
-ProfileImg.propTypes = {
-  text: PropTypes.string,
-  onPressText: PropTypes.func,
-  showUploadBtn: PropTypes.bool,
-  size: PropTypes.number,
-  user: PropTypes.instanceOf(Object).isRequired,
-  getSignedUrl: PropTypes.func,
-  setPhotoUrl: PropTypes.func,
-  uploadProfileImg: PropTypes.func,
-};
-
-ProfileImg.defaultProps = {
-  text: '',
-  onPressText: () => {},
-  showUploadBtn: false,
-  size: 70,
-  getSignedUrl: () => {},
-  setPhotoUrl: () => {},
-  uploadProfileImg: () => {},
-};
-
-// export default compose(
-//   graphql(STORE_QUERIES.user, { props: ({ data: { user } }) => ({ user }) }),
-//   graphql(PROFILE.GET_SIGNED_URL_FOR_UPLOAD, { name: 'getSignedUrl' }),
-//   graphql(STORE_MUTATIONS.setPhotoUrl, { name: 'setPhotoUrl' }),
-//   graphql(PROFILE.UPLOAD_PROFILE_IMG, {
-//     name: 'uploadProfileImg',
-//     options: {
-//       refetchQueries: [{ query: PROFILE.MY_PROFILE }],
-//     },
-//   }),
-// )(ProfileImg);
 
 export default ProfileImg;

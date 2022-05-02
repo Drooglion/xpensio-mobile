@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import { StyleSheet, PixelRatio } from 'react-native';
 import R from 'res/R';
 

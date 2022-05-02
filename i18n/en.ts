@@ -36,6 +36,7 @@ export default {
 
     backOfId: 'Back of ID',
     balanceOnCard: 'Balance on card',
+    balanceNotAvailable: 'Balance not available',
     biometricsTitle: 'Use biometrics to access',
     biometricsDesc:
       "To make your life easy, you can use your device's biometrics scanner for fast login and actions that needs confirmation.",
@@ -170,6 +171,7 @@ export default {
     noNotifications: 'No Notifications',
     noRequests: 'No Requests',
     noTeams: 'No Teams',
+    notAvailable: 'Not available',
 
     notes: 'Notes',
 
@@ -192,6 +194,7 @@ export default {
     pairRequest: 'Pair a request',
     password: 'Password',
     payments: 'Payments',
+    paymentDetailsUpdated: 'Payment details updated',
     paymentUnavailable: 'Payment Unavailable',
     paymentMethod: 'Payment method',
     perPurchaseLimit: 'Per purchase limit',
@@ -234,6 +237,7 @@ export default {
 
     requested: 'Requested',
     requests: 'Requests',
+    requestDetails: 'Request details',
     requestUpdates: 'Request updates',
     requestUpdatesDesc:
       'When the status of your request has changed, including your new messages.',
@@ -319,5 +323,9 @@ export default {
     yes: 'Yes',
 
     zipCode: 'ZIP code',
+
+    message: {
+      updated: 'Updated',
+    },
   },
 };

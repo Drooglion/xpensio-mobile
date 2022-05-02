@@ -1,6 +1,7 @@
 import React from 'react';
 import { Linking } from 'react-native';
 import { List, ListItem, Icon, Switch, Text, View } from 'native-base';
+import _isEmpty from 'lodash/isEmpty';
 import R from 'res/R';
 
 import LoadingIndicator from 'library/components/LoadingIndicator';
@@ -11,11 +12,11 @@ import { useTranslation } from 'react-i18next';
 
 import styles from './styles';
 import { useNavigation } from '@react-navigation/native';
-import User from 'models/User';
+import Profile from 'models/Profile';
 import Team from 'models/Team';
 
 type Props = {
-  profile: User;
+  profile: Profile;
   teams: Team[];
   signOut: () => void;
 };
@@ -29,15 +30,11 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
       await Linking.openURL(url);
     } catch (error) {
       console.log('error: ', error);
-      // HelperUtils.bugsnag.notify(error);
     }
   };
 
   const changePassword = () => {
-    navigation.navigate({
-      key: 'ChangePassword',
-      routeName: 'ChangePassword',
-    });
+    navigation.navigate('ChangePassword');
   };
 
   const notificationsSettings = () => {
@@ -69,34 +66,38 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
 
   return (
     <>
-      <List style={styles.list}>
-        <ListItem itemDivider style={styles.listItemDivider}>
-          <Text uppercase style={styles.listItemDividerTxt}>
-            {t('teams')}
-          </Text>
-        </ListItem>
-        {teams.map(team => (
-          <ListItem
-            style={styles.listItem}
-            onPress={() => onItemClick(team)}
-            disabled
-            key={team.id}>
-            <Text style={styles.listTxt}>{team.name}</Text>
-            <View style={styles.listItemRight}>
-              <Text
-                style={[
-                  styles.listItemRightTxt,
-                  {
-                    marginRight: 20,
-                  },
-                ]}>
-                {t('memberCount', { count: team.memberCount })}
+      {!_isEmpty(teams) && (
+        <>
+          <List style={styles.list}>
+            <ListItem itemDivider style={styles.listItemDivider}>
+              <Text uppercase style={styles.listItemDividerTxt}>
+                {t('teams')}
               </Text>
-              <Icon name="arrow-forward" style={styles.icon} />
-            </View>
-          </ListItem>
-        ))}
-      </List>
+            </ListItem>
+            {teams.map(team => (
+              <ListItem
+                style={styles.listItem}
+                onPress={() => onItemClick(team)}
+                disabled
+                key={team.id}>
+                <Text style={styles.listTxt}>{team.name}</Text>
+                <View style={styles.listItemRight}>
+                  <Text
+                    style={[
+                      styles.listItemRightTxt,
+                      {
+                        marginRight: 20,
+                      },
+                    ]}>
+                    {t('memberCount', { count: team.memberCount })}
+                  </Text>
+                  <Icon name="arrow-forward" style={styles.icon} />
+                </View>
+              </ListItem>
+            ))}
+          </List>
+        </>
+      )}
       <List style={styles.list}>
         <ListItem itemDivider style={styles.listItemDivider}>
           <Text uppercase style={styles.listItemDividerTxt}>
@@ -110,10 +111,10 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
               styles.listItemRightTxt,
               { color: profile.verificationStatusColor() },
             ]}>
-            {profile.formattedVerificationStatus()}
+            {profile.formatVerificationStatus()}
           </Text>
         </ListItem>
-        <ListItem style={styles.listItem} onPress={editProfile} disabled>
+        <ListItem style={styles.listItem} onPress={editProfile}>
           <Text style={styles.listTxt}>{t('personalDetails')}</Text>
           <Icon name="arrow-forward" style={styles.icon} />
         </ListItem>
@@ -145,11 +146,7 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
               <Switch value={false} disabled />
             </ListItem>
           */}
-        <ListItem
-          style={styles.listItem}
-          button
-          onPress={changePassword}
-          disabled>
+        <ListItem style={styles.listItem} button onPress={changePassword}>
           <Text style={styles.listTxt}>{t('changePassword')}</Text>
           <Icon name="arrow-forward" style={styles.icon} />
         </ListItem>

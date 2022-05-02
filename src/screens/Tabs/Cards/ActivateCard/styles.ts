@@ -48,7 +48,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginTop: R.metrics.section,
+    marginTop: R.metrics.smallMargin,
     width: width * 0.75,
   },
   txtResendDesc: {
@@ -65,6 +65,5 @@ export default StyleSheet.create({
     ...R.sharedStyles.btnAction,
     width: '70%',
     marginVertical: 50,
-    backgroundColor: R.colors.primary,
   },
 });

@@ -27,3 +27,7 @@ declare module 'react-native-user-avatar' {
 
   export default component;
 }
+
+declare module 'react-native-parallax-scroll-view';
+
+declare module 'react-native-image-placeholder';

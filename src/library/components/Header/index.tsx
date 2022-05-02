@@ -87,6 +87,7 @@ const Header = ({
     } else if (onSearch) {
       rightComponent = (
         <Right style={styles.right}>
+          {/* @ts-ignore */}
           <Button transparent icon style={styles.btnSearch} onPress={onSearch}>
             <NBIcon
               ios="ios-search"
@@ -110,15 +111,14 @@ const Header = ({
     return (
       content || (
         <Body style={styles.body}>
-          {/* @ts-ignore */}
-          <Title allowFontScaling={false} style={titleStyle}>
-            {title}
-          </Title>
+          <Title style={titleStyle}>{title}</Title>
           {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
         </Body>
       )
     );
   };
+
+  //console.log('hasBack', hasBack);
 
   return (
     <NBHeader

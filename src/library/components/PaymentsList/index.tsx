@@ -1,7 +1,6 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
-// import { graphql } from 'react-apollo';
 import {
   ListItem,
   Text,
@@ -21,15 +20,36 @@ import DateUtils from 'library/utils/DateUtils';
 import NumberUtils from 'library/utils/NumberUtils';
 import R from 'res/R';
 import styles from './styles';
-import Payment from 'models/Payment';
+import { IPayment, IPaymentSection } from 'types/Payment';
 
 type Props = {
-  onItemClick: (payment: Payment) => void;
-  data: Payment[][];
+  onItemClick: (payment: IPayment) => void;
+  data: IPayment[];
 };
 
 const PaymentsList = ({ onItemClick, data }: Props) => {
   const { t } = useTranslation();
+  const currency = 'php';
+  const [items, setItems] = useState<IPaymentSection[][]>();
+
+  useEffect(() => {
+    if (data) {
+      const myPayments = data.map(item => ({
+        ...item,
+        createdAtFormatted: DateUtils.getSectionHeaderDate(item.createdAt),
+      }));
+      const allCreatedAt = chain(myPayments)
+        .map('createdAtFormatted')
+        .uniq()
+        .value();
+      const sectionedData = allCreatedAt.map(createdAt =>
+        myPayments.filter(item => item.createdAtFormatted === createdAt),
+      );
+      console.log('sections', sectionedData);
+      setItems(sectionedData);
+    }
+  }, [data]);
+
   // componentDidMount() {
   //   const { data } = this.props;
   //   this.formatData(data);
@@ -59,21 +79,13 @@ const PaymentsList = ({ onItemClick, data }: Props) => {
     originalAmount: number,
     originalCurrency: string,
   ) => {
-    const currency = 'NZD';
-    return isNil(originalAmount) || originalCurrency === currency ? null : (
+    return isNil(originalAmount) ||
+      originalCurrency.toLowerCase() === currency ? null : (
       <Text allowFontScaling={false} style={styles.originalAmount}>
         {`${NumberUtils.formatCurrency(originalCurrency, originalAmount)}/`}
       </Text>
     );
   };
-
-  // renderItem = item => {
-  //   if (item.isSection) {
-  //     this.renderDateHeader(item);
-  //   }
-
-  //   this.renderItemRow(item);
-  // };
 
   const renderSection = (title: string) => (
     <ListItem itemHeader noBorder noIndent style={styles.listItem}>
@@ -81,17 +93,14 @@ const PaymentsList = ({ onItemClick, data }: Props) => {
     </ListItem>
   );
 
-  const renderItemRow = (item: any, key: any) => {
-    const currency = 'NZD';
-
-    const avatar = !isNil(item.image) ? (
-      <Thumbnail small source={{ uri: item.image }} />
+  const renderItemRow = (item: IPayment, key: any) => {
+    const avatar = !isNil(item.merchantLogo) ? (
+      <Thumbnail small source={{ uri: item.merchantLogo }} />
     ) : (
       <UserAvatar
         size={R.metrics.avatar}
         name={StringUtils.getInitials(item.merchantName)}
-        fontDecrease={2}
-        colors={R.colors.avatars}
+        bgColors={R.colors.avatars}
       />
     );
 
@@ -138,7 +147,10 @@ const PaymentsList = ({ onItemClick, data }: Props) => {
             */}
         </Body>
         <Right style={styles.itemRight}>
-          {renderOriginalAmount(item.originalAmount, item.originalCurrency)}
+          {renderOriginalAmount(
+            item.originalAmount ? parseFloat(item.originalAmount) : 0,
+            item.originalCurrency,
+          )}
           <Text allowFontScaling={false} style={styles.amount}>
             {NumberUtils.formatCurrency(currency, item.amountTotal)}
           </Text>
@@ -147,14 +159,14 @@ const PaymentsList = ({ onItemClick, data }: Props) => {
     );
   };
 
-  const renderItemRows = ({ item }: { item: Item[] }) => {
-    const itemSectionTitle = item[0]?.createdAtFormatted;
+  const renderItemRows = ({ item: row }: { item: IPaymentSection[] }) => {
+    const itemSectionTitle = row[0]?.createdAtFormatted;
     const itemSection = renderSection(itemSectionTitle);
 
     return (
       <Fragment>
         {itemSection}
-        {item.map((item, i) => renderItemRow(item, i))}
+        {row.map((item: any, i: any) => renderItemRow(item, i))}
       </Fragment>
     );
   };
@@ -173,7 +185,7 @@ const PaymentsList = ({ onItemClick, data }: Props) => {
         ListEmptyComponent={
           <EmptyList image={R.images.empty_payments} text={t('noPayments')} />
         }
-        data={data}
+        data={items}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.list}
         onEndReached={() => {}}
