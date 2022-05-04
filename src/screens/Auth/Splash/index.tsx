@@ -16,7 +16,7 @@ const Splash = () => {
           source={R.images.logo_splash}
           resizeMode="contain"
         />
-        <Text style={styles.tagline}>{t('tagline')}</Text>
+        {/* <Text style={styles.tagline}>{t('tagline')}</Text> */}
       </Content>
     </Container>
   );
