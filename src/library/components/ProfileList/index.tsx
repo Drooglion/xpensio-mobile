@@ -2,6 +2,7 @@ import React from 'react';
 import { Linking } from 'react-native';
 import { List, ListItem, Icon, Switch, Text, View } from 'native-base';
 import _isEmpty from 'lodash/isEmpty';
+import _isNil from 'lodash/isNil';
 import R from 'res/R';
 
 import LoadingIndicator from 'library/components/LoadingIndicator';
@@ -17,7 +18,7 @@ import Team from 'models/Team';
 
 type Props = {
   profile: Profile;
-  teams: Team[];
+  teams: Team[] | undefined;
   signOut: () => void;
 };
 const ProfileList = ({ profile, teams, signOut }: Props) => {
@@ -66,7 +67,7 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
 
   return (
     <>
-      {!_isEmpty(teams) && (
+      {!_isNil(teams) && !_isEmpty(teams) && (
         <>
           <List style={styles.list}>
             <ListItem itemDivider style={styles.listItemDivider}>

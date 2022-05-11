@@ -9,7 +9,7 @@ class UserTeam {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly deletedAt: string | null;
-  readonly team: Team;
+  readonly team?: Team;
 
   constructor({
     teamUserId,

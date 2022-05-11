@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { PixelRatio, RefreshControl } from 'react-native';
 import _map from 'lodash/map';
+import _compact from 'lodash/compact';
 
 import { Container, Content, StyleProvider, Text, View } from 'native-base';
 import { useTranslation } from 'react-i18next';
@@ -59,7 +60,7 @@ const Profile = () => {
     return <Loading />;
   }
 
-  const teams = _map(account.teams, 'team');
+  const teams = _compact(_map(account.teams, 'team') || undefined);
 
   return (
     <StyleProvider style={getTheme(theme)}>
