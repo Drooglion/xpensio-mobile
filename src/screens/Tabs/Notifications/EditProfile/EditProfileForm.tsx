@@ -25,6 +25,8 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
   const mobileNumberVerified = inputs.mobileNumberVerified;
   const emailVerified = inputs.emailVerified;
 
+  console.log('inoputs: ', { inputs });
+
   const titles: string[] = ['Mr', 'Mrs', 'Miss', 'Dr', 'Madam'];
 
   /* Virtualized List issue triggered when opening picker is pending at github  - https://github.com/GeekyAnts/NativeBase/issues/3433  */
@@ -98,7 +100,6 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
               autoCorrect={false}
               style={styles.input}
               textContentType="telephoneNumber"
-              keyboardType="numeric"
               onChangeText={text => handleChange('mobileNumber', text)}
               value={inputs.mobileNumber || ''}
             />

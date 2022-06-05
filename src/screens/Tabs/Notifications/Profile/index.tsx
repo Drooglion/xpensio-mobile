@@ -68,8 +68,6 @@ const Profile = () => {
         <Header
           title={t('profile')}
           hasBack
-          transparent
-          backgroundColor={R.colors.transparent}
           onBackPress={() => navigation.goBack()}
         />
 

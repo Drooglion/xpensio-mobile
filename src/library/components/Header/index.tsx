@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import {
   Header as NBHeader,
   Body,
@@ -8,7 +8,6 @@ import {
   Left,
   Button,
   Icon as NBIcon,
-  Text,
 } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 
@@ -23,7 +22,6 @@ export interface AppHeaderProps {
   onSearch?(): void;
   hasBack: boolean;
   highlightBack: boolean;
-  transparent: boolean;
   backgroundColor?: string;
   onBackPress(): void;
   inverseFontColor: boolean;
@@ -40,7 +38,6 @@ const defaultProps: AppHeaderProps = {
   onSearch: undefined,
   hasBack: false,
   highlightBack: false,
-  transparent: false,
   backgroundColor: '',
   onBackPress: () => {},
   inverseFontColor: false,
@@ -57,7 +54,6 @@ const Header = ({
   onSearch,
   hasBack,
   highlightBack,
-  transparent,
   backgroundColor,
   onBackPress,
   inverseFontColor,
@@ -124,7 +120,6 @@ const Header = ({
     <NBHeader
       hasTabs
       noLeft
-      transparent={transparent}
       style={headerStyle}
       //@ts-ignore
       iosBarStyle={iosBarStyle}

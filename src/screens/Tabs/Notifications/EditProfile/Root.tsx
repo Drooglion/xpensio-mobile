@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import dayjs from 'dayjs';
-import { KeyboardAvoidingView } from 'react-native';
 import Toast from 'react-native-toast-message';
 import {
   Button,
@@ -103,6 +102,8 @@ const Root = ({ loading, profile }: Props) => {
       <Container>
         <Header
           hasBack
+          transparent
+          backgroundColor={R.colors.transparent}
           title={R.strings.personalDetails}
           onBackPress={goBack}
         />
@@ -110,14 +111,12 @@ const Root = ({ loading, profile }: Props) => {
         <Content
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}>
-          <KeyboardAvoidingView enabled behavior="padding">
-            <EditProfileForm
-              inputs={inputs}
-              handleChange={handleChange}
-              errors={{}}
-              loading={loading || updating}
-            />
-          </KeyboardAvoidingView>
+          <EditProfileForm
+            inputs={inputs}
+            handleChange={handleChange}
+            errors={{}}
+            loading={loading || updating}
+          />
         </Content>
         <Footer style={styles.footer}>
           <FooterTab style={styles.footerTab}>

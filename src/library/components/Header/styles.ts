@@ -1,3 +1,4 @@
+import Left from 'native-base-theme/components/Left';
 import { StyleSheet } from 'react-native';
 import R from 'res/R';
 
@@ -21,7 +22,7 @@ export default StyleSheet.create({
     flexWrap: 'wrap',
   },
   left: {
-    flex: 0.15,
+    flex: 0.2,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },

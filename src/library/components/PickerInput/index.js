@@ -7,10 +7,7 @@ const ios = Platform.OS === 'ios';
 
 const PickerInput = props => (
   <View style={styles.wrapper}>
-    <Picker
-      {...props}
-      textStyle={ios ? styles.textStyle : null}
-    />
+    <Picker dropdownIconColor="black" style={styles.picker} {...props} />
   </View>
 );
 

@@ -48,7 +48,7 @@ const useUpdateProfile = () => {
       const profile = new Profile(res.data.payload);
       return profile;
     } catch (err: any) {
-      const message = _capitalize(err!.response.data.messages[0]);
+      const message = _capitalize(err!.response.data.payload.messages[0]);
       throw new Error(message, { cause: err });
     }
   };
