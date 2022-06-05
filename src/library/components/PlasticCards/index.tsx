@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Dimensions, Keyboard } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { Button, Text, View } from 'native-base';
 import { useTranslation } from 'react-i18next';
+import useLockCard from 'hooks/api/private/card/useLockCard';
+import useUnlockCard from 'hooks/api/private/card/useUnlockCard';
 
 import StringUtils from 'library/utils/StringUtils';
 
@@ -37,10 +39,12 @@ const PlasticCards = ({
   const carouselRef = useRef<any>(null);
   const [cards, setCards] = useState<ICard[]>([]);
   const [selectedCard, setSelectedCard] = useState<number>();
-  const [action, setAction] = useState<string>();
   const [confirmPinVisible, setConfirmPinVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [pinError, setPinError] = useState<string>();
+
+  const { mutate: lockCard } = useLockCard();
+  const { mutate: unlockCard } = useUnlockCard();
 
   useEffect(() => {
     if (plasticCards.length > 0) {
@@ -51,7 +55,6 @@ const PlasticCards = ({
 
   const confirmLockUnlock = () => {
     if (selectedCard !== undefined) {
-      setAction('lock_unlock_card');
       setConfirmPinVisible(true);
     }
   };
@@ -60,61 +63,61 @@ const PlasticCards = ({
     setSelectedCard(index);
   };
 
-  const toggleLock = async () => {
-    if (selectedCard !== undefined) {
-      const card = cards[selectedCard];
-      if (card) {
-        if (StringUtils.cardStatus(card.status) === 'LOCKED') {
-          card.status = 1;
-        } else if (StringUtils.cardStatus(card.status) === 'UNLOCKED') {
-          card.status = 0;
-        }
+  const toggleLock = useCallback(
+    async (pin: string) => {
+      if (selectedCard !== undefined) {
+        const card = cards[selectedCard];
+        if (card) {
+          if (StringUtils.cardStatus(card.status) === 'LOCKED') {
+            unlockCard(
+              { id: card.id, payload: { pin } },
+              {
+                onSuccess: () => {
+                  card.status = 1;
+                  setPinError('');
+                  setConfirmPinVisible(false);
+                },
+                onError: err => {
+                  setPinError(err.message);
+                },
+              },
+            );
+          } else if (StringUtils.cardStatus(card.status) === 'UNLOCKED') {
+            lockCard(
+              { id: card.id, payload: { pin } },
+              {
+                onSuccess: () => {
+                  card.status = 0;
+                  setPinError('');
+                  setConfirmPinVisible(false);
+                },
+                onError: err => {
+                  setPinError(err.message);
+                },
+              },
+            );
+          }
 
-        const arr = [...cards];
-        arr[selectedCard] = card;
-        setCards([...arr]);
+          const arr = [...cards];
+          arr[selectedCard].data = card;
+          setCards([...arr]);
+        }
       }
-    }
-    /* try {
-      this.setState({ pinModalInProgress: true });
-      const { lockCard, unlockCard } = this.props;
-      const { pin, toggleCard } = this.state;
-      const status = StringUtils.cardStatus(toggleCard.status);
-      const variables = {
-        id: toggleCard.id,
-        input: { pin }
-      };
-      if (status === 'LOCKED') {
-        await unlockCard({ variables });
-      } else if (status === 'UNLOCKED') {
-        await lockCard({ variables });
-      }
-      this.closeConfirmPin();
-    } catch (error) {
-      const { networkError: { result } } = error;
-      const { messages } = has(result, 'payload') ? result.payload : result;
-      this.setState({
-        pinError: true,
-        pinModalInProgress: false,
-        errorText: messages[0]
-      });
-    } */
-  };
+    },
+    [
+      selectedCard,
+      unlockCard,
+      lockCard,
+      setConfirmPinVisible,
+      setPinError,
+      cards,
+    ],
+  );
 
   const pinSubmitHandler = async (pin: string) => {
     // confirm pin if correct then call next action
     Keyboard.dismiss();
-    setLoading(true);
-    if (pin === '111111') {
-      setLoading(false);
-      setConfirmPinVisible(false);
-      if (action === 'lock_unlock_card') {
-        toggleLock();
-      }
-    } else {
-      setLoading(false);
-      setPinError('Wrong PIN');
-    }
+    toggleLock(pin);
   };
 
   const pinCloseHandler = () => {
@@ -124,7 +127,6 @@ const PlasticCards = ({
   };
 
   const scanCard = (item: ICard) => {
-    console.log('scan', item);
     onOpenScanner(item);
   };
 

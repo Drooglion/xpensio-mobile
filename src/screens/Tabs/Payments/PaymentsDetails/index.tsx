@@ -129,38 +129,6 @@ const PaymentsDetails = () => {
         }, 500);
       },
     });
-    // try {
-    //   const res = await rejectPayment({ variables });
-    //   const {
-    //     data: {
-    //       payments: {
-    //         payload: { messages },
-    //       },
-    //     },
-    //   } = res;
-    //   refetchPayments();
-    //   toggledenymodal(false);
-    //   setTimeout(() => {
-    //     showDialogModal({
-    //       variables: {
-    //         icon: 'success',
-    //         title: t('success'),
-    //         description: messages[0],
-    //       },
-    //     });
-    //   }, 500);
-    // } catch (error) {
-    //   HelperUtils.bugsnag.notify(error);
-    //   toggleDenyModal(false);
-    //   setTimeout(() => {
-    //     showDialogModal({
-    //       variables: {
-    //         title: 'Unable to Deny',
-    //         description: 'Something went wrong',
-    //       },
-    //     });
-    //   }, 500);
-    // }
   };
 
   const paymentUnavailable = () => (
