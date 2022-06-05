@@ -135,8 +135,8 @@ android {
         applicationId "com.xpensiorn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 46
-        versionName "0.3.41"
+        versionCode 47
+        versionName "0.3.42"
         missingDimensionStrategy "react-native-camera", "general"
     }
     splits {
