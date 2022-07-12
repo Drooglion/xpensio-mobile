@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import { IUser } from 'types/User';
@@ -15,19 +15,28 @@ type Props = {
   onPressText?: () => void;
   showUploadBtn: Boolean;
   size: number;
+  user: any;
 };
-const ProfileImg = ({ text, onPressText, showUploadBtn, size = 70 }: Props) => {
-  const [uri, setUri] = useState<string | null>(R.images.profile_photo);
-  const { data, isLoading } = useFetchAccount({
-    onSuccess: (account: Account) => {
-      setUri(account.user.photoUrl);
-    },
-    onError: onError,
-  });
+const ProfileImg = ({
+  text,
+  onPressText,
+  showUploadBtn,
+  size = 70,
+  user,
+}: Props) => {
+  const [uri, setUri] = useState<any>();
 
-  const onError = () => {
-    setUri(R.images.profile_photo);
-  };
+  useEffect(() => {
+    if (user) {
+      if (user.photoUrl) {
+        setUri({ uri: user.photoUrl });
+      } else {
+        setUri(R.images.profile_photo);
+      }
+    } else {
+      setUri(R.images.profile_photo);
+    }
+  }, [user]);
 
   const uploadProfilePhoto = () => {
     const options = {
@@ -84,7 +93,6 @@ const ProfileImg = ({ text, onPressText, showUploadBtn, size = 70 }: Props) => {
           duration={500}
           loadingIndicatorSource={R.images.profile_photo}
           source={uri}
-          onError={onError}
           style={[
             StyleSheet.flatten(styles.img),
             {

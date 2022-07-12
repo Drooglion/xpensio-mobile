@@ -22,7 +22,7 @@ export default {
     addressLine2: 'Line 2',
     apply: 'Apply',
     availableBalance: 'Available Balance',
-    availableFunds: 'Available funds',
+    availableFunds: 'Balance on Card',
 
     addOrReferenceNoLabel: 'OR NO / REFERENCE NO',
     addOrReferenceNo: 'Add OR number...',
@@ -138,6 +138,7 @@ export default {
     limitsDesc:
       'When you reached 50%, 75%, 90% and max of your purchase limit.',
 
+    loading: 'Loading...',
     lock: 'Lock',
     loggedOut: 'Logged out',
     loggedOutReason:
@@ -171,6 +172,7 @@ export default {
     noNotifications: 'No Notifications',
     noRequests: 'No Requests',
     noTeams: 'No Teams',
+    noTeamMembers: 'No Members',
     notAvailable: 'Not available',
 
     notes: 'Notes',
@@ -182,7 +184,7 @@ export default {
     onPurchases: 'On purchases',
     onPurchasesDesc:
       'When your card is used for any online and in-store purchases.',
-    ok: 'Ok',
+    ok: 'OK',
     or: 'or',
     orNumLabel: 'OR no. / Reference no.',
     originalAmount: 'Original amount',
@@ -254,6 +256,7 @@ export default {
     rules: 'Rules',
 
     save: 'Save',
+    saveChanges: 'Save changes',
 
     scanDesc: 'Place the QR code inside the center guide.',
     scannerTitle: 'Scan to pair card',
@@ -263,6 +266,10 @@ export default {
     search: 'Search',
     searchPayment: 'Search payment',
     searchRequest: 'Search request',
+    select: 'Select',
+    selectCategory: 'Select category',
+    selectProject: 'Select project',
+    selectTeam: 'Select team',
     sent: 'Sent',
     sessionExpired: 'Session Expired',
     settings: 'Settings',

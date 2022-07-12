@@ -57,7 +57,9 @@ const DenyModal = ({
             {loading ? (
               <LoadingIndicator size={5} color={R.colors.white} />
             ) : (
-              <Text uppercase>{t('done')}</Text>
+              <Text style={styles.doneTxt} uppercase>
+                {t('done')}
+              </Text>
             )}
           </Button>
         </View>

@@ -1,3 +1,4 @@
+import { RequestStatus } from 'models/Request';
 import { ICategory } from 'types/Category';
 import { IProject } from 'types/Project';
 import { ITeam } from 'types/Team';
@@ -9,7 +10,7 @@ export interface IRequest {
   title: string;
   typeOfExpense: number;
   typeOfSusbscription: RequestSubscriptionType | null;
-  status: number;
+  status: RequestStatus;
   amount: number;
   cancelledDate: string | null;
   approvedDate: string | null;

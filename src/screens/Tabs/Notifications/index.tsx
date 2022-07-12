@@ -14,11 +14,26 @@ import theme from 'native-base-theme/variables/theme';
 import useFetchNotifications from 'hooks/api/private/notification/useFetchNotifications';
 
 import styles from './styles';
+import useGetProfile from 'hooks/api/private/profile/useGetProfile';
+import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
+import Account from 'models/Account';
+import { IUser } from 'types/User';
 
 const Notifications = () => {
   const { t } = useTranslation();
   const navigator = useNavigation();
   const { data: notifications, isLoading, refetch } = useFetchNotifications();
+
+  const [user, setUser] = useState<IUser>();
+
+  useFetchAccount({
+    onSuccess: (account: Account) => {
+      setUser(account.user);
+    },
+    onError: err => {
+      console.error(err);
+    },
+  });
 
   const markAsRead = async (id: string) => {};
 
@@ -46,10 +61,12 @@ const Notifications = () => {
     }
   };
 
+  console.log();
+
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container>
-        <Header title={t('notifications')} linkToProfile />
+        <Header title={t('notifications')} linkToProfile user={user} />
         <View style={styles.content}>
           {isLoading || !notifications ? (
             <ListLoader />

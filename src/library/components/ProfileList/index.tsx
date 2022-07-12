@@ -1,14 +1,8 @@
 import React from 'react';
 import { Linking } from 'react-native';
-import { List, ListItem, Icon, Switch, Text, View } from 'native-base';
+import { List, ListItem, Icon, Text, View } from 'native-base';
 import _isEmpty from 'lodash/isEmpty';
 import _isNil from 'lodash/isNil';
-import R from 'res/R';
-
-import LoadingIndicator from 'library/components/LoadingIndicator';
-
-import HelperUtils from 'library/utils/HelperUtils';
-import StringUtils from 'library/utils/StringUtils';
 import { useTranslation } from 'react-i18next';
 
 import styles from './styles';
@@ -46,23 +40,25 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
   };
 
   const identificationSettings = () => {
-    navigation.navigate({
+    /* navigation.navigate({
       key: 'Identification',
       routeName: 'Identification',
       params: profile,
-    });
+    }); */
+    navigation.navigate('Identification', { profile });
   };
 
   const editProfile = () => {
     navigation.navigate('EditProfile', { profile });
   };
 
-  const onItemClick = team => {
-    navigation.navigate({
+  const onItemClick = (team: Team) => {
+    /* navigation.navigate({
       key: 'Team',
       routeName: 'Team',
       params: { team },
-    });
+    }); */
+    navigation.navigate('Team', { team });
   };
 
   return (
@@ -79,7 +75,6 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
               <ListItem
                 style={styles.listItem}
                 onPress={() => onItemClick(team)}
-                disabled
                 key={team.id}>
                 <Text style={styles.listTxt}>{team.name}</Text>
                 <View style={styles.listItemRight}>
@@ -119,10 +114,7 @@ const ProfileList = ({ profile, teams, signOut }: Props) => {
           <Text style={styles.listTxt}>{t('personalDetails')}</Text>
           <Icon name="arrow-forward" style={styles.icon} />
         </ListItem>
-        <ListItem
-          style={styles.listItem}
-          onPress={identificationSettings}
-          disabled>
+        <ListItem style={styles.listItem} onPress={identificationSettings}>
           <Text style={styles.listTxt}>{t('identification')}</Text>
           <Icon name="arrow-forward" style={styles.icon} />
         </ListItem>

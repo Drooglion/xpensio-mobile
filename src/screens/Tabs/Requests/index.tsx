@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Container,
   Tabs,
@@ -6,6 +6,10 @@ import {
   TabHeading,
   StyleProvider,
   View,
+  ListItem,
+  Text,
+  Button,
+  Icon,
 } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -27,48 +31,105 @@ import LoadingModal from 'library/components/LoadingModal';
 import DialogModal from 'library/components/DialogModal';
 import DenyModal from 'library/components/DenyModal';
 import useApi from 'hooks/useApi';
+import useFetchTeamRequests from 'hooks/api/private/requests/useFetchTeamRequests';
+import useGetTeams from 'hooks/api/private/profile/useGetTeams';
+import { ITeam } from 'types/Team';
+import { FlatList } from 'react-native';
+import FilterBottomSheet from 'library/components/FilterBottomSheet';
 
 const Requests = () => {
   const navigation = useNavigation();
   const { t } = useTranslation();
   const tab = useRef<any>(null);
   const { state } = useResource();
-  const { data, refresh, loading } = useGetMyRequests();
+  const {
+    data: myRequests,
+    refresh: refetchMyRequests,
+    loading: myRequestsLoading,
+  } = useGetMyRequests();
+  const { data: teams, isLoading: teamsLoading } = useGetTeams();
+  const { mutate: fetchTeamRequests, isLoading: teamRequestsLoading } =
+    useFetchTeamRequests();
   const { api } = useApi();
 
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [requests, setRequests] = useState<IRequest[]>([]);
-  const [tabs, setTabs] = useState<string[]>([t('myRequests')]);
+  const { actAsAdmin } = state;
+  const tabs = !actAsAdmin ? [t('myRequests')] : [t('myRequests'), t('team')];
+  const [teamsDropdown, setTeamsDropdown] = useState<ITeam[]>([]);
+  const [teamId, setTeamId] = useState<string>();
+  const [selectedTeam, setSelectedTeam] = useState<ITeam>();
+  const [teamRequests, setTeamRequests] = useState<IRequest[]>([]);
+  const [showFilter, setShowFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loadingModalVisible, setLoadingModalVisible] = useState(false);
   const [denyModalVisible, setDenyModalVisible] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState('');
   const [reason, setReason] = useState('');
   const [dialogTitle, setDialogTitle] = useState<string>('');
-  const [dialogIcon, setDialogIcon] = useState<string>();
+  const [dialogIcon, setDialogIcon] = useState<
+    'success' | 'congratulations' | 'email' | 'error' | undefined
+  >();
   const [dialogDesc, setDialogDesc] = useState<string>('');
   const [dialogVisible, setDialogVisible] = useState(false);
 
+  const fetchRequests = useCallback(
+    async (id: string) => {
+      await fetchTeamRequests(
+        { id },
+        {
+          onSuccess(data) {
+            setTeamRequests(data);
+          },
+        },
+      );
+    },
+    [fetchTeamRequests],
+  );
+
+  const refetchTeamRequests = useCallback(async () => {
+    if (teamId) {
+      await fetchTeamRequests(
+        { id: teamId },
+        {
+          onSuccess(data) {
+            setTeamRequests(data);
+          },
+        },
+      );
+    }
+  }, [fetchTeamRequests, teamId]);
+
   useEffect(() => {
-    if (state) {
-      if (state.user) {
-        setIsAdmin(state.user.isAdmin());
+    if (actAsAdmin && teams) {
+      const options = teams
+        .map(i => {
+          return { id: i.id, name: i.name };
+        })
+        .sort((a, b) => a.name.localeCompare(b.name));
+      setTeamsDropdown(options);
+      if (options.length > 0) {
+        setTeamId(options[0].id);
       }
     }
-  }, [state]);
+  }, [actAsAdmin, teams]);
 
   useEffect(() => {
-    if (data) {
-      console.log('requests', data.items);
-      setRequests(data.items);
+    if (teamId) {
+      fetchRequests(teamId);
     }
-  }, [data]);
 
-  useEffect(() => {
-    if (isAdmin) {
-      setTabs([t('myRequests'), t('team')]);
+    if (teamsDropdown.length > 0) {
+      if (teamId) {
+        const selected = teamsDropdown.filter(i => i.id === teamId);
+        if (selected[0]) {
+          setSelectedTeam(selected[0]);
+        } else {
+          setSelectedTeam(teamsDropdown[0]);
+        }
+      } else {
+        setSelectedTeam(teamsDropdown[0]);
+      }
     }
-  }, [isAdmin, t]);
+  }, [teamId, teamsDropdown, fetchRequests]);
 
   const goToTabPage = (page: any) => {
     console.log('page', page);
@@ -98,7 +159,8 @@ const Requests = () => {
     try {
       setLoadingModalVisible(true);
       await api.put(`requests/${id}/approve`);
-      await refresh();
+      await refetchMyRequests();
+      await refetchTeamRequests();
 
       setDialogTitle(t('success'));
       setDialogIcon('success');
@@ -127,10 +189,12 @@ const Requests = () => {
 
   const denyRequestHandler = async () => {
     if (selectedRequestId && reason) {
+      setDenyModalVisible(false);
       try {
         setLoadingModalVisible(true);
         await api.put(`requests/${selectedRequestId}/deny`, { reason });
-        await refresh();
+        await refetchMyRequests();
+        await refetchTeamRequests();
 
         setDialogTitle(t('success'));
         setDialogIcon('success');
@@ -160,6 +224,7 @@ const Requests = () => {
 
   const toggleDenyModal = (id: string) => {
     setSelectedRequestId(id);
+    setReason('');
     setDenyModalVisible(!denyModalVisible);
   };
 
@@ -170,6 +235,47 @@ const Requests = () => {
   const closeDialogHandler = () => {
     setDialogVisible(false);
   };
+
+  const onTeamPress = (team: ITeam) => {
+    console.log('selected', team);
+    setSelectedTeam(team);
+  };
+
+  const dismissFilter = () => {
+    setShowFilter(false);
+  };
+
+  const applyFilter = () => {
+    if (selectedTeam) {
+      setTeamId(selectedTeam.id);
+    }
+    setShowFilter(false);
+  };
+
+  const filterContent = (value: ITeam[]) => (
+    <FlatList
+      data={value}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item }) => (
+        <ListItem
+          key={item.id}
+          style={styles.option}
+          button
+          onPress={() => onTeamPress(item)}>
+          <Text
+            style={
+              selectedTeam
+                ? selectedTeam.id === item.id
+                  ? styles.selectedOptionText
+                  : styles.optionText
+                : styles.optionText
+            }>
+            {item.name}
+          </Text>
+        </ListItem>
+      )}
+    />
+  );
 
   return (
     <StyleProvider style={getTheme(theme)}>
@@ -184,26 +290,46 @@ const Requests = () => {
             tabContainerStyle={styles.tabContainer}
             tabBarUnderlineStyle={styles.tabUnderline}>
             <Tab heading={<TabHeading />}>
-              {loading ? (
+              {myRequestsLoading ? (
                 <ListLoader style={styles.listLoader} />
               ) : (
                 <MyRequests
-                  data={requests}
-                  onRefresh={refresh}
-                  onLoadMore={loadMoreHandler}
+                  data={myRequests}
+                  onRefresh={refetchMyRequests}
                   onItemClick={onItemClick}
                 />
               )}
             </Tab>
-            {isAdmin && (
+            {!actAsAdmin ? null : (
               <Tab heading={<TabHeading />}>
-                {loading ? (
+                <FilterBottomSheet
+                  title={t('teams')}
+                  btnText={t('close')}
+                  sheetHeight={0.35}
+                  onFilterPress={applyFilter}
+                  isVisible={showFilter}
+                  onClose={dismissFilter}>
+                  {filterContent(teamsDropdown)}
+                </FilterBottomSheet>
+                <Button
+                  bordered
+                  rounded
+                  iconRight
+                  onPress={() => setShowFilter(true)}
+                  style={styles.activeFilterContentBtn}>
+                  <Text
+                    style={styles.activeFilterContentText}
+                    allowFontScaling={false}>
+                    {selectedTeam ? selectedTeam.name : 'Team'}
+                  </Text>
+                  <Icon style={styles.iconFilter} name="chevron-down" />
+                </Button>
+                {teamsLoading || teamRequestsLoading ? (
                   <ListLoader style={styles.listLoader} />
                 ) : (
                   <TeamRequests
-                    data={requests}
-                    onRefresh={refresh}
-                    onLoadMore={loadMoreHandler}
+                    data={teamRequests}
+                    onRefresh={refetchTeamRequests}
                     onItemClick={onItemClick}
                     onApproveRequest={approveRequestHandler}
                     onDenyRequest={toggleDenyModal}
@@ -224,9 +350,10 @@ const Requests = () => {
           description={dialogDesc}
           onClose={closeDialogHandler}
         />
-        {isAdmin && (
+        {actAsAdmin && (
           <DenyModal
             visible={denyModalVisible}
+            loading={loadingModalVisible}
             reason={reason}
             onReasonChanged={setReason}
             onCancel={closeDenyModal}

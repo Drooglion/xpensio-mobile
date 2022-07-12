@@ -1,5 +1,13 @@
 import React, { FC, useState, useCallback } from 'react';
-import { Animated, Dimensions, TouchableOpacity, View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  PermissionsAndroid,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Text, Icon } from 'native-base';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import ImageLoad from 'react-native-image-placeholder';
@@ -16,23 +24,28 @@ import R from 'res/R';
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
+const isIos = Platform.OS === 'ios';
 // const imageHeight = PixelRatio.get() < 3 ? 200 : 250;
 const imageHeight = height * 0.3;
-const stickyHeaderHeight = 60;
+const stickyHeaderHeight = isIos ? (hasNotch() ? 96 : 60) : 60;
 
-import { IPayment, IPaymentAttachment } from 'types/Payment';
+import { IPaymentAttachment } from 'types/Payment';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { launchCamera, CameraOptions } from 'react-native-image-picker';
 import useUploadReceipt from 'hooks/api/private/payments/useUploadReceipt';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { hasNotch } from 'react-native-device-info';
+import Payment from 'models/Payment';
 
 type Props = {
-  payment: IPayment;
+  payment: Payment;
   onBackPress: () => void;
   refetch?: () => void;
 };
 
 const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
+  const isAndroid = Platform.OS === 'android';
   const navigation = useNavigation();
   const { mutate: uploadReceipt } = useUploadReceipt();
   const { mutate: getSignedUrl } = useGetSignedUrl();
@@ -40,6 +53,8 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
   const [attachments, setAttachments] = useState<IPaymentAttachment[]>(
     payment.attachments || [],
   );
+  const [permissionAndroidGranted, setPermissionAndroidGranted] =
+    useState<boolean>(false);
 
   const [activeDotIndex, setActiveDotIndex] = useState(0);
   const [viewImage, setViewImage] = useState(false);
@@ -49,26 +64,71 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
 
   const addMoreReceipt = async () => {
     try {
-      const options = { mediaType: 'photo' } as CameraOptions;
-      const { assets } = await launchCamera(options);
-      await getSignedUrl(
-        { id: payment.id },
-        {
-          onSuccess: async res => {
-            const asset = assets && assets[0];
-            const { key, url } = res.data.payload;
-            console.log({ key, url });
-            await ApiUtils.uploadImageToSignedUrl({
-              image: asset?.uri,
-              url,
-            });
-            const payload = { id: payment.id, payload: { key } };
-            uploadReceipt(payload, {
-              onSuccess: () => onSuccessUploadReceipt(asset!),
-            });
+      if (isAndroid) {
+        if (permissionAndroidGranted) {
+          const options = { mediaType: 'photo' } as CameraOptions;
+          const { assets } = await launchCamera(options);
+          await getSignedUrl(
+            { id: payment.id },
+            {
+              onSuccess: async res => {
+                const asset = assets && assets[0];
+                console.log({ asset });
+                const { key, url } = res.data.payload;
+                console.log({ key, url });
+                await ApiUtils.uploadImageToSignedUrl({
+                  image: asset?.uri,
+                  url,
+                });
+                const payload = { id: payment.id, payload: { key } };
+                uploadReceipt(payload, {
+                  onSuccess: () => onSuccessUploadReceipt(asset!),
+                });
+              },
+            },
+          );
+        } else {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+              title: 'Allow camera access',
+              message:
+                'Xpensio needs to access your device camera to take photos of your receipts',
+              buttonPositive: 'OK',
+              buttonNegative: 'Cancel',
+            },
+          );
+
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            setPermissionAndroidGranted(true);
+            addMoreReceipt();
+          } else {
+            setPermissionAndroidGranted(false);
+          }
+        }
+      } else {
+        const options = { mediaType: 'photo' } as CameraOptions;
+        const { assets } = await launchCamera(options);
+        await getSignedUrl(
+          { id: payment.id },
+          {
+            onSuccess: async res => {
+              const asset = assets && assets[0];
+              console.log({ asset });
+              const { key, url } = res.data.payload;
+              console.log({ key, url });
+              await ApiUtils.uploadImageToSignedUrl({
+                image: asset?.uri,
+                url,
+              });
+              const payload = { id: payment.id, payload: { key } };
+              uploadReceipt(payload, {
+                onSuccess: () => onSuccessUploadReceipt(asset!),
+              });
+            },
           },
-        },
-      );
+        );
+      }
     } catch (err) {
       console.log('launchCamera', { err });
     }
@@ -148,7 +208,7 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
   };
 
   const hasAttachments = () => (
-    <View style={{ width }}>
+    <View style={{ width, position: 'relative' }}>
       <Carousel
         data={attachments.concat({})}
         onSnapToItem={setActiveDotIndex}
@@ -159,7 +219,7 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
         lockScrollWhileSnapping
       />
       <Pagination
-        dotsLength={attachments!.length}
+        dotsLength={attachments.length + 1}
         activeDotIndex={activeDotIndex}
         dotColor={R.colors.primary}
         inactiveDotColor={R.colors.white}
@@ -195,7 +255,9 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
           <Header
             hasBack
             highlightBack={headerVisible}
-            backgroundColor={R.colors.transparent}
+            backgroundColor={
+              headerVisible ? R.colors.transparent : R.colors.white
+            }
             inverseFontColor={headerVisible}
             onBackPress={onBackPress}
           />

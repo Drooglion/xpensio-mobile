@@ -8,15 +8,15 @@ const { height, width } = Dimensions.get('window');
 export interface BottomSheetProps {
   visible: boolean;
   children: React.ReactNode;
-  height?: number;
-  hasBackdrop?: boolean;
+  sheetHeight: number;
+  hasBackdrop: boolean;
   onClose(): void;
 }
 
 const BottomSheet = ({
-  hasBackdrop = false,
+  hasBackdrop,
   visible,
-  height: sheetHeight = 0.45,
+  sheetHeight,
   children,
   onClose,
 }: BottomSheetProps) => (
@@ -41,5 +41,13 @@ const BottomSheet = ({
     {children}
   </Modal>
 );
+
+BottomSheet.defaultProps = {
+  hasBackdrop: false,
+  visible: false,
+  sheetHeight: 0.45,
+  children: null,
+  onClose: () => {},
+};
 
 export default BottomSheet;

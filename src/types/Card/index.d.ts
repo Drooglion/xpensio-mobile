@@ -51,4 +51,13 @@ export interface ICardRequest {
   companyId: string;
 }
 
+export interface ICardBillingAddress {
+  companyName: string;
+  line1: string;
+  line2?: string | null;
+  city: string;
+  country: string;
+  zip: string;
+}
+
 export type CardType = 'physical' | 'virtual';

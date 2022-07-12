@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 import React, { Fragment, useState } from 'react';
 import { KeyboardAvoidingView } from 'react-native';
-import { compose, graphql, Query } from 'react-apollo';
 import {
   Button,
   Container,
@@ -16,14 +15,13 @@ import {
   Picker,
   Text,
   StyleProvider,
-  View
+  View,
 } from 'native-base';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-picker';
 import DeviceInfo from 'react-native-device-info';
 import { getName, getCode } from 'country-list';
 
-import STORE_MUTATIONS from 'library/store/mutations';
 import REFERENCES from 'library/api/References';
 import ApiUtils from 'library/utils/ApiUtils';
 import HelperUtils from 'library/utils/HelperUtils';
@@ -51,20 +49,24 @@ const EditIdentification = ({
   showDialogModal,
 }) => {
   const userLocaleCountryCode = DeviceInfo.getDeviceCountry();
-  const { state: { params } } = navigation;
+  const {
+    state: { params },
+  } = navigation;
   const [loading, setLoading] = useState(false);
   const { inputs, handleChange } = hooks.useForm({
     idType: (params && params.type) || null,
     country: (params && params.country) || getName(userLocaleCountryCode),
     idNumber: (params && params.number) || '',
-    dateOfExpiry: (params && moment(params.expirationDate).format('YYYY-MM-DD')) || moment(new Date()).format('YYYY-MM-DD'),
+    dateOfExpiry:
+      (params && moment(params.expirationDate).format('YYYY-MM-DD')) ||
+      moment(new Date()).format('YYYY-MM-DD'),
     frontId: (params && params.photoFrontUrl) || null,
     backId: (params && params.photoBackUrl) || null,
   });
 
-  const uploadFromCamera = (type) => {
+  const uploadFromCamera = type => {
     const options = { cameraType: 'front' };
-    ImagePicker.launchCamera(options, (response) => {
+    ImagePicker.launchCamera(options, response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -76,9 +78,9 @@ const EditIdentification = ({
     });
   };
 
-  const uploadFromGallery = (type) => {
+  const uploadFromGallery = type => {
     const options = { cameraType: 'front' };
-    ImagePicker.launchImageLibrary(options, (response) => {
+    ImagePicker.launchImageLibrary(options, response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -90,20 +92,22 @@ const EditIdentification = ({
     });
   };
 
-  const updateFrontId = (uri) => { handleChange('frontId', uri); };
+  const updateFrontId = uri => {
+    handleChange('frontId', uri);
+  };
 
-  const updateBackId = (uri) => { handleChange('backId', uri); };
+  const updateBackId = uri => {
+    handleChange('backId', uri);
+  };
 
-  const handleDateChange = (dateOfExpiry) => {
+  const handleDateChange = dateOfExpiry => {
     handleChange(
       'dateOfExpiry',
-      moment(new Date(dateOfExpiry)).format('YYYY-MM-DD')
+      moment(new Date(dateOfExpiry)).format('YYYY-MM-DD'),
     );
   };
 
-  const showFrontIdOnly = () => (
-    inputs.idType === 'passport'
-  );
+  const showFrontIdOnly = () => inputs.idType === 'passport';
 
   const validateInputs = () => {
     const validateInputValues = { ...inputs };
@@ -123,7 +127,7 @@ const EditIdentification = ({
         const signedUrlVariables = {
           input: {
             fileType: 'image/jpeg',
-            fileExt: 'jpg'
+            fileExt: 'jpg',
           },
         };
         const variables = {
@@ -134,22 +138,28 @@ const EditIdentification = ({
             expirationDate: inputs.dateOfExpiry || '',
             photoFront: inputs.frontId || '',
             photoBack: showFrontIdOnly() ? '' : inputs.backId || '',
-          }
+          },
         };
-        const signedUrlFrontId = await getSignedUrlFrontId({ variables: signedUrlVariables });
-        const signedUrlBackId = await getSignedUrlBackId({ variables: signedUrlVariables });
+        const signedUrlFrontId = await getSignedUrlFrontId({
+          variables: signedUrlVariables,
+        });
+        const signedUrlBackId = await getSignedUrlBackId({
+          variables: signedUrlVariables,
+        });
 
         await ApiUtils.uploadImageToSignedUrl({
           image: inputs.frontId || '',
-          url: signedUrlFrontId.data.profile.payload.url
+          url: signedUrlFrontId.data.profile.payload.url,
         });
         await ApiUtils.uploadImageToSignedUrl({
           image: inputs.backId || '',
-          url: signedUrlBackId.data.profile.payload.url
+          url: signedUrlBackId.data.profile.payload.url,
         });
 
         variables.input.photoFront = signedUrlFrontId.data.profile.payload.key;
-        variables.input.photoBack = showFrontIdOnly() ? '' : signedUrlBackId.data.profile.payload.key;
+        variables.input.photoBack = showFrontIdOnly()
+          ? ''
+          : signedUrlBackId.data.profile.payload.key;
 
         await updateIdentification({ variables });
         navigation.navigate('Identification', {
@@ -160,7 +170,7 @@ const EditIdentification = ({
             expirationDate: inputs.dateOfExpiry || '',
             photoFrontUrl: inputs.frontId || '',
             photoBackUrl: inputs.backId || '',
-          }
+          },
         });
         setLoading(false);
       }
@@ -176,7 +186,7 @@ const EditIdentification = ({
       variables: {
         title: R.strings.allFieldsAreRequired,
         description: R.strings.pleaseFillUpAllFields,
-      }
+      },
     });
   };
 
@@ -199,9 +209,15 @@ const EditIdentification = ({
                     return null;
                   }
 
-                  if (loadingData) return <LoadingIndicator size={3} />;
+                  if (loadingData) {
+                    return <LoadingIndicator size={3} />;
+                  }
 
-                  const { idTypes: { payload: { idTypes } } } = data;
+                  const {
+                    idTypes: {
+                      payload: { idTypes },
+                    },
+                  } = data;
 
                   return (
                     <PickerInput
@@ -211,17 +227,14 @@ const EditIdentification = ({
                       onValueChange={text => handleChange('idType', text)}
                       placeHolder={R.strings.idType}
                       placeholderIconColor={R.colors.subhead}
-                      selectedValue={inputs.idType}
-                    >
-                      {
-                        idTypes.map(idType => (
-                          <Picker.Item
-                            key={idType.code}
-                            label={idType.description}
-                            value={idType.code}
-                          />
-                        ))
-                      }
+                      selectedValue={inputs.idType}>
+                      {idTypes.map(idType => (
+                        <Picker.Item
+                          key={idType.code}
+                          label={idType.description}
+                          value={idType.code}
+                        />
+                      ))}
                     </PickerInput>
                   );
                 }}
@@ -231,7 +244,11 @@ const EditIdentification = ({
               <CountryInput
                 disabled={loading}
                 onChange={country => handleChange('country', country.name)}
-                cca2={inputs.country ? getCode(inputs.country) : userLocaleCountryCode}
+                cca2={
+                  inputs.country
+                    ? getCode(inputs.country)
+                    : userLocaleCountryCode
+                }
               />
             </Item>
             <Item stackedLabel>
@@ -261,45 +278,39 @@ const EditIdentification = ({
             <Item style={styles.itemUpload}>
               <View style={{ flex: 1 }}>
                 <Label style={styles.label}>{R.strings.frontOfId}</Label>
-                {
-                  inputs.frontId ? (
+                {inputs.frontId ? (
+                  <PhotoIdRemovable
+                    onRemove={() => handleChange('frontId', null)}
+                    source={{ uri: inputs.frontId }}
+                  />
+                ) : (
+                  <UploadIdentificationIdButton
+                    type="front"
+                    uploadFromCamera={uploadFromCamera}
+                    uploadFromGallery={uploadFromGallery}
+                  />
+                )}
+              </View>
+            </Item>
+            {showFrontIdOnly() ? null : (
+              <Item style={styles.itemUpload}>
+                <View style={{ flex: 1 }}>
+                  <Label style={styles.label}>{R.strings.backOfId}</Label>
+                  {inputs.backId ? (
                     <PhotoIdRemovable
-                      onRemove={() => handleChange('frontId', null)}
-                      source={{ uri: inputs.frontId }}
+                      onRemove={() => handleChange('backId', null)}
+                      source={{ uri: inputs.backId }}
                     />
                   ) : (
                     <UploadIdentificationIdButton
-                      type="front"
+                      type="back"
                       uploadFromCamera={uploadFromCamera}
                       uploadFromGallery={uploadFromGallery}
                     />
-                  )
-                }
-              </View>
-            </Item>
-            {
-              showFrontIdOnly() ? null : (
-                <Item style={styles.itemUpload}>
-                  <View style={{ flex: 1 }}>
-                    <Label style={styles.label}>{R.strings.backOfId}</Label>
-                    {
-                      inputs.backId ? (
-                        <PhotoIdRemovable
-                          onRemove={() => handleChange('backId', null)}
-                          source={{ uri: inputs.backId }}
-                        />
-                      ) : (
-                        <UploadIdentificationIdButton
-                          type="back"
-                          uploadFromCamera={uploadFromCamera}
-                          uploadFromGallery={uploadFromGallery}
-                        />
-                      )
-                    }
-                  </View>
-                </Item>
-              )
-            }
+                  )}
+                </View>
+              </Item>
+            )}
           </KeyboardAvoidingView>
         </Content>
         <Footer transparent style={styles.footer}>
@@ -308,22 +319,18 @@ const EditIdentification = ({
               <Button
                 disabled={loading}
                 style={styles.btnCancel}
-                onPress={() => navigation.goBack()}
-              >
+                onPress={() => navigation.goBack()}>
                 <Text style={styles.btnTxt}>{R.strings.cancel}</Text>
               </Button>
               <Button
                 style={styles.btnSave}
                 onPress={handleSubmit}
-                disabled={loading}
-              >
-                {
-                  loading ? (
-                    <LoadingIndicator color={R.colors.white} size={5} />
-                  ) : (
-                    <Text style={styles.btnTxt}>{R.strings.save}</Text>
-                  )
-                }
+                disabled={loading}>
+                {loading ? (
+                  <LoadingIndicator color={R.colors.white} size={5} />
+                ) : (
+                  <Text style={styles.btnTxt}>{R.strings.save}</Text>
+                )}
               </Button>
             </Fragment>
           </FooterTab>
@@ -333,14 +340,4 @@ const EditIdentification = ({
   );
 };
 
-export default compose(
-  graphql(STORE_MUTATIONS.showDialogModal, { name: 'showDialogModal' }),
-  graphql(PROFILE.GET_SIGNED_URL_FOR_FRONT_ID, { name: 'getSignedUrlFrontId' }),
-  graphql(PROFILE.GET_SIGNED_URL_FOR_BACK_ID, { name: 'getSignedUrlBackId' }),
-  graphql(PROFILE.UPDATE_IDENTIFICATION, {
-    name: 'updateIdentification',
-    options: {
-      refetchQueries: [{ query: PROFILE.MY_PROFILE }]
-    }
-  }),
-)(EditIdentification);
+export default EditIdentification;

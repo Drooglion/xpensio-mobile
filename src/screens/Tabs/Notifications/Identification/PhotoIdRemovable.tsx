@@ -1,13 +1,16 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  Button,
-  Icon,
-  View
-} from 'native-base';
+import { Button, Icon, View } from 'native-base';
 import * as Animatable from 'react-native-animatable';
 import styles from './styles';
+import { ImageSourcePropType } from 'react-native';
 
-const PhotoIdRemovable = ({ onRemove, source }) => (
+type Props = {
+  source: ImageSourcePropType;
+  onRemove(): void;
+};
+
+const PhotoIdRemovable = ({ onRemove, source }: Props) => (
   <View style={{ position: 'relative' }}>
     <Animatable.Image
       useNativeDriver
@@ -15,12 +18,7 @@ const PhotoIdRemovable = ({ onRemove, source }) => (
       source={source}
       style={styles.image}
     />
-    <Button
-      onPress={onRemove}
-      rounded
-      light
-      style={styles.photoIdRemove}
-    >
+    <Button onPress={onRemove} rounded light style={styles.photoIdRemove}>
       <Icon name="close" />
     </Button>
   </View>

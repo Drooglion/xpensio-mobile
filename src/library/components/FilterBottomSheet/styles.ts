@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unresolved */
-
 import { StyleSheet } from 'react-native';
 import R from 'res/R';
 
@@ -29,6 +27,7 @@ const styles = StyleSheet.create({
     color: R.colors.secondary,
   },
   content: {
+    flex: 1,
     padding: R.metrics.doubleMargin,
   },
   label: {

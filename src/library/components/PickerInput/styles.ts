@@ -8,19 +8,27 @@ const androidStyle = StyleSheet.create({
   },
   picker: {
     color: 'black',
+    marginLeft: -15,
+  },
+  textStyle: {
+    ...R.theme.body,
   },
 });
 
 const iosStyle = StyleSheet.create({
   wrapper: {
-    alignSelf: 'flex-start',
+    width: '100%',
   },
   picker: {
-    color: 'black',
+    width: '100%',
+    paddingLeft: 0,
+  },
+  pickerItem: {
+    backgroundColor: 'red',
   },
   textStyle: {
     ...R.theme.body,
-    paddingLeft: R.metrics.smallMargin,
+    paddingLeft: 0,
     marginLeft: 0,
   },
 });

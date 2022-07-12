@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import { StyleSheet, PixelRatio } from 'react-native';
 import R from 'res/R';
 
@@ -9,6 +8,7 @@ export default StyleSheet.create({
     marginHorizontal: R.metrics.doubleMargin,
     paddingBottom: PixelRatio.get() < 3 ? 50 : 60,
   },
+  form: {},
   item: {
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -20,16 +20,17 @@ export default StyleSheet.create({
     marginTop: PixelRatio.get() < 3 ? 15 : 20,
     fontSize: 12,
     lineHeight: 16,
-    color: R.colors.subhead
+    color: R.colors.subhead,
   },
   text: {
     ...R.theme.body,
   },
   footerTab: {
-    ...R.sharedStyles.footerTab
+    ...R.sharedStyles.footerTab,
   },
   footer: {
-    ...R.sharedStyles.footer
+    ...R.sharedStyles.footer,
+    backgroundColor: R.colors.transparent,
   },
   btnCancel: {
     height: 45,
@@ -54,7 +55,7 @@ export default StyleSheet.create({
   input: {
     ...R.fonts.AirbnbCerealAppBook,
     marginTop: PixelRatio.get() < 3 ? 10 : 16,
-    fontSize: 14
+    fontSize: 14,
   },
   itemUpload: {
     borderBottomWidth: 0,
@@ -84,8 +85,8 @@ export default StyleSheet.create({
   picker: {
     ...R.fonts.AirbnbCerealAppBook,
     fontSize: 14,
-    paddingLeft: null,
-    paddingRight: null,
+    paddingLeft: 0,
+    paddingRight: 0,
   },
   photoIdRemove: {
     position: 'absolute',

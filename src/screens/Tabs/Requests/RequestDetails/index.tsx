@@ -21,6 +21,7 @@ import { useResource } from 'contexts/resourceContext';
 import useApi from 'hooks/useApi';
 import DialogModal from 'library/components/DialogModal';
 import LoadingModal from 'library/components/LoadingModal';
+import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
 
 const RequestsDetail = () => {
   const { t } = useTranslation();
@@ -28,6 +29,7 @@ const RequestsDetail = () => {
   const route =
     useRoute<RouteProp<RequestNavigatorParamList, 'RequestDetails'>>();
   const { state } = useResource();
+  const { data: account, isLoading: accountLoading } = useFetchAccount({});
   const { fetch, request, loading } = useGetRequestDetails();
   const { api } = useApi();
 
@@ -43,6 +45,22 @@ const RequestsDetail = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
 
   useEffect(() => {
+    setReason('');
+    setDialogTitle('');
+    setDialogIcon(undefined);
+    setDialogDesc('');
+    setDialogVisible(false);
+    return () => {
+      setReason('');
+      setReason('');
+      setDialogTitle('');
+      setDialogIcon(undefined);
+      setDialogDesc('');
+      setDialogVisible(false);
+    };
+  }, []);
+
+  useEffect(() => {
     if (route) {
       if (route.params) {
         const { id } = route.params;
@@ -55,12 +73,13 @@ const RequestsDetail = () => {
 
   useEffect(() => {
     if (state) {
-      if (state.user) {
-        setIsAdmin(state.user.isAdmin());
-        setCurrency(state.user.companyConfiguration.currency);
-      }
+      setIsAdmin(state.actAsAdmin);
     }
-  }, [state]);
+
+    if (account) {
+      setCurrency(account.companyConfiguration.currency);
+    }
+  }, [state, account]);
 
   useEffect(() => {
     if (request) {
@@ -103,6 +122,7 @@ const RequestsDetail = () => {
 
   const handleDenyRequest = async () => {
     if (details) {
+      setDenyModalVisible(false);
       try {
         setLoadingModalVisible(true);
         const res = await api.put(`requests/${details.id}/deny`, { reason });
@@ -145,7 +165,7 @@ const RequestsDetail = () => {
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container>
-        {loading ? (
+        {loading || accountLoading ? (
           <Loading />
         ) : details ? (
           <Fragment>
@@ -189,6 +209,7 @@ const RequestsDetail = () => {
         {isAdmin && (
           <DenyModal
             visible={denyModalVisible}
+            loading={loading}
             reason={reason}
             onReasonChanged={setReason}
             onCancel={toggleDenyModal}

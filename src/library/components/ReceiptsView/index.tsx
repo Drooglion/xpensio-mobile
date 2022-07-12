@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-native';
-import { Button, Text } from 'native-base';
+import { Button, Text, View } from 'native-base';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
 import LoadingIndicator from 'library/components/LoadingIndicator';
@@ -31,6 +31,13 @@ const ImageView = ({
       imageUrls={imageUrls}
       failImageSource={R.images.noimage}
       loadingRender={() => <LoadingIndicator color={R.colors.white} />}
+      renderHeader={() => (
+        <View style={styles.header}>
+          <Button onPress={onClose} transparent>
+            <Text style={styles.txtClose}>{R.strings.close}</Text>
+          </Button>
+        </View>
+      )}
     />
     <Button style={styles.btnDelete} onPress={onDelete} block>
       <Text style={styles.txtDelete}>{R.strings.deleteReceipt}</Text>

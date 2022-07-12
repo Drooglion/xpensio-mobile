@@ -20,7 +20,7 @@ const ProfileAnalytics = ({ amount, receiptsMatch }: Props) => {
         <Text style={styles.title}>{t('payments')}</Text>
       </View>
       <View style={styles.receipts}>
-        <Text style={styles.value}>{`${receiptsMatch}%`}</Text>
+        <Text style={styles.value}>{`${receiptsMatch.toFixed(1)}%`}</Text>
         <Text style={styles.title}>{t('hasReceipts')}</Text>
       </View>
     </View>

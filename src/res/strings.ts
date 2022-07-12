@@ -259,7 +259,10 @@ const strings = {
   sent: 'Sent',
   sessionExpired: 'Session Expired',
   settings: 'Settings',
+  selectCategory: 'Select a category',
   selectDate: 'Select a date',
+  selectProject: 'Select a project',
+  selectTeam: 'Select a team',
   signIn: 'Sign in',
   signInFailed: 'Sign in failed',
   signInFailedDesc:

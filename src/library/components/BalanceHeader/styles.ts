@@ -1,11 +1,15 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
+import { hasNotch } from 'react-native-device-info';
 import R from 'res/R';
+
+const isIos = Platform.OS === 'ios';
 
 export default StyleSheet.create({
   header: {
     paddingLeft: R.metrics.doubleMargin,
     paddingRight: R.metrics.doubleMargin,
     backgroundColor: R.colors.white,
+    marginTop: isIos ? (hasNotch() ? -25 : 0) : 0,
     marginBottom: 30,
   },
   body: {
@@ -29,5 +33,11 @@ export default StyleSheet.create({
     flex: 1,
     textAlign: 'left',
     paddingLeft: 0,
+  },
+  left: {
+    flex: 0,
+  },
+  right: {
+    flex: 0,
   },
 });

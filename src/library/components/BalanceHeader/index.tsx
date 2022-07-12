@@ -1,6 +1,4 @@
-import React, { Component } from 'react';
-import { Query, compose, graphql } from 'react-apollo';
-import PropTypes from 'prop-types';
+import React from 'react';
 import {
   Header as NBHeader,
   Body,
@@ -11,16 +9,53 @@ import {
 } from 'native-base';
 import { Rect } from 'react-native-svg';
 
-import STORE_QUERIES from 'library/store/queries';
-import ACCOUNT from 'library/api/Account';
 import ContentLoader from 'library/components/ContentLoader';
 import NumberUtils from 'library/utils/NumberUtils';
-import HelperUtils from 'library/utils/HelperUtils';
 import R from 'res/R';
 
 import styles from './styles';
+import { UserWalletBalance } from 'models/Wallet';
+import { useTranslation } from 'react-i18next';
 
-class BalanceHeader extends Component {
+type Props = {
+  balance?: UserWalletBalance;
+  loading: boolean;
+  androidStatusBarColor?: string;
+};
+
+const BalanceHeader = ({ balance, loading, androidStatusBarColor }: Props) => {
+  const { t } = useTranslation();
+  return (
+    <NBHeader
+      noLeft
+      hasTabs
+      style={styles.header}
+      iosBarStyle="dark-content"
+      androidStatusBarColor={androidStatusBarColor}>
+      <Left style={styles.left} />
+      <Body style={styles.body}>
+        {loading ? (
+          <ContentLoader
+            height={44}
+            primaryColor="#f3f3f3"
+            secondaryColor="#ecebeb">
+            <Rect x="0" y="0" rx="4" ry="4" width="200" height="40" />
+          </ContentLoader>
+        ) : balance ? (
+          <Title style={styles.title}>
+            {NumberUtils.formatCurrency(balance.currency, balance.value)}
+          </Title>
+        ) : (
+          <Title style={styles.title}>{t('notAvailable')}</Title>
+        )}
+        <Text style={styles.subtitle}>{t('availableFunds')}</Text>
+      </Body>
+      <Right style={styles.right} />
+    </NBHeader>
+  );
+};
+
+/* class BalanceHeader extends Component {
   renderBody = () => {
     const {
       user: { id },
@@ -81,25 +116,10 @@ class BalanceHeader extends Component {
       </NBHeader>
     );
   }
-}
-
-BalanceHeader.propTypes = {
-  androidStatusBarColor: PropTypes.string,
-};
+} */
 
 BalanceHeader.defaultProps = {
   androidStatusBarColor: R.colors.white,
 };
 
-export default compose(
-  graphql(STORE_QUERIES.user, {
-    props: ({ data: { user } }) => ({
-      user,
-    }),
-  }),
-  graphql(STORE_QUERIES.companyConfiguration, {
-    props: ({ data: { companyConfiguration } }) => ({
-      companyConfiguration,
-    }),
-  }),
-)(BalanceHeader);
+export default BalanceHeader;

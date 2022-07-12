@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Container,
   Tabs,
@@ -33,9 +33,12 @@ import useUpdatePayment from 'hooks/api/private/payments/useUpdatePayment';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { IPayment } from 'types/Payment';
 import { useResource } from 'contexts/resourceContext';
 import useRejectPayment from 'hooks/api/private/payments/useRejectPayment';
+import useGetPayment from 'hooks/api/private/payments/useGetPayment';
+import Loading from 'library/components/Loading';
+import Payment from 'models/Payment';
+import { SafeAreaView } from 'react-native';
 
 const PaymentsDetails = () => {
   const tab = useRef<any>(null);
@@ -46,37 +49,55 @@ const PaymentsDetails = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const route = useRoute();
+  const { mutate: getPayment, isLoading: fetchingPayment } = useGetPayment();
   const { mutate: updatePayment, isLoading: updatingPayment } =
     useUpdatePayment();
   const { mutate: rejectPayment, isLoading: rejectingPayment } =
     useRejectPayment();
-  const { payment, paymentTab } = route.params;
 
   /* hooks */
-  const [details, setDetails] = useState<IPayment>();
+  const [paymentId, setPaymentId] = useState<string>();
+  const [details, setDetails] = useState<Payment>();
   const [activeTab, setActiveTab] = useState<number>(0);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [denyModalVisible, setDenyModalVisible] = useState<boolean>(false);
   const [denyReason, setDenyReason] = useState<string>('');
 
   useEffect(() => {
     if (route) {
       if (route.params) {
-        const { payment } = route.params;
-        setDetails(payment);
+        const { id } = route.params as any;
+        console.log({ id });
+        setPaymentId(id);
+        //setDetails(payment);
       }
     }
   }, [route]);
+
+  const fetchPayment = useCallback(
+    async (id: string) => {
+      await getPayment(
+        { id: id },
+        {
+          onSuccess: payment => {
+            setDetails(payment);
+          },
+        },
+      );
+    },
+    [getPayment],
+  );
+
+  useEffect(() => {
+    if (paymentId) {
+      fetchPayment(paymentId);
+    }
+  }, [paymentId, fetchPayment]);
 
   const goToTabPage = (page: number) => {
     if (tab.current) {
       setActiveTab(page);
       tab.current.goToPage(page);
     }
-  };
-
-  const setEditing = () => {
-    setIsEditing(true);
   };
 
   const toggleDenyModal = (toggle: boolean) => {
@@ -87,48 +108,52 @@ const PaymentsDetails = () => {
   const handleDenyReasonChange = (value: string) => {
     setDenyReason(value);
   };
+
   const handleSave = async (inputs: Record<string, string>) => {
-    dispatch({ type: 'SET_LOADING_MODAL', loadingModal: true });
-    const params = { id: payment.id, payload: { ...inputs } };
+    if (paymentId) {
+      dispatch({ type: 'SET_LOADING_MODAL', loadingModal: true });
+      const params = { id: paymentId, payload: { ...inputs } };
 
-    await updatePayment(params, {
-      onSuccess: () => {
-        dispatch({
-          type: 'SET_DIALOG_MODAL',
-          dialogModal: {
-            visible: true,
-            title: t('message.updated'),
-            icon: 'congratulations',
-            description: t('paymentDetailsUpdated'),
-          },
-        });
-      },
-      onSettled: () => {
-        setIsEditing(false);
-        dispatch({ type: 'SET_LOADING_MODAL', loadingModal: false });
-      },
-    });
-  };
-
-  const handleRejectPayment = () => {
-    setDenyModalVisible(false);
-    const params = { id: payment.id, payload: { reason: denyReason } };
-    rejectPayment(params, {
-      onSuccess: (message: string) => {
-        setTimeout(() => {
+      await updatePayment(params, {
+        onSuccess: () => {
           dispatch({
             type: 'SET_DIALOG_MODAL',
             dialogModal: {
               visible: true,
               title: t('message.updated'),
               icon: 'congratulations',
-              description: message,
+              description: t('paymentDetailsUpdated'),
             },
           });
-          console.log(details);
-        }, 500);
-      },
-    });
+        },
+        onSettled: () => {
+          dispatch({ type: 'SET_LOADING_MODAL', loadingModal: false });
+        },
+      });
+    }
+  };
+
+  const handleRejectPayment = () => {
+    setDenyModalVisible(false);
+    if (details) {
+      const params = { id: details.id, payload: { reason: denyReason } };
+      rejectPayment(params, {
+        onSuccess: (message: string) => {
+          setTimeout(() => {
+            dispatch({
+              type: 'SET_DIALOG_MODAL',
+              dialogModal: {
+                visible: true,
+                title: t('message.updated'),
+                icon: 'congratulations',
+                description: message,
+              },
+            });
+            console.log(details);
+          }, 500);
+        },
+      });
+    }
   };
 
   const paymentUnavailable = () => (
@@ -152,12 +177,14 @@ const PaymentsDetails = () => {
           onCancel={() => toggleDenyModal(false)}
           onSubmit={handleRejectPayment}
         />
-        {details ? (
+        {fetchingPayment ? (
+          <Loading />
+        ) : details ? (
           <ParallaxContent
             payment={details}
-            onBackPress={() => navigation.navigate('Payments' as never)}
+            onBackPress={() => navigation.goBack()}
             refetch={() => {}}>
-            <View style={styles.parallaxChild}>
+            <SafeAreaView style={styles.parallaxChild}>
               <Item style={styles.paymentHeader}>
                 <Left style={styles.paymentHeaderLeft}>
                   <UserAvatar
@@ -178,10 +205,7 @@ const PaymentsDetails = () => {
                 </Body>
                 <Right style={styles.paymentHeaderRight}>
                   <Text numberOfLines={1} style={styles.amountTotal}>
-                    {NumberUtils.formatCurrency(
-                      details.currency,
-                      details.amountTotal,
-                    )}
+                    {NumberUtils.formatCurrency(currency, details.amountTotal)}
                   </Text>
                 </Right>
               </Item>
@@ -190,6 +214,7 @@ const PaymentsDetails = () => {
                 initialPage={0}
                 ref={tab}
                 locked
+                prerenderingSiblingsNumber={2}
                 tabContainerStyle={styles.tabContainer}
                 tabBarUnderlineStyle={styles.tabUnderline}>
                 <Tab heading={<TabHeading />}>
@@ -198,6 +223,8 @@ const PaymentsDetails = () => {
                     paymentTab={activeTab}
                     currency={currency}
                     payment={details}
+                    isUpdating={updatingPayment}
+                    handleSave={handleSave}
                     toggleDenyModal={toggleDenyModal}
                   />
                 </Tab>
@@ -209,15 +236,15 @@ const PaymentsDetails = () => {
                     actAsAdmin={actAsAdmin}
                     payment={details}
                     paymentTab={activeTab}
-                    setEditing={setEditing}
-                    isEditing={isEditing}
                     isUpdating={updatingPayment}
                   />
                 </Tab>
               </Tabs>
-            </View>
+            </SafeAreaView>
           </ParallaxContent>
-        ) : null}
+        ) : (
+          paymentUnavailable
+        )}
       </Container>
     </StyleProvider>
   );

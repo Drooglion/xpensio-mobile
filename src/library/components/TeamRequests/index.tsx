@@ -6,7 +6,7 @@ import { IRequest } from 'types/Request';
 export interface TeamRequestsProps {
   data: IRequest[];
   onRefresh(): void;
-  onLoadMore(): void;
+  onLoadMore?(): void;
   onItemClick(item: IRequest): void;
   onApproveRequest(id: string): void;
   onDenyRequest(id: string): void;
@@ -20,6 +20,7 @@ const TeamRequests = ({
   onApproveRequest,
   onDenyRequest,
 }: TeamRequestsProps) => {
+  console.log('requests', data);
   /* Approve Request */
   /* const onApproveRequest = id => {
     const variables = { id, input: {} };
@@ -79,6 +80,8 @@ const TeamRequests = ({
       onRefresh={onRefresh}
       onItemClick={onItemClick}
       loadMore={onLoadMore}
+      teamRequest={true}
+      showName
     />
   );
 };
