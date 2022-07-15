@@ -1,5 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  PermissionsAndroid,
+} from 'react-native';
 import {
   launchCamera,
   launchImageLibrary,
@@ -28,9 +33,12 @@ const ProfileImg = ({
   size = 70,
   user,
 }: Props) => {
+  const isAndroid = Platform.OS === 'android';
   const [uri, setUri] = useState<any>();
   const { mutate: getSignedUrl } = useGetSignedUrl();
   const { mutate: uploadProfilePhoto } = useUploadProfilePhoto();
+  const [permissionAndroidGranted, setPermissionAndroidGranted] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (user) {
@@ -43,6 +51,30 @@ const ProfileImg = ({
       setUri(R.images.profile_photo);
     }
   }, [user]);
+
+  const handleUpload = useCallback(async () => {
+    if (isAndroid && !permissionAndroidGranted) {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Allow camera access',
+          message:
+            'Xpensio needs to access your device camera or gallery to upload profile photo',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        },
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        setPermissionAndroidGranted(true);
+        chooseUploadMethod();
+      } else {
+        setPermissionAndroidGranted(false);
+      }
+    } else {
+      chooseUploadMethod();
+    }
+  }, []);
 
   const chooseUploadMethod = () => {
     return ActionSheet.show(
@@ -101,34 +133,6 @@ const ProfileImg = ({
     [signUrlAndUpload],
   );
 
-  const save = async photo => {
-    // try {
-    //   const { getSignedUrl } = this.props;
-    //   const variables = {
-    //     input: {
-    //       fileType: 'image/jpeg',
-    //       fileExt: 'jpg'
-    //     },
-    //   };
-    //   const res = await getSignedUrl({ variables });
-    //   const { data: { profile: { payload: { key, url } } } } = res;
-    //   await ApiUtils.uploadImageToSignedUrl({ image: photo.uri, url });
-    //   this.upload(key, photo);
-    // } catch (error) {
-    //   HelperUtils.bugsnag.notify(error);
-    // }
-  };
-
-  const upload = async (key, photo) => {
-    // const variables = { input: { key } };
-    // const { uploadProfileImg, setPhotoUrl } = this.props;
-    // try {
-    //   await uploadProfileImg({ variables });
-    //   await setPhotoUrl({ variables: { photoUrl: photo.uri } });
-    // } catch (error) {
-    //   console.log('Error uploading:', { error });
-    // }
-  };
   return (
     <View style={styles.profileImg}>
       <View style={styles.imgContainer}>
@@ -151,7 +155,7 @@ const ProfileImg = ({
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.upload}
-            onPress={chooseUploadMethod}>
+            onPress={handleUpload}>
             <Icon style={styles.uploadIcon} name="camera" />
           </TouchableOpacity>
         ) : null}
