@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { launchCamera } from 'react-native-image-picker';
-import { IUser } from 'types/User';
+import {
+  launchCamera,
+  launchImageLibrary,
+  CameraOptions,
+} from 'react-native-image-picker';
 import * as Animatable from 'react-native-animatable';
-import { Button, Text, Icon, View } from 'native-base';
-import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
-import Account from 'models/Account';
+import { ActionSheet, Button, Text, Icon, View } from 'native-base';
+import { useGetSignedUrl } from 'hooks/api/private/profile/useGetSignedUrl';
+import { useUploadProfilePhoto } from 'hooks/api/private/profile/useUploadProfilePhoto';
+import ApiUtils from 'library/utils/ApiUtils';
 
 import R from 'res/R';
 import styles from './styles';
@@ -25,6 +29,8 @@ const ProfileImg = ({
   user,
 }: Props) => {
   const [uri, setUri] = useState<any>();
+  const { mutate: getSignedUrl } = useGetSignedUrl();
+  const { mutate: uploadProfilePhoto } = useUploadProfilePhoto();
 
   useEffect(() => {
     if (user) {
@@ -38,23 +44,62 @@ const ProfileImg = ({
     }
   }, [user]);
 
-  const uploadProfilePhoto = () => {
-    const options = {
-      cameraType: 'front',
-      mediaType: 'photo',
-      saveToPhotos: true,
-    };
-    launchCamera(options, () => {});
-    // ImagePicker.showImagePicker(options, (response) => {
-    //   if (response.didCancel) {
-    //     console.log('User cancelled image picker');
-    //   } else if (response.error) {
-    //     console.log('ImagePicker Error: ', response.error);
-    //   } else {
-    //     this.save(response);
-    //   }
-    // });
+  const chooseUploadMethod = () => {
+    return ActionSheet.show(
+      {
+        options: ['From Photos', 'Take a Picture', 'Cancel'],
+        cancelButtonIndex: 2,
+        title: 'Add Photo',
+      },
+      handleUploadProfilePhoto,
+    );
   };
+
+  const signUrlAndUpload = useCallback(
+    async asset => {
+      await getSignedUrl(
+        {},
+        {
+          onSuccess: async res => {
+            const { key, url } = res.data.payload;
+            console.log({ key, url });
+            await ApiUtils.uploadImageToSignedUrl({
+              image: asset?.uri,
+              url,
+            });
+            const payload = { payload: { key } };
+            uploadProfilePhoto(payload, {
+              onSuccess: () => {
+                setUri({ uri: asset.uri });
+              },
+            });
+          },
+        },
+      );
+    },
+    [getSignedUrl, uploadProfilePhoto],
+  );
+
+  const handleUploadProfilePhoto = useCallback(
+    async (buttonIndex: number) => {
+      /* Button Index:
+       * 0 - Gallery
+       * 1 - Camera
+       */
+      const useCamera = buttonIndex === 1;
+      try {
+        const options = { mediaType: 'photo' } as CameraOptions;
+        const { assets } = useCamera
+          ? await launchCamera(options)
+          : await launchImageLibrary(options);
+        const asset = assets && assets[0];
+        signUrlAndUpload(asset);
+      } catch (err) {
+        console.log('imagepicker', { err });
+      }
+    },
+    [signUrlAndUpload],
+  );
 
   const save = async photo => {
     // try {
@@ -106,7 +151,7 @@ const ProfileImg = ({
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.upload}
-            onPress={uploadProfilePhoto}>
+            onPress={chooseUploadMethod}>
             <Icon style={styles.uploadIcon} name="camera" />
           </TouchableOpacity>
         ) : null}
