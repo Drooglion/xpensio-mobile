@@ -118,14 +118,24 @@ const ProfileImg = ({
        * 0 - Gallery
        * 1 - Camera
        */
+      const isCancelled = buttonIndex === 2;
+      if (isCancelled) {
+        return;
+      }
+
       const useCamera = buttonIndex === 1;
       try {
-        const options = { mediaType: 'photo' } as CameraOptions;
+        const options = {
+          mediaType: 'photo',
+          cameraType: 'front',
+        } as CameraOptions;
         const { assets } = useCamera
           ? await launchCamera(options)
           : await launchImageLibrary(options);
-        const asset = assets && assets[0];
-        signUrlAndUpload(asset);
+        if (assets) {
+          const asset = assets && assets[0];
+          signUrlAndUpload(asset);
+        }
       } catch (err) {
         console.log('imagepicker', { err });
       }

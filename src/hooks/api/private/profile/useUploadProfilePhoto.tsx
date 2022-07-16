@@ -25,6 +25,7 @@ export const useUploadProfilePhoto = () => {
   return useMutation('uploadProfilePhoto', uploadProfilePhoto, {
     onSuccess: () => {
       queryClient.invalidateQueries('profile');
+      queryClient.invalidateQueries('account');
     },
   });
 };

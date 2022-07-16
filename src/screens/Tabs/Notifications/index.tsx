@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Container, StyleProvider, View } from 'native-base';
 import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@react-navigation/native';
-import { has, isEmpty } from 'lodash';
-import _isEmpty from 'lodash/isEmpty';
+import { has } from 'lodash';
 
 import Header from 'library/components/Header';
 import NotificationsList from 'library/components/NotificationsList';
@@ -14,26 +12,13 @@ import theme from 'native-base-theme/variables/theme';
 import useFetchNotifications from 'hooks/api/private/notification/useFetchNotifications';
 
 import styles from './styles';
-import useGetProfile from 'hooks/api/private/profile/useGetProfile';
 import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
-import Account from 'models/Account';
-import { IUser } from 'types/User';
 
 const Notifications = () => {
   const { t } = useTranslation();
-  const navigator = useNavigation();
   const { data: notifications, isLoading, refetch } = useFetchNotifications();
 
-  const [user, setUser] = useState<IUser>();
-
-  useFetchAccount({
-    onSuccess: (account: Account) => {
-      setUser(account.user);
-    },
-    onError: err => {
-      console.error(err);
-    },
-  });
+  const { data: account, isLoading: accountIsLoading } = useFetchAccount({});
 
   const markAsRead = async (id: string) => {};
 
@@ -61,12 +46,16 @@ const Notifications = () => {
     }
   };
 
-  console.log();
-
   return (
     <StyleProvider style={getTheme(theme)}>
       <Container>
-        <Header title={t('notifications')} linkToProfile user={user} />
+        {accountIsLoading ? null : (
+          <Header
+            title={t('notifications')}
+            linkToProfile
+            user={account!.user}
+          />
+        )}
         <View style={styles.content}>
           {isLoading || !notifications ? (
             <ListLoader />
