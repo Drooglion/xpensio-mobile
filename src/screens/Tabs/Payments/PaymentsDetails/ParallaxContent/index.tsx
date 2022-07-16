@@ -68,6 +68,12 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
         if (permissionAndroidGranted) {
           const options = { mediaType: 'photo' } as CameraOptions;
           const { assets } = await launchCamera(options);
+
+          /* Clicked back */
+          if (!assets) {
+            return;
+          }
+
           await getSignedUrl(
             { id: payment.id },
             {
@@ -109,6 +115,12 @@ const ParallaxContent: FC<Props> = ({ children, payment, onBackPress }) => {
       } else {
         const options = { mediaType: 'photo' } as CameraOptions;
         const { assets } = await launchCamera(options);
+
+        /* Clicked back */
+        if (!assets) {
+          return;
+        }
+
         await getSignedUrl(
           { id: payment.id },
           {
