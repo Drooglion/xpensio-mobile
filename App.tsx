@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { StyleProvider } from 'native-base';
+import { StyleProvider, Root } from 'native-base';
 import SplashScreen from 'react-native-splash-screen';
 import './i18n';
 
@@ -24,7 +24,9 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
           <ResourceProvider>
-            <RootNavigator />
+            <Root>
+              <RootNavigator />
+            </Root>
           </ResourceProvider>
         </AuthContextProvider>
       </QueryClientProvider>
