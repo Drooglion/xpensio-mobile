@@ -28,6 +28,7 @@ import useGetProjects from 'hooks/api/private/profile/useGetProjects';
 import hooks from 'library/hooks';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import Payment, { PaymentStatus } from 'models/Payment';
+import useGetProfile from 'hooks/api/private/profile/useGetProfile';
 
 export interface SummaryTabProps {
   currency: string;
@@ -54,17 +55,11 @@ const SummaryTab = ({
   const { data: teams, isLoading: teamsLoading } = useGetTeams();
   const { data: categories, isLoading: categoriesLoading } = useGetCategories();
   const { data: projects, isLoading: projectsLoading } = useGetProjects();
+  const { data: profile } = useGetProfile();
 
   useEffect(() => {
-    const getUserId = async () => {
-      const id = await AsyncStorage.getItem('USER_ID');
-      if (id) {
-        setUserId(id);
-      }
-    };
-
-    getUserId();
-  }, []);
+    setUserId(profile?.userId);
+  }, [profile?.userId]);
 
   const { inputs, handleChange } = hooks.useForm({
     categoryId: payment ? (payment.category ? payment.category.id : '') : '',

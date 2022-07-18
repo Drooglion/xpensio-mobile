@@ -4,6 +4,7 @@ import { Button, Label, Item, Input, Text } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isNil } from 'lodash';
 import { useTranslation } from 'react-i18next';
+import useGetProfile from 'hooks/api/private/profile/useGetProfile';
 
 import hooks from 'library/hooks';
 import NumberUtils from 'library/utils/NumberUtils';
@@ -35,17 +36,11 @@ const ReceiptTab = ({
 }: ReceiptTabProps) => {
   const { t } = useTranslation();
   const [userId, setUserId] = useState<string>();
+  const { data: profile } = useGetProfile();
 
   useEffect(() => {
-    const getUserId = async () => {
-      const id = await AsyncStorage.getItem('USER_ID');
-      if (id) {
-        setUserId(id);
-      }
-    };
-
-    getUserId();
-  }, []);
+    setUserId(profile?.userId);
+  }, [profile?.userId]);
 
   const { inputs, handleChange } = hooks.useForm({
     merchantTin: payment.merchantTin,

@@ -40,6 +40,7 @@ import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
 import useGetTeams from 'hooks/api/private/profile/useGetTeams';
 import { ITeam, TeamRole } from 'types/Team';
 import FilterBottomSheet from 'library/components/FilterBottomSheet';
+import useGetProfile from 'hooks/api/private/profile/useGetProfile';
 
 const Payments = () => {
   const tab = useRef<any>(null);
@@ -65,6 +66,7 @@ const Payments = () => {
   const { data: balance, isLoading: loading } = useGetWalletBalance(userId);
   const { state } = useResource();
   const { actAsAdmin } = state;
+  const { data: profile } = useGetProfile();
 
   const tabs = !actAsAdmin ? [t('myPayments')] : [t('myPayments'), t('team')];
 
@@ -83,16 +85,9 @@ const Payments = () => {
   );
 
   useEffect(() => {
-    const getUserId = async () => {
-      const id = await AsyncStorage.getItem('USER_ID');
-      if (id) {
-        setUserId(id);
-      }
-    };
+    setUserId(profile?.userId);
     fetchPayments();
-
-    getUserId();
-  }, [fetchPayments]);
+  }, [fetchPayments, profile?.userId]);
 
   useEffect(() => {
     if (account && teams) {
