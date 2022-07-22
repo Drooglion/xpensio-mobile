@@ -26,7 +26,7 @@ const reducer = (prevState: StateType, action: any) => {
   }
 };
 
-type DialogModal = {
+export type DialogModalProps = {
   visible: boolean;
   title: string;
   description: string;
@@ -38,7 +38,7 @@ type StateType = {
   actAsAdmin: boolean;
   requests: Request[];
   loadingModal: boolean;
-  dialogModal: DialogModal;
+  dialogModal: DialogModalProps;
 };
 
 const initialState: StateType = {

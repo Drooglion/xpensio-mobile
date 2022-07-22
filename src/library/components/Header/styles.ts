@@ -1,12 +1,15 @@
-import Left from 'native-base-theme/components/Left';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
+import { hasNotch } from 'react-native-device-info';
 import R from 'res/R';
+
+const isIos = Platform.OS === 'ios';
 
 export default StyleSheet.create({
   header: {
     paddingLeft: R.metrics.doubleMargin,
     paddingRight: R.metrics.doubleMargin,
     backgroundColor: R.colors.white,
+    marginTop: isIos ? (hasNotch() ? -25 : 0) : 0,
     marginBottom: 30,
     zIndex: 30,
   },
@@ -58,10 +61,11 @@ export default StyleSheet.create({
   highlightBack: {
     height: 40,
     width: 40,
-    borderRadius: 40,
+    borderRadius: 99,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(52, 52, 52, 0.7)',
+    backgroundColor: 'rgba(52, 52, 52, 0.5)',
+    paddingLeft: 5,
   },
   withCountContainer: {
     flexDirection: 'row',

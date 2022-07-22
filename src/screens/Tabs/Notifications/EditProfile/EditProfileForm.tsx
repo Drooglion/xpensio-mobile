@@ -13,37 +13,47 @@ import HelperUtils from 'library/utils/HelperUtils';
 import R from 'res/R';
 import styles from './styles';
 import { Country } from 'react-native-country-picker-modal';
+import { SafeAreaView } from 'react-native';
 
 type Props = {
   inputs: Record<string, any>;
   handleChange: (name: string, value: any) => void;
   errors: Record<string, string>;
   loading: boolean;
+  disabled: boolean;
 };
 
-const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
+const EditProfileForm = ({
+  inputs,
+  handleChange,
+  errors,
+  loading,
+  disabled,
+}: Props) => {
   const mobileNumberVerified = inputs.mobileNumberVerified;
   const emailVerified = inputs.emailVerified;
 
-  console.log('inoputs: ', { inputs });
-
-  const titles: string[] = ['Mr', 'Mrs', 'Miss', 'Dr', 'Madam'];
+  console.log('inputs: ', { inputs });
 
   /* Virtualized List issue triggered when opening picker is pending at github  - https://github.com/GeekyAnts/NativeBase/issues/3433  */
 
   return (
-    <>
+    <SafeAreaView>
       <Item stackedLabel error={!isNil(errors?.title)}>
         <Label style={styles.label}>{R.strings.title}</Label>
         <PickerInput
-          disabled={loading}
+          enabled={!loading && !disabled}
           mode="dropdown"
           onValueChange={(text: string) => handleChange('title', text)}
           placeHolder={R.strings.title}
           placeholderIconColor={R.colors.subhead}
           selectedValue={inputs.title}>
-          {titles.map(title => (
-            <Picker.Item label={title} value={title} key={title} />
+          {R.titles.map(title => (
+            <Picker.Item
+              key={title.code}
+              label={title.description}
+              value={title.code}
+            />
           ))}
         </PickerInput>
       </Item>
@@ -51,19 +61,21 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
       <Item stackedLabel error={!isNil(errors?.nationality)}>
         <Label style={styles.label}>{R.strings.nationality}</Label>
         <PickerInput
-          disabled={loading}
+          enabled={!loading && !disabled}
           mode="dropdown"
           onValueChange={(text: string) => handleChange('nationality', text)}
           placeHolder={R.strings.nationality}
           placeholderIconColor={R.colors.subhead}
           selectedValue={inputs?.nationality || ''}>
-          {R.nationalities.map((nationality: Record<string, string>) => (
-            <Picker.Item
-              key={nationality.nationality}
-              label={nationality.nationality}
-              value={nationality.nationality}
-            />
-          ))}
+          {R.nationalities
+            .sort((a, b) => a.code.localeCompare(b.code))
+            .map(nationality => (
+              <Picker.Item
+                key={nationality.code}
+                label={nationality.code}
+                value={nationality.code}
+              />
+            ))}
         </PickerInput>
       </Item>
       <Item
@@ -72,6 +84,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
         style={styles.itemLeft}>
         <Label style={styles.label}>{R.strings.birthday}</Label>
         <DatePickerField
+          disabled={loading || disabled}
           date={inputs.birthday || ''}
           onDateChange={(date: string) => handleChange('birthday', date)}
         />
@@ -79,14 +92,14 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
       <Item stackedLabel error={!isNil(errors?.gender)}>
         <Label style={styles.label}>{R.strings.gender}</Label>
         <PickerInput
-          disabled={loading}
+          enabled={!loading && !disabled}
           mode="dropdown"
           onValueChange={(text: string) => handleChange('gender', text)}
           placeHolder={R.strings.gender}
           placeholderIconColor={R.colors.subhead}
           selectedValue={inputs?.gender?.toString() || '0'}>
-          <Picker.Item label={R.strings.female} value="1" key={1} />
-          <Picker.Item label={R.strings.male} value="2" key={2} />
+          <Picker.Item label={R.strings.male} value="1" key={1} />
+          <Picker.Item label={R.strings.female} value="2" key={2} />
         </PickerInput>
       </Item>
       <Item error={!isNil(errors?.mobileNumber)}>
@@ -94,7 +107,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
           <Label style={styles.label}>{R.strings.mobileNumber}</Label>
           <View style={{ position: 'relative' }}>
             <Input
-              disabled={loading}
+              disabled={loading || disabled}
               returnKeyType="done"
               autoCapitalize="none"
               autoCorrect={false}
@@ -120,7 +133,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
           <Label style={styles.label}>{R.strings.email}</Label>
           <View style={{ position: 'relative' }}>
             <Input
-              disabled={loading}
+              disabled={loading || disabled}
               returnKeyType="next"
               autoCapitalize="none"
               autoCorrect={false}
@@ -145,7 +158,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
       <Item stackedLabel error={!isNil(errors?.firstName)}>
         <Label style={styles.label}>{R.strings.firstName}</Label>
         <Input
-          disabled={loading}
+          disabled={loading || disabled}
           returnKeyType="next"
           autoCorrect={false}
           style={styles.input}
@@ -157,7 +170,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
       <Item stackedLabel error={!isNil(errors?.middleName)}>
         <Label style={styles.label}>{R.strings.middleName}</Label>
         <Input
-          disabled={loading}
+          disabled={loading || disabled}
           returnKeyType="next"
           autoCorrect={false}
           style={styles.input}
@@ -169,7 +182,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
       <Item stackedLabel error={!isNil(errors?.lastName)}>
         <Label style={styles.label}>{R.strings.lastName}</Label>
         <Input
-          disabled={loading}
+          disabled={loading || disabled}
           returnKeyType="next"
           autoCorrect={false}
           style={styles.input}
@@ -183,7 +196,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
         <Item stackedLabel error={!isNil(errors?.addressLine1)}>
           <Label style={styles.label}>{R.strings.addressLine1}</Label>
           <Input
-            disabled={loading}
+            disabled={loading || disabled}
             returnKeyType="next"
             autoCorrect={false}
             style={styles.input}
@@ -196,7 +209,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
         <Item stackedLabel error={!isNil(errors?.addressLine2)}>
           <Label style={styles.label}>{R.strings.addressLine2}</Label>
           <Input
-            disabled={loading}
+            disabled={loading || disabled}
             returnKeyType="next"
             autoCorrect={false}
             style={styles.input}
@@ -218,7 +231,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
         <Item stackedLabel error={!isNil(errors?.state)}>
           <Label style={styles.label}>{R.strings.state}</Label>
           <Input
-            disabled={loading}
+            disabled={loading || disabled}
             returnKeyType="next"
             autoCorrect={false}
             style={styles.input}
@@ -229,7 +242,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
         <Item stackedLabel error={!isNil(errors?.city)}>
           <Label style={styles.label}>{R.strings.city}</Label>
           <Input
-            disabled={loading}
+            disabled={loading || disabled}
             returnKeyType="next"
             autoCorrect={false}
             style={styles.input}
@@ -240,7 +253,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
         <Item stackedLabel error={!isNil(errors?.zipCode)}>
           <Label style={styles.label}>{R.strings.zipCode}</Label>
           <Input
-            disabled={loading}
+            disabled={loading || disabled}
             returnKeyType="next"
             autoCapitalize="none"
             autoCorrect={false}
@@ -251,7 +264,7 @@ const EditProfileForm = ({ inputs, handleChange, errors, loading }: Props) => {
           />
         </Item>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 

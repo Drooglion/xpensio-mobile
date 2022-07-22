@@ -6,7 +6,7 @@ import { IRequest } from 'types/Request';
 export interface MyRequestsProps {
   data: IRequest[];
   onRefresh(): void;
-  onLoadMore(): void;
+  onLoadMore?(): void;
   onItemClick(item: IRequest): void;
 }
 
@@ -24,6 +24,7 @@ const MyRequests = ({
       onRefresh={onRefresh}
       loadMore={onLoadMore}
       onItemClick={onItemClick}
+      showName={false}
     />
   );
 };

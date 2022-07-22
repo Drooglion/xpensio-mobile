@@ -305,6 +305,8 @@ PODS:
     - React
   - RNCAsyncStorage (1.15.15):
     - React-Core
+  - RNCPicker (2.4.1):
+    - React-Core
   - RNDeviceInfo (8.4.8):
     - React-Core
   - RNGestureHandler (1.10.3):
@@ -362,6 +364,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "ReactNativeART (from `../node_modules/@react-native-community/art`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -453,6 +456,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/art"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCPicker:
+    :path: "../node_modules/@react-native-picker/picker"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
@@ -509,6 +514,7 @@ SPEC CHECKSUMS:
   ReactCommon: 620442811dc6f707b4bf5e3b27d4f19c12d5a821
   ReactNativeART: 78edc68dd4a1e675338cd0cd113319cf3a65f2ab
   RNCAsyncStorage: 0bef6a21517c0254bd6bd59a3672963abfa0d18e
+  RNCPicker: abc646b53a3d28ccfa3232c927a0ca52e0cf024d
   RNDeviceInfo: 0400a6d0c94186d1120c3cbd97b23abc022187a9
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNPermissions: f7ebe52db07c00901127966ca080b4ec6a6ceb0a
@@ -519,4 +525,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 77a384690d547ef7c79d565063139356a5ca2326
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.3

@@ -3,9 +3,12 @@ import {
   IPaymentCard,
   IPaymentUser,
   IPaymentAttachment,
+  IPaymentTeam,
 } from 'types/Payment';
 import StringUtils from 'library/utils/StringUtils';
 import NumberUtils from 'library/utils/NumberUtils';
+import { ICategory } from 'types/Category';
+import { IProject } from 'types/Project';
 
 class Payment {
   readonly id: string;
@@ -29,9 +32,9 @@ class Payment {
   readonly createdAt: string;
   readonly reason: string | null;
   readonly request: string | null;
-  readonly team: string | null;
-  readonly category: string | null;
-  readonly project: string | null;
+  readonly team: IPaymentTeam | null;
+  readonly category: ICategory | null;
+  readonly project: IProject | null;
   readonly card: IPaymentCard;
   readonly attachments: IPaymentAttachment[];
   readonly user: IPaymentUser;

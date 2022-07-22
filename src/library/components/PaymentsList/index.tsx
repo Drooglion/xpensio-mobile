@@ -25,9 +25,10 @@ import { IPayment, IPaymentSection } from 'types/Payment';
 type Props = {
   onItemClick: (payment: IPayment) => void;
   data: IPayment[];
+  showName: boolean;
 };
 
-const PaymentsList = ({ onItemClick, data }: Props) => {
+const PaymentsList = ({ onItemClick, data, showName }: Props) => {
   const { t } = useTranslation();
   const currency = 'php';
   const [items, setItems] = useState<IPaymentSection[][]>();
@@ -134,7 +135,11 @@ const PaymentsList = ({ onItemClick, data }: Props) => {
             {item.merchantName}
           </Text>
           <Text style={styles.time}>
-            {DateUtils.formatTime(item.createdAt)}
+            {showName
+              ? `${item.user.firstName} ${
+                  item.user.lastName
+                } — ${DateUtils.formatTime(item.createdAt)}`
+              : DateUtils.formatTime(item.createdAt)}
           </Text>
           {status}
           {/*

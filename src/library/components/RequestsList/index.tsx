@@ -27,12 +27,13 @@ export interface RequestListProps {
   onItemClick(item: IRequest): void;
   sectionBy?: string;
   loading?: boolean;
-  loadMore(): void;
+  loadMore?(): void;
   isRefreshing: boolean;
   onApproveRequest(id: string): void;
   onDenyRequest(id: string): void;
   onRefresh(): void;
   teamRequest?: boolean;
+  showName: boolean;
 }
 
 const defaultProps: RequestListProps = {
@@ -47,6 +48,7 @@ const defaultProps: RequestListProps = {
   onDenyRequest: () => {},
   onRefresh: () => {},
   teamRequest: false,
+  showName: false,
 };
 
 const RequestsList = ({
@@ -56,6 +58,7 @@ const RequestsList = ({
   loading,
   isRefreshing,
   teamRequest,
+  showName,
   onItemClick,
   loadMore,
   onRefresh,
@@ -73,9 +76,14 @@ const RequestsList = ({
 
   useEffect(() => {
     if (data) {
+      console.log({ data });
       if (sectionBy === 'status') {
         const pendings = data.filter(item => item.status === 0).sort();
         const pastRequests = data.filter(item => item.status !== 0).sort();
+
+        console.log({ pendings });
+        console.log({ pastRequests });
+
         setItems([pendings, pastRequests]);
       } else {
         const myRequests = data.map(item => ({
@@ -128,14 +136,14 @@ const RequestsList = ({
           style={styles.listItem}>
           <Left style={styles.itemLeft}>{avatar}</Left>
           <Body style={styles.itemBody}>
-            <Text
-              allowFontScaling={false}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.name}>
+            <Text allowFontScaling={false} style={styles.name}>
               {item.title}
             </Text>
-            <Text style={styles.time}>{item.description}</Text>
+            <Text style={styles.time}>
+              {showName
+                ? `${item.user.firstName} ${item.user.lastName} — ${item.description}`
+                : item.description}
+            </Text>
             {
               // (item.comment !== null) ? (
               //   <View style={styles.commentBox}>
@@ -168,7 +176,7 @@ const RequestsList = ({
   }) => {
     let component = null;
     if (row) {
-      console.log({ row });
+      // console.log({ row });
       if (row[0]) {
         const itemSectionTitle =
           sectionBy === 'status'

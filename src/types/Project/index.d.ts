@@ -6,3 +6,8 @@ export interface IProject {
   updatedAt: string;
   description: string | null;
 }
+
+export interface IProjectsResponse {
+  payload: IProject[];
+  code: string;
+}

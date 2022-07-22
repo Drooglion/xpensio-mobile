@@ -7,11 +7,13 @@ import Notifications from '.';
 import Profile from './Profile';
 import ChangePassword from './ChangePassword';
 import EditProfile from './EditProfile';
+import Identification from './Identification';
+import Team from './Team';
 
 const Navigator = () => (
   <Stack.Navigator>
     <Stack.Screen
-      name="Notifications"
+      name="NotificationsList"
       component={Notifications}
       options={{ headerShown: false }}
     />
@@ -28,6 +30,16 @@ const Navigator = () => (
     <Stack.Screen
       name="EditProfile"
       component={EditProfile}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="Identification"
+      component={Identification}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="Team"
+      component={Team}
       options={{ headerShown: false }}
     />
   </Stack.Navigator>

@@ -1,5 +1,7 @@
 import { CardStatus } from 'models/Card';
 import { PaymentStatus } from 'models/Payment';
+import { ICategory } from 'types/Category';
+import { IProject } from 'types/Project';
 
 export interface IPaymentsResponse {
   result: IPayment[];
@@ -29,9 +31,9 @@ export interface IPayment {
   createdAt: string;
   reason: string | null;
   request: string | null;
-  team: string | null;
-  category: string | null;
-  project: string | null;
+  team: IPaymentTeam | null;
+  category: ICategory | null;
+  project: IProject | null;
   card: IPaymentCard;
   attachments: IPaymentAttachment[];
   user: IPaymentUser;
@@ -39,6 +41,11 @@ export interface IPayment {
 
 export interface IPaymentSection extends IPayment {
   createdAtFormatted: string;
+}
+
+export interface IPaymentTeam extends IPayment {
+  id: string;
+  name: string;
 }
 
 export interface IPaymentCard {
@@ -72,7 +79,6 @@ export interface IPaymentUser {
   updatedAt: string;
   deletedAt: string | null;
 }
-
 
 export interface IPaymentAttachment {
   createdAt: string;

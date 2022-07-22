@@ -12,7 +12,7 @@ import VirtualCard from './VirtualCard';
 
 import styles from './styles';
 import OtpConfirmModal from '../OtpConfirmModal';
-import { CardType, ICard, ICardUser } from 'types/Card';
+import { CardType, ICard, ICardBillingAddress, ICardUser } from 'types/Card';
 import { IUserCompany } from 'types/User';
 import useLockCard from 'hooks/api/private/card/useLockCard';
 import useUnlockCard from 'hooks/api/private/card/useUnlockCard';
@@ -50,6 +50,7 @@ const VirtualCards = ({
   const [cards, setCards] = useState<CarouselItemType[]>([]);
   const [selectedCard, setSelectedCard] = useState<number>();
   const [cvv, setCvv] = useState<string>();
+  const [billingAddress, setBillingAddress] = useState<ICardBillingAddress>();
   const [action, setAction] = useState<string>('');
   const [confirmPinVisible, setConfirmPinVisible] = useState<boolean>(false);
   const [cardDetailsVisible, setCardDetailsVisible] = useState<boolean>(false);
@@ -109,15 +110,17 @@ const VirtualCards = ({
           getCardDetails(params, {
             onSuccess: res => {
               /* Card Details here */
-              card.cardNumber = '4242424242424242';
-              card.cvv = '123';
-              setCvv('123');
-              console.log('card details', card);
+              console.log('card details', res.data.payload);
+              card.cardNumber = res.data.payload.cardNumber;
+              card.cvv = res.data.payload.cvv;
+              setCvv(res.data.payload.cvv);
+              setBillingAddress(res.data.payload.billingAddress);
 
               const arr = [...cards];
               arr[selectedCard].data = card;
               setCards(arr);
 
+              setConfirmPinVisible(false);
               setTimeout(() => {
                 setCardDetailsVisible(true);
               }, 500);
@@ -337,7 +340,7 @@ const VirtualCards = ({
         useScrollView
       />
       <BottomSheet
-        height={0.32}
+        sheetHeight={0.35}
         visible={cardDetailsVisible}
         onClose={onCloseBottomSheet}>
         <View style={styles.bottomSheetContent}>
@@ -349,17 +352,25 @@ const VirtualCards = ({
               <Text uppercase style={styles.label}>
                 {t('company')}
               </Text>
-              <Text style={styles.text}>{company ? company.name : ''}</Text>
+              <Text style={styles.text}>
+                {company
+                  ? company.name
+                  : billingAddress
+                  ? billingAddress.companyName
+                  : ''}
+              </Text>
             </Item>
             <Item style={styles.item}>
               <Text uppercase style={styles.label}>
                 {t('address')}
               </Text>
               <Text style={styles.text}>
-                {company
-                  ? company.address
-                    ? company.address
-                    : 'Company address'
+                {billingAddress
+                  ? `${billingAddress.line1}${
+                      billingAddress.line2 ? ` ${billingAddress.line2}` : ''
+                    } ${billingAddress.city} ${billingAddress.country} ${
+                      billingAddress.zip
+                    }`
                   : 'Company address'}
               </Text>
             </Item>

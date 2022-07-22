@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { StyleSheet } from 'react-native';
 import { Button, Item, Text, Footer, FooterTab, View } from 'native-base';
 import moment from 'moment';
 import { startCase, toLower } from 'lodash';
@@ -12,6 +13,7 @@ import R from 'res/R';
 
 import styles from './styles';
 import { IRequest } from 'types/Request';
+import HelperUtils from 'library/utils/HelperUtils';
 
 type DetailsTabProps = {
   currency: string;
@@ -29,6 +31,10 @@ const DetailsTab = ({
   onDeny,
 }: DetailsTabProps) => {
   const { t } = useTranslation();
+  const statusColor = {
+    borderColor: HelperUtils.statusColor(request.status) || '#AAA',
+    backgroundColor: HelperUtils.statusColor(request.status) || '#AAA',
+  };
   return (
     <Fragment>
       <View style={styles.tabContent}>
@@ -44,6 +50,15 @@ const DetailsTab = ({
               {t('description')}
             </Text>
             <Text style={styles.descriptionText}>{request.description}</Text>
+          </Item>
+          <Item style={styles.descriptionItem}>
+            <Text uppercase style={styles.descriptionLabel}>
+              {t('status')}
+            </Text>
+            <BorderedBadge
+              style={statusColor}
+              text={StringUtils.formatStatus(request.status)}
+            />
           </Item>
           <Item style={styles.descriptionItem}>
             <Text uppercase style={styles.descriptionLabel}>

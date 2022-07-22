@@ -38,9 +38,9 @@ const customStyles = StyleSheet.create({
     color: R.colors.primary,
   },
   dateText: {
-    fontSize: 17,
+    ...R.theme.body,
     position: 'absolute',
-    left: 8,
+    left: 0,
     bottom: 4,
     width: R.metrics.windowWidth,
     color: 'black',
@@ -48,8 +48,11 @@ const customStyles = StyleSheet.create({
   dateInput: {
     borderColor: 'transparent',
   },
+  disabled: {
+    backgroundColor: R.colors.transparent,
+  },
   placeholderText: {
-    fontSize: 17,
+    ...R.theme.body,
     position: 'absolute',
     left: 8,
     bottom: 4,

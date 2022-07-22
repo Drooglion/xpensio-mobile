@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unresolved */
-
 import { StyleSheet } from 'react-native';
 import R from 'res/R';
 
@@ -12,12 +10,12 @@ const styles = StyleSheet.create({
   },
   title: {
     ...R.fonts.AirbnbCerealAppMedium,
-    fontSize: 25,
+    fontSize: 20,
   },
   subtitle: {
     ...R.theme.subhead,
     fontSize: 14,
-    marginVertical: R.metrics.smallMargin
+    marginVertical: R.metrics.smallMargin,
   },
   body: {
     marginVertical: R.metrics.doubleMargin,
@@ -27,12 +25,18 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   noTxt: {
+    ...R.fonts.AirbnbCerealAppMedium,
+    fontSize: 14,
     color: R.colors.body2,
+  },
+  doneTxt: {
+    ...R.fonts.AirbnbCerealAppMedium,
+    fontSize: 14,
   },
   caption: {
     ...R.fonts.AirbnbCerealAppMedium,
     fontSize: 12,
-    color: R.colors.grey
+    color: R.colors.grey,
   },
   input: {
     ...R.theme.body,

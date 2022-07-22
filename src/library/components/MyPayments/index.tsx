@@ -5,7 +5,6 @@ import React, { useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import PaymentsList from 'library/components/PaymentsList';
 
-import styles from './styles';
 import { IPayment } from 'types/Payment';
 
 export interface MyPaymentsProps {
@@ -17,12 +16,17 @@ const MyPayments = ({ data }: MyPaymentsProps) => {
 
   const onItemClick = useCallback(
     (payment: IPayment) => {
-      navigation.navigate('PaymentsDetails' as never, { payment } as never);
+      navigation.navigate(
+        'PaymentsDetails' as never,
+        { payment, id: payment.id } as never,
+      );
     },
     [navigation],
   );
 
-  return <PaymentsList onItemClick={onItemClick} data={data} />;
+  return (
+    <PaymentsList showName={false} onItemClick={onItemClick} data={data} />
+  );
 };
 
 export default MyPayments;

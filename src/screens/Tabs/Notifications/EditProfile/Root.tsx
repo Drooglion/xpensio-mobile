@@ -21,7 +21,6 @@ import getTheme from 'native-base-theme/components';
 import theme from 'native-base-theme/variables/theme';
 import EditProfileForm from './EditProfileForm';
 import styles from './styles';
-import { useTranslation } from 'react-i18next';
 import { IProfileType } from 'types/Profile';
 import useForm from 'hooks/useForm';
 import useUpdateProfile, {
@@ -35,15 +34,23 @@ type Props = {
 };
 
 const Root = ({ loading, profile }: Props) => {
-  const { t } = useTranslation();
   const navigation = useNavigation();
+  console.log({ profile });
   const { inputs, handleChange } = useForm({
     title: profile?.title || '',
     firstName: profile?.firstName || '',
     middleName: profile?.middleName || '',
     lastName: profile?.lastName || '',
     email: profile?.email || '',
+    emailVerified:
+      profile?.adminVerificationStatus.emailAddress === 'verified'
+        ? true
+        : false,
     mobileNumber: profile?.mobileNumber || '',
+    mobileNumberVerified:
+      profile?.adminVerificationStatus.mobileNumber === 'verified'
+        ? true
+        : false,
     birthday: (profile && dayjs(profile?.birthday).format('YYYY-MM-DD')) || '',
     nationality: profile?.nationality || '',
     gender: profile?.gender || 0,
@@ -80,6 +87,7 @@ const Root = ({ loading, profile }: Props) => {
 
     updateProfile(payload, {
       onSuccess: data => {
+        console.log('update', data);
         Toast.show({
           type: 'success',
           text1: 'Profile Updated',
@@ -102,7 +110,6 @@ const Root = ({ loading, profile }: Props) => {
       <Container>
         <Header
           hasBack
-          transparent
           backgroundColor={R.colors.transparent}
           title={R.strings.personalDetails}
           onBackPress={goBack}
@@ -116,29 +123,32 @@ const Root = ({ loading, profile }: Props) => {
             handleChange={handleChange}
             errors={{}}
             loading={loading || updating}
+            disabled={profile.verificationStatus !== 'pending'}
           />
         </Content>
-        <Footer style={styles.footer}>
-          <FooterTab style={styles.footerTab}>
-            <Button
-              danger
-              disabled={loading || updating}
-              style={styles.btnCancel}
-              onPress={goBack}>
-              <Text style={styles.btnTxt}>{R.strings.cancel}</Text>
-            </Button>
-            <Button
-              disabled={loading || updating}
-              style={styles.btnSave}
-              onPress={submit}>
-              {loading || updating ? (
-                <LoadingIndicator color={R.colors.white} size={5} />
-              ) : (
-                <Text style={styles.btnTxt}>{R.strings.save}</Text>
-              )}
-            </Button>
-          </FooterTab>
-        </Footer>
+        {profile.verificationStatus === 'pending' ? (
+          <Footer style={styles.footer}>
+            <FooterTab style={styles.footerTab}>
+              <Button
+                danger
+                disabled={loading || updating}
+                style={styles.btnCancel}
+                onPress={goBack}>
+                <Text style={styles.btnTxt}>{R.strings.cancel}</Text>
+              </Button>
+              <Button
+                disabled={loading || updating}
+                style={styles.btnSave}
+                onPress={submit}>
+                {loading || updating ? (
+                  <LoadingIndicator color={R.colors.white} size={5} />
+                ) : (
+                  <Text style={styles.btnTxt}>{R.strings.save}</Text>
+                )}
+              </Button>
+            </FooterTab>
+          </Footer>
+        ) : null}
       </Container>
     </StyleProvider>
   );

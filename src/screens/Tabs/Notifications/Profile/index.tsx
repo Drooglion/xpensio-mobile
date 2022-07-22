@@ -21,7 +21,10 @@ import R from 'res/R';
 import styles from './styles';
 import { useAuth } from 'contexts/authContext';
 import useGetProfile from 'hooks/api/private/profile/useGetProfile';
+import useGetTeams from 'hooks/api/private/profile/useGetTeams';
 import useFetchAccount from 'hooks/api/private/account/useFetchAccount';
+import useGetMyMetrics from 'hooks/api/private/analytics/useGetMyMetrics';
+import Team from 'models/Team';
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -31,24 +34,44 @@ const Profile = () => {
   const { signOut } = useAuth();
 
   const {
-    data: profile,
-    isLoading: profileLoading,
-    refetch: refetchProfile,
-  } = useGetProfile();
-  const {
     data: account,
     isLoading: accountIsLoading,
     refetch: refetchAccount,
   } = useFetchAccount({});
 
+  const {
+    data: metrics,
+    isLoading: metricsLoading,
+    refetch: refetchMetrics,
+  } = useGetMyMetrics();
+
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    refetch: refetchProfile,
+  } = useGetProfile();
+
+  const {
+    data: teams,
+    isLoading: teamsLoading,
+    refetch: refetchTeams,
+  } = useGetTeams();
+
   const refetch = useCallback(() => {
     refetchProfile();
     refetchAccount();
-  }, [refetchProfile, refetchAccount]);
+    refetchMetrics();
+    refetchProfile();
+    refetchTeams();
+  }, [refetchProfile, refetchAccount, refetchMetrics, refetchTeams]);
 
   useEffect(() => {
     isFocused && refetch();
   }, [isFocused, refetch]);
+
+  useEffect(() => {
+    console.log({ teams });
+  }, [teams]);
 
   const onSignOut = () => {
     setShowSignOut(false);
@@ -56,11 +79,20 @@ const Profile = () => {
     signOut();
   };
 
-  if (profileLoading || !profile || accountIsLoading || !account) {
+  if (
+    profileLoading ||
+    !profile ||
+    accountIsLoading ||
+    !account ||
+    metricsLoading ||
+    !metrics ||
+    teamsLoading
+  ) {
     return <Loading />;
   }
 
-  const teams = _compact(_map(account.teams, 'team') || undefined);
+  //const teams = _compact(_map(account.teams, 'team') || undefined);
+  //console.log('teams', account.teams);
 
   return (
     <StyleProvider style={getTheme(theme)}>
@@ -83,13 +115,24 @@ const Profile = () => {
             onCancel={() => setShowSignOut(false)}
           />
           <View>
-            <ProfileImg size={PixelRatio.get() < 3 ? 100 : 110} showUploadBtn />
+            <ProfileImg
+              size={PixelRatio.get() < 3 ? 100 : 110}
+              showUploadBtn
+              user={account.user}
+            />
             <View style={styles.namePosition}>
               <Text style={styles.name}>{profile.fullName()}</Text>
               <Text style={styles.position}>{profile.profile.email}</Text>
             </View>
           </View>
-          <ProfileAnalytics amount={17} receiptsMatch={90} />
+          <ProfileAnalytics
+            amount={metrics.payments}
+            receiptsMatch={
+              isNaN((metrics.receiptsMatched / metrics.payments) * 100)
+                ? 0
+                : (metrics.receiptsMatched / metrics.payments) * 100
+            }
+          />
           <ProfileList
             teams={teams}
             signOut={() => setShowSignOut(true)}

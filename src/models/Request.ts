@@ -10,7 +10,7 @@ class Request {
   readonly title: string;
   readonly typeOfExpense: number;
   readonly typeOfSusbscription: any;
-  readonly status: number;
+  readonly status: RequestStatus;
   readonly amount: number;
   readonly cancelledDate: string | null;
   readonly approvedDate: string | null;

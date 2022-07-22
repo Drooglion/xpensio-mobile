@@ -42,14 +42,14 @@ export default StyleSheet.create({
   },
   time: {
     ...R.fonts.AirbnbCerealAppBook,
-    fontSize: 9,
-    lineHeight: 11,
+    fontSize: 10,
+    lineHeight: 14,
     color: R.colors.subhead,
   },
   status: {
     ...R.fonts.AirbnbCerealAppMedium,
-    fontSize: 9,
-    lineHeight: 11,
+    fontSize: 10,
+    lineHeight: 14,
     color: R.colors.subhead,
   },
   missing: {

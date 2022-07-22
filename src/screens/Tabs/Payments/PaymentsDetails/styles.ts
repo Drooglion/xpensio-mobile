@@ -75,6 +75,9 @@ export default StyleSheet.create({
     ...R.fonts.AirbnbCerealAppBook,
     fontSize: 13,
   },
+  tabsContainer: {
+    flexGrow: 1,
+  },
   tabContainer: {
     height: 0,
     borderColor: R.colors.transparent,
@@ -89,10 +92,18 @@ export default StyleSheet.create({
     paddingTop: 0,
     paddingHorizontal: R.metrics.doubleMargin,
     paddingBottom: R.metrics.doubleMargin,
+    textAlign: 'left',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  selectRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+    borderBottomWidth: 1,
+    borderBottomColor: R.colors.hint,
   },
   title: {
     flex: 1,
@@ -141,8 +152,8 @@ export default StyleSheet.create({
   receiptInput: {
     ...R.theme.body,
     paddingLeft: 0,
-    borderBottomWidth: R.metrics.horizontalLineHeight,
-    borderBottomColor: R.colors.divider,
+    borderBottomWidth: 1,
+    borderBottomColor: R.colors.hint,
   },
   footer: {
     paddingHorizontal: R.metrics.doubleMargin,
@@ -158,5 +169,29 @@ export default StyleSheet.create({
   parallaxChild: {
     paddingTop: R.metrics.baseMargin,
     paddingBottom: R.metrics.doubleSection,
+  },
+  dropdownIcon: {
+    position: 'absolute',
+    fontSize: 20,
+    color: R.colors.subhead,
+    right: 0,
+  },
+  itemInput: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    marginTop: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: R.colors.hint,
+  },
+  input: {
+    ...R.theme.body,
+    paddingLeft: 0,
+    paddingRight: 0,
+    height: 40,
+    width: '100%',
+  },
+  placeholder: {
+    ...R.theme.body,
+    color: R.colors.hint,
   },
 });

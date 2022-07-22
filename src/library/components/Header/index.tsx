@@ -128,11 +128,11 @@ const Header = ({
         <Left style={styles.left}>
           <Button
             onPress={onBackPress}
-            transparent={!highlightBack}
+            transparent={true /* !highlightBack */}
             style={highlightBack ? styles.highlightBack : null}>
             <Icon
               name="md-arrow-back"
-              size={33}
+              size={28}
               color={R.colors[inverseFontColor ? 'white' : 'black']}
             />
           </Button>

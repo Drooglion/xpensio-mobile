@@ -21,25 +21,27 @@ const PlasticCard = ({
   <View style={styles.cardContainer}>
     <Image
       source={
-        R.images[status === 1 ? 'bg_plastic_card' : 'bg_plastic_card_disabled']
+        R.images[status === 0 ? 'bg_plastic_card_disabled' : 'bg_plastic_card']
       }
       style={styles.img}
     />
-    <View style={styles.cardDetails}>
-      <Text allowFontScaling={false} style={styles.cardNumber}>
-        {StringUtils.cardNumberHidden(last4)}
-      </Text>
-      <View style={styles.cardHolder}>
-        <View style={styles.cardName}>
-          <Text allowFontScaling={false} style={styles.cardTxtName}>
-            {cardholder}
+    {status !== -1 ? (
+      <View style={styles.cardDetails}>
+        <Text allowFontScaling={false} style={styles.cardNumber}>
+          {StringUtils.cardNumberHidden(last4)}
+        </Text>
+        <View style={styles.cardHolder}>
+          <View style={styles.cardName}>
+            <Text allowFontScaling={false} style={styles.cardTxtName}>
+              {cardholder}
+            </Text>
+          </View>
+          <Text allowFontScaling={false} style={styles.cardTxtCompany}>
+            {company}
           </Text>
         </View>
-        <Text allowFontScaling={false} style={styles.cardTxtCompany}>
-          {company}
-        </Text>
       </View>
-    </View>
+    ) : null}
   </View>
 );
 

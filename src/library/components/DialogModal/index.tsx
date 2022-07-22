@@ -21,6 +21,7 @@ const DialogModal = () => {
   }
 
   const { visible, title, description, icon, onClose } = dialogModal;
+
   const handleClose = () => {
     onClose
       ? onClose()

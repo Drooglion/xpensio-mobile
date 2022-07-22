@@ -1,17 +1,18 @@
 {
   "name": "xpensiorn",
-  "version": "0.3.43",
+  "version": "0.3.49",
   "private": true,
   "scripts": {
     "postversion": "react-native-version",
     "start": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "build:apk": "ENVFILE=.env.prod cd android && ./gradlew assembleRelease",
-    "build:aab": "ENVFILE=.env.prod cd android && ./gradlew bundleRelease",
+    "build:apk": "ENVFILE=.env.prod cd android && ./gradlew clean && ./gradlew assembleRelease",
+    "build:aab": "ENVFILE=.env.prod cd android && ./gradlew clean && ./gradlew bundleRelease",
     "build:ios": "ENVFILE=.env.prod react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
     "ios": "ENVFILE=.env.dev npx react-native run-ios",
     "android": "ENVFILE=.env.dev npx react-native run-android",
+    "android:release": "ENVFILE=.env.prod npx react-native run-android --variant=release",
     "ios:devices": "xcrun simctl list devices"
   },
   "dependencies": {
@@ -57,6 +58,7 @@
     "react-native-screens": "^3.8.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-splash-screen": "^3.3.0",
+    "react-native-super-grid": "^4.4.0",
     "react-native-svg": "^12.1.1",
     "react-native-swipeout": "^2.3.6",
     "react-native-toast-message": "^2.1.5",

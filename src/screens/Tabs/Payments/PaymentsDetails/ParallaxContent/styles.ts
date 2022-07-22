@@ -28,13 +28,16 @@ const styles = StyleSheet.create({
   },
   dotsContainer: {
     position: 'absolute',
-    bottom: -10,
     alignSelf: 'center',
+    bottom: -10,
   },
   dotStyle: {
     height: 10,
     width: 10,
     borderRadius: 10,
+  },
+  header: {
+    height: 60,
   },
 });
 

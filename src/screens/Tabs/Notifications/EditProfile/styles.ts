@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import { StyleSheet, PixelRatio } from 'react-native';
 import R from 'res/R';
 
@@ -14,13 +13,13 @@ export default StyleSheet.create({
     color: R.colors.body2,
     fontSize: 16,
     paddingTop: 5,
-    paddingRight: '10%'
+    paddingRight: '10%',
   },
   footerTab: {
-    ...R.sharedStyles.footerTab
+    ...R.sharedStyles.footerTab,
   },
   footer: {
-    ...R.sharedStyles.footer
+    ...R.sharedStyles.footer,
   },
   btnCancel: {
     height: 45,
@@ -80,5 +79,5 @@ export default StyleSheet.create({
   },
   checkmarkUnverified: {
     color: R.colors.subhead,
-  }
+  },
 });

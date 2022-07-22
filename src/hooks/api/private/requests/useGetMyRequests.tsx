@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useResource } from 'contexts/resourceContext';
 import useApi from 'hooks/useApi';
 import Requests from 'models/Requests';
+import { IRequest } from 'types/Request';
 
 /*
  * Get Requests
@@ -21,7 +22,7 @@ type ParamType = {
 
 const useGetMyRequests = () => {
   //const [params, setParams] = useState<ParamType>();
-  const [data, setData] = useState<Requests>();
+  const [data, setData] = useState<IRequest[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
   const { dispatch } = useResource();
@@ -35,7 +36,7 @@ const useGetMyRequests = () => {
         const requests = new Requests(res.data.payload);
         dispatch({ type: 'SET_REQUESTS', requests: requests.items });
         console.log({ requests: requests.items });
-        setData(requests);
+        setData(requests.items);
         setLoading(false);
       } catch (err: any) {
         console.log({ err });
@@ -56,7 +57,7 @@ const useGetMyRequests = () => {
       const requests = new Requests(res.data.payload);
       dispatch({ type: 'SET_REQUESTS', requests: requests.items });
       console.log({ requests: requests.items });
-      setData(requests);
+      setData(requests.items);
       setLoading(false);
     } catch (err: any) {
       console.log({ err });
